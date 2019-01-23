@@ -1,0 +1,76 @@
+<idea-plugin>
+    <id>com.binarysushi.sfcc-studio</id>
+    <name>Salesforce Commerce Cloud Studio</name>
+    <vendor email="nek4life@gmail.com" url="https://www.binarysushi.com">Binary Sushi</vendor>
+
+    <description><![CDATA[
+        Tools for developing Salesforce Commerce Cloud sites
+    ]]></description>
+
+    <depends>com.intellij.modules.lang</depends>
+
+
+    <extensions defaultExtensionNs="com.intellij">
+        <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>
+
+        <!-- Project Extensions -->
+        <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
+        <projectService serviceImplementation="com.binarysushi.studio.settings.StudioSettingsProvider"/>
+        <projectService serviceImplementation="com.binarysushi.studio.webdav.StudioServerConnection"/>
+        <projectConfigurable id="SFCC_SERVER_SETTINGS_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.settings.StudioServerSettingsConfigurable"/>
+        <projectConfigurable id="SFCC_CARTRIDGE_SETTINGS_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.settings.StudioCartridgeSettingsConfigurable"/>
+
+        <!-- Module Extensions -->
+        <moduleType id="SFCC_STUDIO_MODULE" implementationClass="com.binarysushi.studio.projectWizard.StudioModuleType"/>
+        <moduleBuilder builderClass="com.binarysushi.studio.projectWizard.StudioModuleBuilder"/>
+
+        <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
+
+        <!-- ISML Extensions-->
+        <fileTypeFactory implementation="com.binarysushi.studio.lang.isml.ISMLLanguageTypeFactory"/>
+        <xml.tagNameProvider implementation="com.binarysushi.studio.lang.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
+        <xml.elementDescriptorProvider implementation="com.binarysushi.studio.lang.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
+        <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.lang.isml.ISMLTemplatesProvider"/>
+
+        <!-- DS Extensions-->
+        <iconProvider implementation="com.binarysushi.studio.lang.ds.DSIconProvider" />
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+    <application-components>
+        <!-- Add your application components here -->
+        <component>
+            <implementation-class>com.binarysushi.studio.webdav.StudioBulkFileListener</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.binarysushi.studio.lang.ds.DSFileTypeAssociator</implementation-class>
+        </component>
+    </application-components>
+
+    <actions>
+        <group id="SFCCActionGroup" text="Commerce Cloud" popup="true" icon="/icons/salesforce.png">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
+
+        <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
+                text="Clean Cartridges" description="Clean Cartridges" >
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action class="com.binarysushi.studio.templates.StudioCreateISMLFileAction" id="StudioCreateISMLFile">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </action>
+
+        <action class="com.binarysushi.studio.templates.StudioCreateDSFileAction" id="StudioCreateDSFile">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </action>
+    </actions>
+
+
+</idea-plugin>
