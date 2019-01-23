@@ -9,6 +9,7 @@
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/vagrant.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/
