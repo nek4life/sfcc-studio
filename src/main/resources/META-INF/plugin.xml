@@ -7,8 +7,9 @@
         Tools for developing Salesforce Commerce Cloud sites
     ]]></description>
 
+    <depends>JavaScript</depends>
     <depends>com.intellij.modules.lang</depends>
-
+    <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>
@@ -31,6 +32,7 @@
         <xml.tagNameProvider implementation="com.binarysushi.studio.lang.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
         <xml.elementDescriptorProvider implementation="com.binarysushi.studio.lang.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
         <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.lang.isml.ISMLTemplatesProvider"/>
+        <multiHostInjector implementation="com.binarysushi.studio.lang.isml.ISMLScriptInjector" />
 
         <!-- DS Extensions-->
         <iconProvider implementation="com.binarysushi.studio.lang.ds.DSIconProvider" />

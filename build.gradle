@@ -26,6 +26,7 @@ compileTestKotlin {
 }
 intellij {
     version 'IU-2018.3.1'
+    plugins = ['JavaScriptLanguage']
 }
 patchPluginXml {
     changeNotes """
