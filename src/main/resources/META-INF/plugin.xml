@@ -1,10 +1,10 @@
 <idea-plugin>
     <id>com.binarysushi.sfcc-studio</id>
     <name>Salesforce Commerce Cloud Studio</name>
-    <vendor email="nek4life@gmail.com" url="https://www.binarysushi.com">Binary Sushi</vendor>
+    <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
 
     <description><![CDATA[
-        Tools for developing Salesforce Commerce Cloud sites
+        Tools for developing Salesforce Commerce Cloud websites.
     ]]></description>
 
     <depends>JavaScript</depends>
