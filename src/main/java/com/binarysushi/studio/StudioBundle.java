@@ -16,7 +16,7 @@ public class StudioBundle {
     }
 
     @NonNls
-    public static final String BUNDLE = "messages.StudioBundle";
+    private static final String BUNDLE = "messages.StudioBundle";
     private static Reference<ResourceBundle> ourBundle;
 
     private StudioBundle() {
