@@ -30,6 +30,9 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      And... We're back.<br>
+      <em>Updated plugin name so old plugin works as is.</em><br/>
+      <em>Changed to project based configuration so plugin will work in WebStorm</em><br/>
+      <em>Added JS injection in ISML files</em>      
+      """
 }
