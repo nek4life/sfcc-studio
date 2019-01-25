@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.ds;
+package com.binarysushi.studio.language.ds;
 
 import com.intellij.openapi.components.ApplicationComponent;
 import com.intellij.openapi.fileTypes.FileType;

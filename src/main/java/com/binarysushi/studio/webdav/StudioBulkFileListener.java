@@ -1,6 +1,6 @@
 package com.binarysushi.studio.webdav;
 
-import com.binarysushi.studio.settings.StudioSettingsProvider;
+import com.binarysushi.studio.configuration.StudioConfigurationProvider;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
@@ -49,23 +49,23 @@ public class StudioBulkFileListener implements BulkFileListener, Disposable {
 
             if (eventFile != null && !eventFile.isDirectory()) {
                 for (Project project : projects) {
-                    StudioSettingsProvider settingsProvider = StudioSettingsProvider.getInstance(project);
+                    StudioConfigurationProvider configurationProvider = StudioConfigurationProvider.getInstance(project);
 
                     // Bail out if auto uploads are not enabled.
-                    if (!StudioSettingsProvider.getInstance(project).getAutoUploadEnabled()) {
+                    if (!StudioConfigurationProvider.getInstance(project).getAutoUploadEnabled()) {
                         return;
                     }
 
-                    if (settingsProvider.getCartridgeRoots().size() < 1) {
+                    if (configurationProvider.getCartridgeRoots().size() < 1) {
                         return;
                     }
 
-                    for (String cartridgeRoot : settingsProvider.getCartridgeRoots()) {
+                    for (String cartridgeRoot : configurationProvider.getCartridgeRoots()) {
                         if (eventFile.getPath().contains(cartridgeRoot)) {
                             ProgressManager.getInstance().run(
                                     new StudioUpdateFileTask(
                                             project,
-                                            "Syncing files to: " + StudioSettingsProvider.getInstance(project).getHostname(),
+                                            "Syncing files to: " + StudioConfigurationProvider.getInstance(project).getHostname(),
                                             true,
                                             PerformInBackgroundOption.ALWAYS_BACKGROUND,
                                             cartridgeRoot,

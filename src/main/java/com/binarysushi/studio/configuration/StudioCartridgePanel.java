@@ -1,4 +1,4 @@
-package com.binarysushi.studio.settings;
+package com.binarysushi.studio.configuration;
 
 import com.intellij.openapi.project.Project;
 
@@ -8,17 +8,17 @@ import java.util.Arrays;
 
 public class StudioCartridgePanel {
     private final Project myProject;
-    private final StudioSettingsProvider mySettingsProvider;
+    private final StudioConfigurationProvider myConfigurationProvider;
     private JPanel panel1;
     private StudioCartridgeAddEditDeleteListPanel studioCartridgeAddEditDeleteListPanel1;
 
-    StudioCartridgePanel(final Project project, StudioSettingsProvider settingsProvider) {
+    StudioCartridgePanel(final Project project, StudioConfigurationProvider configurationProvider) {
         myProject = project;
-        mySettingsProvider = settingsProvider;
+        myConfigurationProvider = configurationProvider;
     }
 
     private void createUIComponents() {
-        studioCartridgeAddEditDeleteListPanel1 = new StudioCartridgeAddEditDeleteListPanel("Cartridge Settings", mySettingsProvider.getCartridgeRoots());
+        studioCartridgeAddEditDeleteListPanel1 = new StudioCartridgeAddEditDeleteListPanel("Cartridge Settings", myConfigurationProvider.getCartridgeRoots(), myProject);
     }
 
     public JPanel createPanel () {
@@ -27,7 +27,7 @@ public class StudioCartridgePanel {
 
     public boolean isModified() {
         Object[] listItems = studioCartridgeAddEditDeleteListPanel1.getListItems();
-        return !mySettingsProvider.getCartridgeRoots().equals(new ArrayList<>(Arrays.asList(listItems)));
+        return !myConfigurationProvider.getCartridgeRoots().equals(new ArrayList<>(Arrays.asList(listItems)));
     }
 
     public ArrayList getListItems() {

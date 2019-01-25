@@ -1,6 +1,6 @@
 package com.binarysushi.studio.projectWizard;
 
-import com.binarysushi.studio.settings.StudioSettingsPanel;
+import com.binarysushi.studio.configuration.StudioConfigurationPanel;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.ProjectBuilder;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -11,7 +11,7 @@ import javax.swing.*;
 public class StudioModuleWizardStep extends ModuleWizardStep {
     private final StudioModuleBuilder myBuilder;
     private final WizardContext myWizardContext;
-    private final StudioSettingsPanel mySettingsPanel = new StudioSettingsPanel();
+    private final StudioConfigurationPanel myConfigurationPanel = new StudioConfigurationPanel();
 
     public StudioModuleWizardStep(WizardContext wizardContext, final StudioModuleBuilder builder) {
         myBuilder = builder;
@@ -20,7 +20,7 @@ public class StudioModuleWizardStep extends ModuleWizardStep {
 
     @Override
     public JComponent getComponent() {
-        return mySettingsPanel.createPanel();
+        return myConfigurationPanel.createPanel();
     }
 
     @Override
@@ -28,12 +28,12 @@ public class StudioModuleWizardStep extends ModuleWizardStep {
         final ProjectBuilder projectBuilder = myWizardContext.getProjectBuilder();
 
         if (projectBuilder instanceof StudioModuleBuilder) {
-            ((StudioModuleBuilder) projectBuilder).updateSettings(
-                    mySettingsPanel.getHostname(),
-                    mySettingsPanel.getUsername(),
-                    mySettingsPanel.getPassword(),
-                    mySettingsPanel.getVersion(),
-                    mySettingsPanel.getAutoUploadEnabled()
+            ((StudioModuleBuilder) projectBuilder).updateConfiguration(
+                    myConfigurationPanel.getHostname(),
+                    myConfigurationPanel.getUsername(),
+                    myConfigurationPanel.getPassword(),
+                    myConfigurationPanel.getVersion(),
+                    myConfigurationPanel.getAutoUploadEnabled()
             );
         }
     }
@@ -44,7 +44,7 @@ public class StudioModuleWizardStep extends ModuleWizardStep {
      */
     @Override
     public boolean validate() throws ConfigurationException {
-//        if (mySettingsPanel.getUsername().isEmpty()) {
+//        if (myConfigurationPanel.getUsername().isEmpty()) {
 //            throw new ConfigurationException("Specify Username");
 //        }
 

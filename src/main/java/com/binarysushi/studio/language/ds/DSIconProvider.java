@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.ds;
+package com.binarysushi.studio.language.ds;
 
 import com.binarysushi.studio.StudioIcons;
 import com.intellij.ide.IconProvider;

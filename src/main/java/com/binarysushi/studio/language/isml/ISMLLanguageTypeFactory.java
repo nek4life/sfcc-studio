@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.isml;
+package com.binarysushi.studio.language.isml;
 
 import com.intellij.openapi.fileTypes.FileTypeConsumer;
 import com.intellij.openapi.fileTypes.FileTypeFactory;

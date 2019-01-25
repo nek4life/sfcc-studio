@@ -1,6 +1,6 @@
 package com.binarysushi.studio.webdav.clean;
 
-import com.binarysushi.studio.settings.StudioSettingsProvider;
+import com.binarysushi.studio.configuration.StudioConfigurationProvider;
 import com.binarysushi.studio.toolWindow.StudioConsoleService;
 import com.binarysushi.studio.webdav.StudioServerConnection;
 import com.intellij.execution.ui.ConsoleView;
@@ -44,16 +44,16 @@ public class StudioCleanTask extends Task.Backgroundable {
 
     @Override
     public void run(@NotNull ProgressIndicator indicator) {
-        StudioSettingsProvider settingsProvider = StudioSettingsProvider.getInstance(myProject);
-        ArrayList<String> CartridgeRoots = settingsProvider.getCartridgeRoots();
-        if (settingsProvider.getCartridgeRoots().size() < 1) {
+        StudioConfigurationProvider configurationProvider = StudioConfigurationProvider.getInstance(myProject);
+        ArrayList<String> CartridgeRoots = configurationProvider.getCartridgeRoots();
+        if (configurationProvider.getCartridgeRoots().size() < 1) {
             return;
         }
 
         ConsoleView consoleView = ServiceManager.getService(myProject, StudioConsoleService.class).getConsoleView();
         StudioServerConnection serverConnection = ServiceManager.getService(myProject, StudioServerConnection.class);
 
-        String version = settingsProvider.getVersion();
+        String version = configurationProvider.getVersion();
         File tempDir = Paths.get(FileUtil.getTempDirectory(), myProject.getName()).toFile();
         File versionDir = Paths.get(tempDir.toString(), version).toFile();
         File zipFile = Paths.get(tempDir.toString(), version + ".zip").toFile();
