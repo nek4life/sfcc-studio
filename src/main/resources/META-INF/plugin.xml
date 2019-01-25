@@ -16,10 +16,10 @@
 
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
-        <projectService serviceImplementation="com.binarysushi.studio.settings.StudioSettingsProvider"/>
+        <projectService serviceImplementation="com.binarysushi.studio.configuration.StudioConfigurationProvider"/>
         <projectService serviceImplementation="com.binarysushi.studio.webdav.StudioServerConnection"/>
-        <projectConfigurable id="SFCC_SERVER_SETTINGS_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.settings.StudioServerSettingsConfigurable"/>
-        <projectConfigurable id="SFCC_CARTRIDGE_SETTINGS_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.settings.StudioCartridgeSettingsConfigurable"/>
+        <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.StudioServerConfigurable"/>
+        <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.StudioCartridgeConfigurable"/>
 
         <!-- Module Extensions -->
         <moduleType id="SFCC_STUDIO_MODULE" implementationClass="com.binarysushi.studio.projectWizard.StudioModuleType"/>
@@ -28,19 +28,15 @@
         <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
 
         <!-- ISML Extensions-->
-        <fileTypeFactory implementation="com.binarysushi.studio.lang.isml.ISMLLanguageTypeFactory"/>
-        <xml.tagNameProvider implementation="com.binarysushi.studio.lang.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
-        <xml.elementDescriptorProvider implementation="com.binarysushi.studio.lang.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
-        <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.lang.isml.ISMLTemplatesProvider"/>
-        <multiHostInjector implementation="com.binarysushi.studio.lang.isml.ISMLScriptInjector" />
+        <fileTypeFactory implementation="com.binarysushi.studio.language.isml.ISMLLanguageTypeFactory"/>
+        <xml.tagNameProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
+        <xml.elementDescriptorProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
+        <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.language.isml.ISMLTemplatesProvider"/>
+        <multiHostInjector implementation="com.binarysushi.studio.language.isml.ISMLScriptInjector" />
 
         <!-- DS Extensions-->
-        <iconProvider implementation="com.binarysushi.studio.lang.ds.DSIconProvider" />
+        <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
     </extensions>
-
-    <actions>
-        <!-- Add your actions here -->
-    </actions>
 
     <application-components>
         <!-- Add your application components here -->
@@ -48,7 +44,7 @@
             <implementation-class>com.binarysushi.studio.webdav.StudioBulkFileListener</implementation-class>
         </component>
         <component>
-            <implementation-class>com.binarysushi.studio.lang.ds.DSFileTypeAssociator</implementation-class>
+            <implementation-class>com.binarysushi.studio.language.ds.DSFileTypeAssociator</implementation-class>
         </component>
     </application-components>
 
@@ -61,6 +57,18 @@
 
         <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
                 text="Clean Cartridges" description="Clean Cartridges" >
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseXChangeAction" class="com.binarysushi.studio.browseActions.StudioBrowseXChangeAction"
+                text="Browse XChange" description="Browse XChange">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseDocumentationAction" class="com.binarysushi.studio.browseActions.StudioBrowseDocumentationAction"
+                text="Browse Documentation" description="Browse Documentation">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>

@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.isml.codeInsight.tags;
+package com.binarysushi.studio.language.isml.codeInsight.tags;
 
 import com.intellij.html.impl.RelaxedHtmlFromSchemaElementDescriptor;
 import com.intellij.openapi.util.Condition;

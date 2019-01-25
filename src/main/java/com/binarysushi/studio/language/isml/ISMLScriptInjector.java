@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.isml;
+package com.binarysushi.studio.language.isml;
 
 import com.intellij.lang.injection.MultiHostInjector;
 import com.intellij.lang.injection.MultiHostRegistrar;

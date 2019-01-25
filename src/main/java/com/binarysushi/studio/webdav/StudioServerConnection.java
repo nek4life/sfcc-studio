@@ -1,6 +1,6 @@
 package com.binarysushi.studio.webdav;
 
-import com.binarysushi.studio.settings.StudioSettingsProvider;
+import com.binarysushi.studio.configuration.StudioConfigurationProvider;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -26,12 +26,12 @@ import java.security.UnrecoverableKeyException;
 import java.util.ArrayList;
 
 public class StudioServerConnection {
-    private final StudioSettingsProvider settingsProvider;
+    private final StudioConfigurationProvider myConfigurationProvider;
     private final CloseableHttpClient client;
     private final HttpClientContext context;
 
-    public StudioServerConnection(StudioSettingsProvider settingsProvider) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
-        this.settingsProvider = settingsProvider;
+    public StudioServerConnection(StudioConfigurationProvider configurationProvider) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+        myConfigurationProvider = configurationProvider;
 
         // SSLContextFactory to allow all hosts. Without this an SSLException is thrown with self signed certs
         SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (arg0, arg1) -> true).build();
@@ -51,7 +51,7 @@ public class StudioServerConnection {
     }
 
     public String getBaseServerPath() {
-        return String.format("https://%s/on/demandware.servlet/webdav/Sites/Cartridges/%s", settingsProvider.getHostname(), settingsProvider.getVersion());
+        return String.format("https://%s/on/demandware.servlet/webdav/Sites/Cartridges/%s", myConfigurationProvider.getHostname(), myConfigurationProvider.getVersion());
     }
 
     public String getCartridgeName(String rootPath) {
@@ -89,8 +89,8 @@ public class StudioServerConnection {
     public CredentialsProvider getCredientials() {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
-                new AuthScope(settingsProvider.getHostname(), AuthScope.ANY_PORT),
-                new UsernamePasswordCredentials(settingsProvider.getUsername(), settingsProvider.getPassword()));
+                new AuthScope(myConfigurationProvider.getHostname(), AuthScope.ANY_PORT),
+                new UsernamePasswordCredentials(myConfigurationProvider.getUsername(), myConfigurationProvider.getPassword()));
         return credentialsProvider;
     }
 

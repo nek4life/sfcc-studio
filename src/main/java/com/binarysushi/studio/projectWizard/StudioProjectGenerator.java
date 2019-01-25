@@ -2,8 +2,8 @@ package com.binarysushi.studio.projectWizard;
 
 import com.binarysushi.studio.StudioBundle;
 import com.binarysushi.studio.StudioIcons;
-import com.binarysushi.studio.settings.StudioSettingsPanel;
-import com.binarysushi.studio.settings.StudioSettingsProvider;
+import com.binarysushi.studio.configuration.StudioConfigurationPanel;
+import com.binarysushi.studio.configuration.StudioConfigurationProvider;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.SettingsStep;
 import com.intellij.ide.util.projectWizard.WebProjectTemplate;
@@ -37,12 +37,12 @@ public class StudioProjectGenerator extends WebProjectTemplate<StudioProjectWiza
 
     @Override
     public void generateProject(@NotNull Project project, @NotNull VirtualFile baseDir, @NotNull StudioProjectWizardData data, @NotNull Module module) {
-        StudioSettingsProvider settingsProvider = StudioSettingsProvider.getInstance(project);
-        settingsProvider.setHostname(data.hostname);
-        settingsProvider.setUsername(data.username);
-        settingsProvider.setPassword(data.password);
-        settingsProvider.setVersion(data.version);
-        settingsProvider.setAutoUploadEnabled(data.autoUploadEnabled);
+        StudioConfigurationProvider configurationProvider = StudioConfigurationProvider.getInstance(project);
+        configurationProvider.setHostname(data.hostname);
+        configurationProvider.setUsername(data.username);
+        configurationProvider.setPassword(data.password);
+        configurationProvider.setVersion(data.version);
+        configurationProvider.setAutoUploadEnabled(data.autoUploadEnabled);
     }
 
     @NotNull
@@ -60,12 +60,12 @@ public class StudioProjectGenerator extends WebProjectTemplate<StudioProjectWiza
     @SuppressWarnings("deprecation")
     private class StudioProjectGeneratePeer implements GeneratorPeer {
 
-        private final StudioSettingsPanel mySettingsPanel = new StudioSettingsPanel();
+        private final StudioConfigurationPanel myConfigurationPanel = new StudioConfigurationPanel();
 
         @NotNull
         @Override
         public JComponent getComponent() {
-            return mySettingsPanel.createPanel();
+            return myConfigurationPanel.createPanel();
         }
 
         @Override
@@ -75,11 +75,11 @@ public class StudioProjectGenerator extends WebProjectTemplate<StudioProjectWiza
         @Override
         public Object getSettings() {
             return new StudioProjectWizardData(
-                    mySettingsPanel.getHostname(),
-                    mySettingsPanel.getUsername(),
-                    mySettingsPanel.getPassword(),
-                    mySettingsPanel.getVersion(),
-                    mySettingsPanel.getAutoUploadEnabled());
+                    myConfigurationPanel.getHostname(),
+                    myConfigurationPanel.getUsername(),
+                    myConfigurationPanel.getPassword(),
+                    myConfigurationPanel.getVersion(),
+                    myConfigurationPanel.getAutoUploadEnabled());
         }
 
         @Nullable

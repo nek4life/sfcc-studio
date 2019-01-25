@@ -2,7 +2,7 @@ package com.binarysushi.studio.projectWizard;
 
 import com.binarysushi.studio.StudioBundle;
 import com.binarysushi.studio.StudioIcons;
-import com.binarysushi.studio.settings.StudioSettingsProvider;
+import com.binarysushi.studio.configuration.StudioConfigurationProvider;
 import com.intellij.ide.util.projectWizard.ModuleBuilder;
 import com.intellij.ide.util.projectWizard.ModuleWizardStep;
 import com.intellij.ide.util.projectWizard.WizardContext;
@@ -26,15 +26,15 @@ public class StudioModuleBuilder extends ModuleBuilder {
     @Override
     public void setupRootModel(ModifiableRootModel modifiableRootModel) throws ConfigurationException {
         ContentEntry entry = doAddContentEntry(modifiableRootModel);
-        StudioSettingsProvider settingsProvider = StudioSettingsProvider.getInstance(modifiableRootModel.getProject());
-        settingsProvider.setHostname(myHostname);
-        settingsProvider.setUsername(myUsername);
-        settingsProvider.setPassword(myPassword);
-        settingsProvider.setVersion(myVersion);
-        settingsProvider.setAutoUploadEnabled(myAutoUpload);
+        StudioConfigurationProvider configurationProvider = StudioConfigurationProvider.getInstance(modifiableRootModel.getProject());
+        configurationProvider.setHostname(myHostname);
+        configurationProvider.setUsername(myUsername);
+        configurationProvider.setPassword(myPassword);
+        configurationProvider.setVersion(myVersion);
+        configurationProvider.setAutoUploadEnabled(myAutoUpload);
     }
 
-    public void updateSettings(String hostname, String username, String password, String version, boolean autoUpload) {
+    public void updateConfiguration(String hostname, String username, String password, String version, boolean autoUpload) {
         myHostname = hostname;
         myUsername = username;
         myPassword= password;

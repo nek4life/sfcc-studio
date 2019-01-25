@@ -1,4 +1,4 @@
-package com.binarysushi.studio.settings;
+package com.binarysushi.studio.configuration;
 
 import com.intellij.openapi.components.PersistentStateComponent;
 import com.intellij.openapi.components.ServiceManager;
@@ -11,17 +11,17 @@ import java.util.ArrayList;
 
 
 @State(
-        name = "StudioSettingsProvider",
+        name = "StudioConfigurationProvider",
         storages = {
                 @Storage("sfcc-settings.xml")
         }
 )
-public class StudioSettingsProvider implements PersistentStateComponent<StudioSettingsProvider.State> {
-    public static final Logger LOG = Logger.getInstance(StudioSettingsProvider.class);
+public class StudioConfigurationProvider implements PersistentStateComponent<StudioConfigurationProvider.State> {
+    public static final Logger LOG = Logger.getInstance(StudioConfigurationProvider.class);
     private State myState = new State();
 
-    public static StudioSettingsProvider getInstance(Project project) {
-        return ServiceManager.getService(project, StudioSettingsProvider.class);
+    public static StudioConfigurationProvider getInstance(Project project) {
+        return ServiceManager.getService(project, StudioConfigurationProvider.class);
     }
 
     public String getHostname() {

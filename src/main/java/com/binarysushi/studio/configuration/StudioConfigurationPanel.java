@@ -1,13 +1,13 @@
-package com.binarysushi.studio.settings;
+package com.binarysushi.studio.configuration;
 
 import javax.swing.*;
 
-public class StudioSettingsPanel {
+public class StudioConfigurationPanel {
     private JTextField hostnameField;
     private JTextField usernameField;
     private JTextField versionField;
     private JPasswordField passwordField;
-    private JPanel studioSettingsPanel;
+    private JPanel studioConfigurationPanel;
     private JCheckBox autoUploadEnabledField;
 
     public String getHostname() {
@@ -51,7 +51,7 @@ public class StudioSettingsPanel {
     }
 
     public JPanel createPanel() {
-        return studioSettingsPanel;
+        return studioConfigurationPanel;
     }
 
     private void createUIComponents() {

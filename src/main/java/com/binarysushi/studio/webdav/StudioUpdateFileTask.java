@@ -66,16 +66,16 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
             }
 
             if (response.getStatusLine().getStatusCode() == 401) {
-                Notifications.Bus.notify(new Notification("Demandware", "Unauthorized Request",
-                        "Please check your server configuration in the Demandware facet settings.", NotificationType.INFORMATION));
-                Notifications.Bus.notify(new Notification("Demandware", "Unauthorized Request",
+                Notifications.Bus.notify(new Notification("Salesforce", "Unauthorized Request",
+                        "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
+                Notifications.Bus.notify(new Notification("Salesforce", "Unauthorized Request",
                         getRequest.getURI().toString(), NotificationType.INFORMATION));
 
                 return;
             }
         } catch (UnknownHostException e) {
-            Notifications.Bus.notify(new Notification("Demandware", "Unknown Host",
-                    "Please check your server configuration in the Demandware facet settings.", NotificationType.INFORMATION));
+            Notifications.Bus.notify(new Notification("Salesforce", "Unknown Host",
+                    "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
             return;
         } catch (IOException e) {
             e.printStackTrace();

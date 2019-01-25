@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.isml;
+package com.binarysushi.studio.language.isml;
 
 import com.intellij.codeInsight.template.impl.DefaultLiveTemplatesProvider;
 import org.jetbrains.annotations.Nullable;

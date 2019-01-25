@@ -1,4 +1,4 @@
-package com.binarysushi.studio.settings;
+package com.binarysushi.studio.configuration;
 
 import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;

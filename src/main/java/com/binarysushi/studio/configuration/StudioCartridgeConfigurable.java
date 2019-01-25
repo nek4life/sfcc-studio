@@ -1,4 +1,4 @@
-package com.binarysushi.studio.settings;
+package com.binarysushi.studio.configuration;
 
 import com.binarysushi.studio.StudioBundle;
 import com.intellij.openapi.Disposable;
@@ -12,13 +12,13 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 
-public class StudioCartridgeSettingsConfigurable implements SearchableConfigurable, Configurable.NoScroll, Disposable {
+public class StudioCartridgeConfigurable implements SearchableConfigurable, Configurable.NoScroll, Disposable {
     private StudioCartridgePanel myCartridgePanel;
     private final Project myProject;
 
-    public StudioCartridgeSettingsConfigurable(Project project) {
+    public StudioCartridgeConfigurable(Project project) {
         myProject = project;
-        myCartridgePanel = new StudioCartridgePanel(project, StudioSettingsProvider.getInstance(project));
+        myCartridgePanel = new StudioCartridgePanel(project, StudioConfigurationProvider.getInstance(project));
     }
 
     @Override
@@ -29,7 +29,7 @@ public class StudioCartridgeSettingsConfigurable implements SearchableConfigurab
     @NotNull
     @Override
     public String getId() {
-        return "StudioCartridgeSettingsConfigurable";
+        return "StudioCartridgeConfigurable";
     }
 
     @Nls
@@ -51,7 +51,7 @@ public class StudioCartridgeSettingsConfigurable implements SearchableConfigurab
 
     @Override
     public void apply() throws ConfigurationException {
-        StudioSettingsProvider mySettingProvider = StudioSettingsProvider.getInstance(myProject);
-        mySettingProvider.setCartridgeRoots(myCartridgePanel.getListItems());
+        StudioConfigurationProvider myConfigurationProvider = StudioConfigurationProvider.getInstance(myProject);
+        myConfigurationProvider.setCartridgeRoots(myCartridgePanel.getListItems());
     }
 }

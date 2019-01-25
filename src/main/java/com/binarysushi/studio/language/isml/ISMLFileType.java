@@ -1,4 +1,4 @@
-package com.binarysushi.studio.lang.isml;
+package com.binarysushi.studio.language.isml;
 
 import com.binarysushi.studio.StudioIcons;
 import com.intellij.ide.highlighter.XmlLikeFileType;
