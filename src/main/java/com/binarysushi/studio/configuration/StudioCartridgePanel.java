@@ -18,7 +18,7 @@ public class StudioCartridgePanel {
     }
 
     private void createUIComponents() {
-        studioCartridgeAddEditDeleteListPanel1 = new StudioCartridgeAddEditDeleteListPanel("Cartridge Settings", myConfigurationProvider.getCartridgeRoots());
+        studioCartridgeAddEditDeleteListPanel1 = new StudioCartridgeAddEditDeleteListPanel("Cartridge Settings", myConfigurationProvider.getCartridgeRoots(), myProject);
     }
 
     public JPanel createPanel () {
