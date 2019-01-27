@@ -40,7 +40,7 @@ public class ISMLLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
                 // TODO make the template completion text path more compact when choosing from multiple templates
                 NavigationGutterIconBuilder<PsiElement> builder =
-                        NavigationGutterIconBuilder.create(StudioIcons.STUDIO_ICON)
+                        NavigationGutterIconBuilder.create(StudioIcons.STUDIO_ISML_ICON)
                         .setTooltipText("Jump to file")
                         .setTargets(templateMatches);
 
