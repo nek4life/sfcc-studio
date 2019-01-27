@@ -58,7 +58,7 @@
         </group>
 
         <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
-                text="Clean Cartridges" description="Clean Cartridges" >
+                text="Clean Cartridges" description="Clean Cartridges" icon="/icons/cartridge.png">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
