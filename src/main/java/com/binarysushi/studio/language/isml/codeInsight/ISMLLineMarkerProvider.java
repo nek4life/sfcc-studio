@@ -21,15 +21,18 @@ public class ISMLLineMarkerProvider extends RelatedItemLineMarkerProvider {
 
     @Override
     protected void collectNavigationMarkers(@NotNull PsiElement element, @NotNull Collection<? super RelatedItemLineMarkerInfo> result) {
-    if (!(element instanceof XmlAttribute)) { return; }
+        if (!(element instanceof XmlAttribute)) {
+            return;
+        }
 
-    if (((XmlAttribute) element).getName().equals("template") && (((XmlTag) element.getParent()).getName().equals("isinclude") || ((XmlTag) element.getParent()).getName().equals("isdecorate"))) {
+        if (((XmlAttribute) element).getName().equals("template") && (((XmlTag) element.getParent()).getName().equals("isinclude") || ((XmlTag) element.getParent()).getName().equals("isdecorate"))) {
             Project project = element.getProject();
             PsiManager manager = PsiManager.getInstance(project);
             String attributeValue = ((XmlAttribute) element).getValue();
             Collection<VirtualFile> files = FilenameIndex.getAllFilesByExt(project, "isml");
             ArrayList<PsiFile> templateMatches = new ArrayList<>();
-            if (attributeValue != null && !attributeValue.contains("${") ) {
+
+            if (attributeValue != null && !attributeValue.contains("${")) {
                 for (VirtualFile file : files) {
                     // Remove .isml so it is not doubled up if the extension was typed into the attribute value
                     String cleanedAttributeValue = attributeValue.replace(".isml", "");
@@ -41,8 +44,8 @@ public class ISMLLineMarkerProvider extends RelatedItemLineMarkerProvider {
                 // TODO make the template completion text path more compact when choosing from multiple templates
                 NavigationGutterIconBuilder<PsiElement> builder =
                         NavigationGutterIconBuilder.create(StudioIcons.STUDIO_ISML_ICON)
-                        .setTooltipText("Jump to file")
-                        .setTargets(templateMatches);
+                                .setTooltipText("Goto included file")
+                                .setTargets(templateMatches);
 
                 result.add(builder.createLineMarkerInfo(element));
             }
