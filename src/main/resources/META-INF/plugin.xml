@@ -34,6 +34,7 @@
         <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.language.isml.ISMLTemplatesProvider"/>
         <multiHostInjector implementation="com.binarysushi.studio.language.isml.ISMLScriptInjector" />
         <completion.contributor language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor"/>
+        <codeInsight.lineMarkerProvider language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.ISMLLineMarkerProvider"/>
 
         <!-- DS Extensions-->
         <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
