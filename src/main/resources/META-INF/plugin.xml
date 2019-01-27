@@ -33,6 +33,7 @@
         <xml.elementDescriptorProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
         <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.language.isml.ISMLTemplatesProvider"/>
         <multiHostInjector implementation="com.binarysushi.studio.language.isml.ISMLScriptInjector" />
+        <completion.contributor language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor"/>
 
         <!-- DS Extensions-->
         <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
