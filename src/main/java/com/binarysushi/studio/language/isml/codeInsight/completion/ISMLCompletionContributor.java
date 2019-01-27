@@ -72,6 +72,7 @@ public class ISMLCompletionContributor extends CompletionContributor {
             Document document = context.getDocument();
             final int caretOffset = editor.getCaretModel().getOffset();
             document.insertString(caretOffset, resultPath.subpath(4, resultPath.getNameCount()).toString());
+            editor.getCaretModel().moveToOffset(caretOffset + resultPath.subpath(4, resultPath.getNameCount()).toString().length());
             document.deleteString(caretOffset - resultText.length(), caretOffset);
 
         }
