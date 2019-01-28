@@ -9,8 +9,6 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiLanguageInjectionHost;
 import com.intellij.psi.impl.source.html.HtmlTagImpl;
 import com.intellij.psi.impl.source.xml.XmlAttributeValueImpl;
-import com.intellij.psi.impl.source.xml.XmlDocumentImpl;
-import com.intellij.psi.impl.source.xml.XmlPrologImpl;
 import com.intellij.psi.impl.source.xml.XmlTextImpl;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +36,6 @@ public class ISMLScriptInjector implements MultiHostInjector {
     @NotNull
     @Override
     public List<? extends Class<? extends PsiElement>> elementsToInjectIn() {
-        return Arrays.asList(XmlDocumentImpl.class, XmlPrologImpl.class, XmlTextImpl.class, XmlAttributeValueImpl.class);
+        return Arrays.asList(XmlTextImpl.class, XmlAttributeValueImpl.class);
     }
 }

@@ -33,6 +33,9 @@
         <xml.elementDescriptorProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
         <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.language.isml.ISMLTemplatesProvider"/>
         <multiHostInjector implementation="com.binarysushi.studio.language.isml.ISMLScriptInjector" />
+        <completion.contributor language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor"/>
+        <codeInsight.lineMarkerProvider language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.ISMLLineMarkerProvider"/>
+        <typedHandler implementation="com.binarysushi.studio.language.isml.ISMLTypedHandlerDelegate"/>
 
         <!-- DS Extensions-->
         <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
@@ -56,7 +59,7 @@
         </group>
 
         <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
-                text="Clean Cartridges" description="Clean Cartridges" >
+                text="Clean Cartridges" description="Clean Cartridges" icon="/icons/cartridge.png">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
