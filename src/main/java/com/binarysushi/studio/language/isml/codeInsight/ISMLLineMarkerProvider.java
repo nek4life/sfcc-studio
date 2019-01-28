@@ -25,14 +25,23 @@ public class ISMLLineMarkerProvider extends RelatedItemLineMarkerProvider {
             return;
         }
 
-        if (((XmlAttribute) element).getName().equals("template") && (((XmlTag) element.getParent()).getName().equals("isinclude") || ((XmlTag) element.getParent()).getName().equals("isdecorate"))) {
-            Project project = element.getProject();
-            PsiManager manager = PsiManager.getInstance(project);
-            String attributeValue = ((XmlAttribute) element).getValue();
-            Collection<VirtualFile> files = FilenameIndex.getAllFilesByExt(project, "isml");
-            ArrayList<PsiFile> templateMatches = new ArrayList<>();
+        String attributeValue = ((XmlAttribute) element).getValue();
 
-            if (attributeValue != null && !attributeValue.contains("${")) {
+        if (attributeValue != null) {
+
+            if (attributeValue.isEmpty() || attributeValue.contains("${")) {
+                return;
+            }
+
+            if (((XmlAttribute) element).getName().equals("template") && (((XmlTag) element.getParent()).getName().equals("isinclude") || ((XmlTag) element.getParent()).getName().equals("isdecorate"))) {
+                Project project = element.getProject();
+                PsiManager manager = PsiManager.getInstance(project);
+
+
+                Collection<VirtualFile> files = FilenameIndex.getAllFilesByExt(project, "isml");
+                ArrayList<PsiFile> templateMatches = new ArrayList<>();
+
+
                 for (VirtualFile file : files) {
                     // Remove .isml so it is not doubled up if the extension was typed into the attribute value
                     String cleanedAttributeValue = attributeValue.replace(".isml", "");
