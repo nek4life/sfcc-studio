@@ -48,9 +48,10 @@ public class ISMLCompletionContributor extends CompletionContributor {
                         String cartridges = "cartridges";
                         Path resultPath = Paths.get(filePath.substring(filePath.indexOf(cartridges) + cartridges.length()).replace(".isml", ""));
                         result.addElement(LookupElementBuilder.create(resultPath.toString())
-                                .withPresentableText(resultPath.subpath(4, resultPath.getNameCount()).toString())
-                                .withTailText("  " + resultPath.subpath(0, 1) + "/" + resultPath.subpath(3, 4))
+                                .withPresentableText(resultPath.subpath(4, resultPath.getNameCount()).toString() + ".isml")
+                                .withTailText("  " + resultPath.subpath(0, 1) + ":" + resultPath.subpath(3, 4))
                                 .withInsertHandler(new ISMLTemplateFileInsertHandler())
+                                .bold()
                         );
                     }
                 }
