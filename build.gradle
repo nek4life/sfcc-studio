@@ -1,11 +1,11 @@
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.1'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.11'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.20'
 }
 
 group 'com.binarysushi'
-version '1.2.0'
+version '1.3.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
@@ -25,14 +25,6 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version 'IU-2018.3.1'
-    plugins = ['JavaScriptLanguage']
-}
-patchPluginXml {
-    changeNotes """
-      And... We're back.<br>
-      <em>Updated plugin name so old plugin works as is.</em><br/>
-      <em>Changed to project based configuration so plugin will work in WebStorm</em><br/>
-      <em>Added JS injection in ISML files</em>      
-      """
+    version "IU-191-EAP-SNAPSHOT"
+    plugins = ["JavaScriptLanguage"]
 }
