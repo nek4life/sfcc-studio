@@ -1,14 +1,12 @@
 package com.binarysushi.studio.language.isml.codeInsight.tags;
 
 import com.intellij.html.impl.RelaxedHtmlFromSchemaElementDescriptor;
-import com.intellij.openapi.util.Condition;
 import com.intellij.psi.PsiElement;
 import com.intellij.psi.impl.source.html.dtd.HtmlNSDescriptorImpl;
 import com.intellij.psi.impl.source.xml.XmlDocumentImpl;
 import com.intellij.psi.util.PsiTreeUtil;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlTag;
-import com.intellij.util.ArrayUtil;
 import com.intellij.util.containers.ContainerUtil;
 import com.intellij.xml.XmlAttributeDescriptor;
 import com.intellij.xml.XmlElementDescriptor;
@@ -22,10 +20,10 @@ import java.util.Map;
 
 public class ISMLTagDescriptor implements XmlElementDescriptor {
     protected final String name;
-    protected final PsiElement declaration;
-    private final Map<String, String> attrMap = new HashMap<String, String>();
+    private final PsiElement declaration;
+    private final Map<String, String> attrMap = new HashMap<>();
 
-    public ISMLTagDescriptor(String myName, PsiElement declaration) {
+    ISMLTagDescriptor(String myName, PsiElement declaration) {
         this.name = myName;
         this.declaration = declaration;
 
@@ -101,12 +99,8 @@ public class ISMLTagDescriptor implements XmlElementDescriptor {
     @Nullable
     @Override
     public XmlAttributeDescriptor getAttributeDescriptor(@NonNls final String attributeName, @Nullable XmlTag context) {
-        return ContainerUtil.find(getAttributesDescriptors(context), new Condition<XmlAttributeDescriptor>() {
-            @Override
-            public boolean value(XmlAttributeDescriptor descriptor) {
-                return attributeName.equals(descriptor.getName());
-            }
-        });
+        return ContainerUtil.find(getAttributesDescriptors(context),
+                descriptor -> attributeName.equals(descriptor.getName()));
     }
 
     @Override
@@ -149,10 +143,5 @@ public class ISMLTagDescriptor implements XmlElementDescriptor {
     @Override
     public void init(PsiElement element) {
 
-    }
-
-    @Override
-    public Object[] getDependences() {
-        return ArrayUtil.EMPTY_OBJECT_ARRAY;
     }
 }
