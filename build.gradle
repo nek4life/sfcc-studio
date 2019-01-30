@@ -28,3 +28,10 @@ intellij {
     version "IU-191-EAP-SNAPSHOT"
     plugins = ["JavaScriptLanguage"]
 }
+patchPluginXml {
+    changeNotes """
+      New Features<br/><br/>
+      <em>Compatibility with 2019.1 IDE releases</em>
+      <em>Static mapping of form.xsd for form field auto completion</em><br/>           
+      """
+}

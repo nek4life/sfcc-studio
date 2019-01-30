@@ -47,32 +47,36 @@ public class StudioServerConnection {
                 .build();
 
         context = new HttpClientContext();
-        context.setCredentialsProvider(getCredientials());
+        context.setCredentialsProvider(getCredentials());
     }
 
     public String getBaseServerPath() {
         return String.format("https://%s/on/demandware.servlet/webdav/Sites/Cartridges/%s", myConfigurationProvider.getHostname(), myConfigurationProvider.getVersion());
     }
 
-    public String getCartridgeName(String rootPath) {
+    private String getCartridgeName(String rootPath) {
         return Paths.get(rootPath).getFileName().toString();
     }
 
-    public String getRemoteFilePath(String rootPath, String filePath) {
-        String relPath = filePath.substring(rootPath.length(), filePath.length());
+    String getRemoteFilePath(String rootPath, String filePath) {
+        String relPath = filePath.substring(rootPath.length());
         String cartridgeName = getCartridgeName(rootPath);
         return getBaseServerPath() + "/" + cartridgeName + relPath;
     }
 
-    public ArrayList<String> getRemoteDirPaths(String rootPath, String filePath) {
-        ArrayList<String> serverPaths = new ArrayList<String>();
+    ArrayList<String> getRemoteDirPaths(String rootPath, String filePath) {
+        ArrayList<String> serverPaths = new ArrayList<>();
+        // There may be no parent path in root directory
         Path relPath = Paths.get(rootPath).relativize(Paths.get(filePath)).getParent();
         String cartridgeName = getCartridgeName(rootPath);
 
         String dirPath = "";
-        for (Path subPath : relPath) {
-            dirPath = dirPath + "/" + subPath.getFileName();
-            serverPaths.add(getBaseServerPath() + "/" + cartridgeName + dirPath);
+
+        if (relPath != null) {
+            for (Path subPath : relPath) {
+                dirPath = dirPath + "/" + subPath.getFileName();
+                serverPaths.add(getBaseServerPath() + "/" + cartridgeName + dirPath);
+            }
         }
 
         return serverPaths;
@@ -86,7 +90,7 @@ public class StudioServerConnection {
         return context;
     }
 
-    public CredentialsProvider getCredientials() {
+    private CredentialsProvider getCredentials() {
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
                 new AuthScope(myConfigurationProvider.getHostname(), AuthScope.ANY_PORT),
