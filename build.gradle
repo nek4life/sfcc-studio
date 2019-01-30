@@ -30,9 +30,7 @@ intellij {
 }
 patchPluginXml {
     changeNotes """
-      And... We're back.<br>
-      <em>Updated plugin name so old plugin works as is.</em><br/>
-      <em>Changed to project based configuration so plugin will work in WebStorm</em><br/>
-      <em>Added JS injection in ISML files</em>      
+      Bug Fixes<br/><br/>
+      <em>Fixed null pointer exception when trying to sync file in root of cartridge path</em><br/>           
       """
 }
