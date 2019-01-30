@@ -40,7 +40,7 @@ public class ISMLTagDescriptor implements XmlElementDescriptor {
         attrMap.put("isinclude", "template,url");
         attrMap.put("isloop", "items,var,alias,status,begin,end,step");
         attrMap.put("ismodule", "template,name");
-        attrMap.put("isobject", "name,view");
+        attrMap.put("isobject", "object,view");
         attrMap.put("isprint", "value,style,formatter,timezone,padding,encoding");
         attrMap.put("isredirect", "location,permanent");
         attrMap.put("isremove", "name,scope");
