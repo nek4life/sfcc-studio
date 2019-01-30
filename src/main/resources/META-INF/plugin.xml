@@ -11,6 +11,8 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
+    <idea-version since-build="183"/>
+
     <extensions defaultExtensionNs="com.intellij">
         <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>
 
@@ -39,6 +41,9 @@
 
         <!-- DS Extensions-->
         <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
+
+        <!-- Static Schema Registration -->
+        <standardResource url="http://www.demandware.com/xml/form/2008-04-19" path="schemas/form.xsd"/>
     </extensions>
 
     <application-components>
