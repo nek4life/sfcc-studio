@@ -20,3 +20,7 @@
  development documentation. 
  
  http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system.html
+ 
+ 
+ ## Plugin on the JetBrains site
+ https://plugins.jetbrains.com/plugin/11590-salesforce-commerce-cloud-studio
