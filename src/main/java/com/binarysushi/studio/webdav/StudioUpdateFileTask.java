@@ -67,15 +67,15 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
 
             if (response.getStatusLine().getStatusCode() == 401) {
                 Notifications.Bus.notify(new Notification("Salesforce", "Unauthorized Request",
-                        "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
+                        "Please check your server configuration in the project settings panel. (File | Settings | Tools | Commerce Cloud Server)", NotificationType.ERROR));
                 Notifications.Bus.notify(new Notification("Salesforce", "Unauthorized Request",
-                        getRequest.getURI().toString(), NotificationType.INFORMATION));
+                        getRequest.getURI().toString(), NotificationType.ERROR));
 
                 return;
             }
         } catch (UnknownHostException e) {
             Notifications.Bus.notify(new Notification("Salesforce", "Unknown Host",
-                    "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
+                    "Please check your server configuration in the project settings panel. (File | Settings | Tools | Commerce Cloud Server)", NotificationType.ERROR));
             return;
         } catch (IOException e) {
             e.printStackTrace();
@@ -91,7 +91,7 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
                 try (CloseableHttpResponse response = httpClient.execute(mkcolRequest, context)) {
                     if (response.getStatusLine().getStatusCode() == 201) {
                         Date now = new Date();
-                        consoleView.print("[" + timeFormat.format(now) + "] " + "Created " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                        consoleView.print("[" + timeFormat.format(now) + "] " + "Created folder " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -101,19 +101,19 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
 
         indicator.setFraction(.80);
 
+        File file = new File(localFilePath);
         // Put remote file
         HttpUriRequest request = RequestBuilder.create("PUT")
                 .setUri(remoteFilePath)
-                .setEntity(new FileEntity(new File(localFilePath)))
+                .setEntity(new FileEntity(file))
                 .build();
 
         try (CloseableHttpResponse response = httpClient.execute(request, context)) {
+            Date now = new Date();
             if (isNewRemoteFile) {
-                Date now = new Date();
-                consoleView.print("[" + timeFormat.format(now) + "] " + "Created " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                consoleView.print("[" + timeFormat.format(now) + "] " + "Created file (" + file.getName() + ") on server " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
             } else {
-                Date now = new Date();
-                consoleView.print("[" + timeFormat.format(now) + "] " + "Updated " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                consoleView.print("[" + timeFormat.format(now) + "] " + "Updated file (" + file.getName() + ") on server " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
             }
         } catch (IOException e) {
             LOG.error(e);
