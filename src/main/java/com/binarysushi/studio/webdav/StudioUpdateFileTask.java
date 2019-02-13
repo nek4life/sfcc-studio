@@ -101,24 +101,29 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
 
         indicator.setFraction(.80);
 
-        // Put remote file
-        HttpUriRequest request = RequestBuilder.create("PUT")
-                .setUri(remoteFilePath)
-                .setEntity(new FileEntity(new File(localFilePath)))
-                .build();
+        File localFile = new File(localFilePath);
 
-        try (CloseableHttpResponse response = httpClient.execute(request, context)) {
-            if (isNewRemoteFile) {
-                Date now = new Date();
-                consoleView.print("[" + timeFormat.format(now) + "] " + "Created " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
-            } else {
-                Date now = new Date();
-                consoleView.print("[" + timeFormat.format(now) + "] " + "Updated " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+        // TODO this ensures local file still exists in situations like changing branches, but perhaps this should actually delete the remote files
+        if (localFile.exists()) {
+            // Put remote file
+            HttpUriRequest request = RequestBuilder.create("PUT")
+                    .setUri(remoteFilePath)
+                    .setEntity(new FileEntity(localFile))
+                    .build();
+
+            try (CloseableHttpResponse response = httpClient.execute(request, context)) {
+                if (isNewRemoteFile) {
+                    Date now = new Date();
+                    consoleView.print("[" + timeFormat.format(now) + "] " + "Created " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                } else {
+                    Date now = new Date();
+                    consoleView.print("[" + timeFormat.format(now) + "] " + "Updated " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                }
+            } catch (IOException e) {
+                LOG.error(e);
             }
-        } catch (IOException e) {
-            LOG.error(e);
-        }
 
-        indicator.setFraction(1);
+            indicator.setFraction(1);
+        }
     }
 }
