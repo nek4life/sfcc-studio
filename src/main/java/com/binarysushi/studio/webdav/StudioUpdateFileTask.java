@@ -62,13 +62,23 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
         FileStatus fileStatus;
         indicator.setFraction(.33);
 
-        if (testRemoteFileExistence() == 200) {
+        int statusCode = testRemoteFileExistence();
+
+        // If there is an error don't do anything on the server
+        if (statusCode == 401 || statusCode == -1) {
+            return;
+        }
+
+        // If the status code is 200 a file exists
+        if (statusCode == 200) {
+            // Check the existence of the local virtual file to determine whether to update or delete.
             if (myEventFile.exists()) {
                 fileStatus = FileStatus.UPDATED;
             } else {
                 fileStatus = FileStatus.DELETED;
             }
         } else {
+            // If the file doesn't exist on the server a new file should be created
             fileStatus = FileStatus.NEW;
         }
 
@@ -77,13 +87,13 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
         switch (fileStatus) {
             case NEW:
                 createRemoteDirectories();
-                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus);
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile);
                 break;
             case UPDATED:
-                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus);
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile);
                 break;
             case DELETED:
-                doHttpRequest(RequestBuilder.create("DELETE").setUri(myRemoteFilePath).build(), fileStatus);
+                doHttpRequest(RequestBuilder.create("DELETE").setUri(myRemoteFilePath).build(), fileStatus, localFile);
                 break;
         }
 
@@ -93,10 +103,20 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
     private int testRemoteFileExistence() {
         HttpUriRequest getRequest = RequestBuilder.create("HEAD").setUri(myRemoteFilePath).build();
         try (CloseableHttpResponse response = myHttpClient.execute(getRequest, myHttpContext)) {
-            return response.getStatusLine().getStatusCode();
+            int statusCode = response.getStatusLine().getStatusCode();
+            if (statusCode == 401) {
+                Notifications.Bus.notify(new Notification("Salesforce",
+                        "Unauthorized Request",
+                        "Please check your server configuration in the project settings panel. (File | Settings | Tools | Commerce Cloud Server)",
+                        NotificationType.ERROR));
+            }
+            return statusCode;
         } catch (UnknownHostException e) {
-            Notifications.Bus.notify(new Notification("Salesforce", "Unknown Host",
-                    "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
+            Notifications.Bus.notify(new Notification(
+                    "Salesforce",
+                    "Unknown Host",
+                    "Please check your server configuration in the project settings panel. (File | Settings | Tools | Commerce Cloud Server)",
+                    NotificationType.ERROR));
             return -1;
         } catch (IOException e) {
             e.printStackTrace();
@@ -119,7 +139,7 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
         }
     }
 
-    private void doHttpRequest(HttpUriRequest request, FileStatus fileStatus) {
+    private void doHttpRequest(HttpUriRequest request, FileStatus fileStatus, File localFile) {
         try (CloseableHttpResponse ignored = myHttpClient.execute(request, myHttpContext)) {
             Date now = new Date();
             String message = "";
@@ -134,6 +154,9 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
                     message = "Updated";
                     break;
             }
+
+            // TODO: update to add local file to console output.
+            //  This message could get really long. Might make more sense to create a remote and local sync log.
 
             myConsoleView.print("[" + timeFormat.format(now) + "] " + message + " " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
         } catch (IOException e) {
