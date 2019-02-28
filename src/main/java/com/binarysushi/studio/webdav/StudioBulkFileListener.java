@@ -69,7 +69,7 @@ public class StudioBulkFileListener implements BulkFileListener, Disposable {
                                             true,
                                             PerformInBackgroundOption.ALWAYS_BACKGROUND,
                                             cartridgeRoot,
-                                            eventFile.getPath()
+                                            eventFile
                                     )
                             );
                         }

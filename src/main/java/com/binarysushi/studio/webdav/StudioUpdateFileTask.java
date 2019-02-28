@@ -12,6 +12,7 @@ import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
@@ -29,101 +30,119 @@ import java.util.Date;
 
 public class StudioUpdateFileTask extends Task.Backgroundable {
     private final Logger LOG = Logger.getInstance(StudioUpdateFileTask.class);
-    private final CloseableHttpClient httpClient;
-    private final HttpClientContext context;
-    private final ArrayList<String> remoteDirPaths;
-    private final String remoteFilePath;
-    private final String localFilePath;
-    private final Project project;
+    private final CloseableHttpClient myHttpClient;
+    private final HttpClientContext myHttpContext;
+    private final ArrayList<String> myRemoteDirPaths;
+    private final String myRemoteFilePath;
+    private final String myLocalFilePath;
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss");
+    private final ConsoleView myConsoleView;
+    private final VirtualFile myEventFile;
 
     StudioUpdateFileTask(Project project,
                          final String title,
                          final boolean canBeCancelled,
                          final PerformInBackgroundOption backgroundOption,
                          String sourceRootPath,
-                         String localFilePath) {
+                         VirtualFile eventFile) {
         super(project, title, canBeCancelled, backgroundOption);
         StudioServerConnection serverConnection = ServiceManager.getService(project, StudioServerConnection.class);
-        this.project = project;
-        this.localFilePath = localFilePath;
-        this.httpClient = serverConnection.getClient();
-        this.context = serverConnection.getContext();
-        this.remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath, localFilePath);
-        this.remoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath, localFilePath);
+        myConsoleView = ServiceManager.getService(myProject, StudioConsoleService.class).getConsoleView();
+        myEventFile = eventFile;
+        myLocalFilePath = eventFile.getPath();
+        myHttpClient = serverConnection.getClient();
+        myHttpContext = serverConnection.getContext();
+        myRemoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath, myLocalFilePath);
+        myRemoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath, myLocalFilePath);
     }
 
     @Override
     public void run(@NotNull ProgressIndicator indicator) {
-        boolean isNewRemoteFile = true;
-        ConsoleView consoleView = ServiceManager.getService(project, StudioConsoleService.class).getConsoleView();
+        File localFile = new File(myLocalFilePath);
+        FileStatus fileStatus;
         indicator.setFraction(.33);
 
-        HttpUriRequest getRequest = RequestBuilder.create("HEAD").setUri(remoteFilePath).build();
-        try (CloseableHttpResponse response = httpClient.execute(getRequest, context)) {
-            if (response.getStatusLine().getStatusCode() == 200) {
-                isNewRemoteFile = false;
+        if (testRemoteFileExistence() == 200) {
+            if (myEventFile.exists()) {
+                fileStatus = FileStatus.UPDATED;
+            } else {
+                fileStatus = FileStatus.DELETED;
             }
-
-            if (response.getStatusLine().getStatusCode() == 401) {
-                Notifications.Bus.notify(new Notification("Salesforce", "Unauthorized Request",
-                        "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
-                Notifications.Bus.notify(new Notification("Salesforce", "Unauthorized Request",
-                        getRequest.getURI().toString(), NotificationType.INFORMATION));
-
-                return;
-            }
-        } catch (UnknownHostException e) {
-            Notifications.Bus.notify(new Notification("Salesforce", "Unknown Host",
-                    "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
-            return;
-        } catch (IOException e) {
-            e.printStackTrace();
+        } else {
+            fileStatus = FileStatus.NEW;
         }
 
         indicator.setFraction(.5);
 
-        // Create Remote Directories if file is a new local or remote file
-        if (isNewRemoteFile) {
-            for (String path : remoteDirPaths) {
-                HttpUriRequest mkcolRequest = RequestBuilder.create("MKCOL").setUri(path + "/").build();
-
-                try (CloseableHttpResponse response = httpClient.execute(mkcolRequest, context)) {
-                    if (response.getStatusLine().getStatusCode() == 201) {
-                        Date now = new Date();
-                        consoleView.print("[" + timeFormat.format(now) + "] " + "Created " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+        switch (fileStatus) {
+            case NEW:
+                createRemoteDirectories();
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus);
+                break;
+            case UPDATED:
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus);
+                break;
+            case DELETED:
+                doHttpRequest(RequestBuilder.create("DELETE").setUri(myRemoteFilePath).build(), fileStatus);
+                break;
         }
 
-        indicator.setFraction(.80);
+        indicator.setFraction(1);
+    }
 
-        File localFile = new File(localFilePath);
+    private int testRemoteFileExistence() {
+        HttpUriRequest getRequest = RequestBuilder.create("HEAD").setUri(myRemoteFilePath).build();
+        try (CloseableHttpResponse response = myHttpClient.execute(getRequest, myHttpContext)) {
+            return response.getStatusLine().getStatusCode();
+        } catch (UnknownHostException e) {
+            Notifications.Bus.notify(new Notification("Salesforce", "Unknown Host",
+                    "Please check your server configuration in the project settings panel.", NotificationType.INFORMATION));
+            return -1;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
 
-        // TODO this ensures local file still exists in situations like changing branches, but perhaps this should actually delete the remote files
-        if (localFile.exists()) {
-            // Put remote file
-            HttpUriRequest request = RequestBuilder.create("PUT")
-                    .setUri(remoteFilePath)
-                    .setEntity(new FileEntity(localFile))
-                    .build();
+    private void createRemoteDirectories() {
+        for (String path : myRemoteDirPaths) {
+            HttpUriRequest mkcolRequest = RequestBuilder.create("MKCOL").setUri(path + "/").build();
 
-            try (CloseableHttpResponse response = httpClient.execute(request, context)) {
-                if (isNewRemoteFile) {
+            try (CloseableHttpResponse response = myHttpClient.execute(mkcolRequest, myHttpContext)) {
+                if (response.getStatusLine().getStatusCode() == 201) {
                     Date now = new Date();
-                    consoleView.print("[" + timeFormat.format(now) + "] " + "Created " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
-                } else {
-                    Date now = new Date();
-                    consoleView.print("[" + timeFormat.format(now) + "] " + "Updated " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                    myConsoleView.print("[" + timeFormat.format(now) + "] " + "Created " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
                 }
             } catch (IOException e) {
-                LOG.error(e);
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void doHttpRequest(HttpUriRequest request, FileStatus fileStatus) {
+        try (CloseableHttpResponse ignored = myHttpClient.execute(request, myHttpContext)) {
+            Date now = new Date();
+            String message = "";
+            switch (fileStatus) {
+                case NEW:
+                    message = "Created";
+                    break;
+                case DELETED:
+                    message = "Deleted";
+                    break;
+                case UPDATED:
+                    message = "Updated";
+                    break;
             }
 
-            indicator.setFraction(1);
+            myConsoleView.print("[" + timeFormat.format(now) + "] " + message + " " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+        } catch (IOException e) {
+            // TODO add some messaging here for the user that something went wrong.
+            LOG.error(e);
         }
+    }
+
+    private enum FileStatus {
+        NEW, UPDATED, DELETED
     }
 }

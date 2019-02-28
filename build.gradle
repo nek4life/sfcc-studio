@@ -33,5 +33,6 @@ patchPluginXml {
       New Features<br/><br/>
       <em>Compatibility with 2019.1 IDE releases</em>
       <em>Static mapping of form.xsd for form field auto completion</em><br/>           
+      <em>Now deletes files properly from the server with also fixed deleted files issue</em><br/>                
       """
 }
