@@ -87,13 +87,13 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
         switch (fileStatus) {
             case NEW:
                 createRemoteDirectories();
-                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile);
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile, "Created");
                 break;
             case UPDATED:
-                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile);
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile, "Updated");
                 break;
             case DELETED:
-                doHttpRequest(RequestBuilder.create("DELETE").setUri(myRemoteFilePath).build(), fileStatus, localFile);
+                doHttpRequest(RequestBuilder.create("DELETE").setUri(myRemoteFilePath).build(), fileStatus, localFile, "Deleted");
                 break;
         }
 
@@ -131,7 +131,7 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
             try (CloseableHttpResponse response = myHttpClient.execute(mkcolRequest, myHttpContext)) {
                 if (response.getStatusLine().getStatusCode() == 201) {
                     Date now = new Date();
-                    myConsoleView.print("[" + timeFormat.format(now) + "] " + "Created " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                    myConsoleView.print("[" + timeFormat.format(now) + "] " + "[Created] " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -139,26 +139,13 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
         }
     }
 
-    private void doHttpRequest(HttpUriRequest request, FileStatus fileStatus, File localFile) {
+    private void doHttpRequest(HttpUriRequest request, FileStatus fileStatus, File localFile, String message) {
         try (CloseableHttpResponse ignored = myHttpClient.execute(request, myHttpContext)) {
             Date now = new Date();
-            String message = "";
-            switch (fileStatus) {
-                case NEW:
-                    message = "Created";
-                    break;
-                case DELETED:
-                    message = "Deleted";
-                    break;
-                case UPDATED:
-                    message = "Updated";
-                    break;
-            }
 
             // TODO: update to add local file to console output.
             //  This message could get really long. Might make more sense to create a remote and local sync log.
-
-            myConsoleView.print("[" + timeFormat.format(now) + "] " + message + " " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+            myConsoleView.print("[" + timeFormat.format(now) + "] " + "[" + message + "] " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
         } catch (IOException e) {
             // TODO add some messaging here for the user that something went wrong.
             LOG.error(e);
