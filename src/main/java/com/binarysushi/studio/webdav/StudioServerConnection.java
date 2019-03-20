@@ -27,27 +27,18 @@ import java.util.ArrayList;
 
 public class StudioServerConnection {
     private final StudioConfigurationProvider myConfigurationProvider;
-    private final CloseableHttpClient client;
-    private final HttpClientContext context;
+    private final PoolingHttpClientConnectionManager myConnectionManager;
 
     public StudioServerConnection(StudioConfigurationProvider configurationProvider) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
         myConfigurationProvider = configurationProvider;
-
         // SSLContextFactory to allow all hosts. Without this an SSLException is thrown with self signed certs
         SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(null, (arg0, arg1) -> true).build();
         SSLConnectionSocketFactory socketFactory = new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE);
         Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder.<ConnectionSocketFactory>create().register("https", socketFactory).build();
 
-        PoolingHttpClientConnectionManager connectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
-        connectionManager.setMaxTotal(3);
-        connectionManager.setDefaultMaxPerRoute(2);
-
-        client = HttpClients.custom()
-                .setConnectionManager(connectionManager)
-                .build();
-
-        context = new HttpClientContext();
-        context.setCredentialsProvider(getCredentials());
+        myConnectionManager = new PoolingHttpClientConnectionManager(socketFactoryRegistry);
+        myConnectionManager.setMaxTotal(3);
+        myConnectionManager.setDefaultMaxPerRoute(2);
     }
 
     public String getBaseServerPath() {
@@ -83,10 +74,13 @@ public class StudioServerConnection {
     }
 
     public CloseableHttpClient getClient() {
-        return client;
+        return HttpClients.custom().setConnectionManager(myConnectionManager).build();
     }
 
     public HttpClientContext getContext() {
+        final HttpClientContext context;
+        context = new HttpClientContext();
+        context.setCredentialsProvider(getCredentials());
         return context;
     }
 
