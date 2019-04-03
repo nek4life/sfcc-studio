@@ -1,13 +1,19 @@
 package com.binarysushi.studio.webdav;
 
+import com.binarysushi.studio.configuration.StudioServerConfigurable;
 import com.binarysushi.studio.toolWindow.StudioConsoleService;
 import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.notification.Notification;
+import com.intellij.notification.NotificationAction;
 import com.intellij.notification.NotificationType;
 import com.intellij.notification.Notifications;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.actionSystem.PlatformDataKeys;
 import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.options.ShowSettingsUtil;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
 import com.intellij.openapi.progress.ProgressIndicator;
 import com.intellij.openapi.progress.Task;
@@ -102,21 +108,39 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
 
     private int testRemoteFileExistence() {
         HttpUriRequest getRequest = RequestBuilder.create("HEAD").setUri(myRemoteFilePath).build();
+
+        // action to the server configurations
+        NotificationAction notificationAction = new NotificationAction("Configuration") {
+            @Override
+            public void actionPerformed(@NotNull AnActionEvent anActionEvent,
+                                        @NotNull Notification notification) {
+                DataContext dataContext = anActionEvent.getDataContext();
+                Project project = PlatformDataKeys.PROJECT.getData(dataContext);
+                ShowSettingsUtil.getInstance().showSettingsDialog(project, StudioServerConfigurable.class);
+            }
+        };
         try (CloseableHttpResponse response = myHttpClient.execute(getRequest, myHttpContext)) {
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode == 401) {
-                Notifications.Bus.notify(new Notification("Salesforce",
+                Notification notification = new Notification(
+                        "Salesforce",
                         "Unauthorized Request",
-                        "Please check your server configuration in the project settings panel. (File | Settings | Tools | Commerce Cloud Server)",
-                        NotificationType.ERROR));
+                        "Please check your server configurations.",
+                        NotificationType.ERROR);
+                notification.addAction(notificationAction);
+
+                Notifications.Bus.notify(notification);
             }
             return statusCode;
         } catch (UnknownHostException e) {
-            Notifications.Bus.notify(new Notification(
+            Notification notification = new Notification(
                     "Salesforce",
                     "Unknown Host",
-                    "Please check your server configuration in the project settings panel. (File | Settings | Tools | Commerce Cloud Server)",
-                    NotificationType.ERROR));
+                    "Please check your server configurations.",
+                    NotificationType.ERROR);
+            notification.addAction(notificationAction);
+
+            Notifications.Bus.notify(notification);
             return -1;
         } catch (IOException e) {
             e.printStackTrace();
