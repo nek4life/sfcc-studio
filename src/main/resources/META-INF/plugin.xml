@@ -69,6 +69,24 @@
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxBMAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxBMAction"
+                text="Open Sandbox BM" description="Open Sandbox BM">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxLogsAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxLogsAction"
+                text="Open Sandbox Logs" description="Open Sandbox Logs">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxImpexAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxImpexAction"
+                text="Open Sandbox Impex" description="Open Sandbox Impex">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
         <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseXChangeAction" class="com.binarysushi.studio.browseActions.StudioBrowseXChangeAction"
                 text="Browse XChange" description="Browse XChange">
 
