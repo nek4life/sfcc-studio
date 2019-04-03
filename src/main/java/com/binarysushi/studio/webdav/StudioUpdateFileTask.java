@@ -87,10 +87,10 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
         switch (fileStatus) {
             case NEW:
                 createRemoteDirectories();
-                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile, "Created");
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile, "Created file");
                 break;
             case UPDATED:
-                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile, "Updated");
+                doHttpRequest(RequestBuilder.create("PUT").setUri(myRemoteFilePath).setEntity(new FileEntity(localFile)).build(), fileStatus, localFile, "Updated file");
                 break;
             case DELETED:
                 doHttpRequest(RequestBuilder.create("DELETE").setUri(myRemoteFilePath).build(), fileStatus, localFile, "Deleted");
@@ -131,7 +131,7 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
             try (CloseableHttpResponse response = myHttpClient.execute(mkcolRequest, myHttpContext)) {
                 if (response.getStatusLine().getStatusCode() == 201) {
                     Date now = new Date();
-                    myConsoleView.print("[" + timeFormat.format(now) + "] " + "[Created] " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+                    myConsoleView.print("[" + timeFormat.format(now) + "] " + "[Created folder] " + mkcolRequest.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -145,7 +145,7 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
 
             // TODO: update to add local file to console output.
             //  This message could get really long. Might make more sense to create a remote and local sync log.
-            myConsoleView.print("[" + timeFormat.format(now) + "] " + "[" + message + "] " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
+            myConsoleView.print("[" + timeFormat.format(now) + "] " + "[" + message + " (" + localFile.getName() + ")] " + request.getURI().toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT);
         } catch (IOException e) {
             // TODO add some messaging here for the user that something went wrong.
             LOG.error(e);
