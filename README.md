@@ -20,3 +20,16 @@
  development documentation. 
  
  http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system.html
+ 
+ ### Plugin configurations
+ File | Settings | Tools | Commerce Cloud Cartridges
+
+ ![Commerce Cloud Cartridges](_img/Commerce_Cloud_Cartridges.png)
+
+ File | Settings | Tools | Commerce Cloud Server
+
+ ![Commerce Cloud Server](_img/Commerce_Cloud_Server.png)
+ 
+ 
+ ## Plugin on the JetBrains site
+ https://plugins.jetbrains.com/plugin/11590-salesforce-commerce-cloud-studio
