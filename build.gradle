@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.binarysushi'
-version '1.3.0'
+version '1.4.0'
 
 sourceCompatibility = 1.8
 
@@ -31,8 +31,9 @@ intellij {
 patchPluginXml {
     changeNotes """
       New Features<br/><br/>
-      <em>Compatibility with 2019.1 IDE releases</em>
-      <em>Static mapping of form.xsd for form field auto completion</em><br/>           
-      <em>Now deletes files properly from the server with also fixed deleted files issue</em><br/>                
+      <em>Updated plugin to work with 2019.2</em><br/>
+      <em>Added new actions to sandbox features, logs, webdav, etc...</em><br/>
+      <em>Updated console logs to contain local file path</em><br/>           
+      <em>Added configuration link when there is a hostname error</em><br/>                
       """
 }
