@@ -66,7 +66,9 @@ public class StudioCleanTask extends Task.Backgroundable {
 
             for (String cartridgeRoot : CartridgeRoots) {
                 File dir = new File(cartridgeRoot);
-                FileUtil.copyDir(dir, Paths.get(versionDir.toString(), dir.getName()).toFile());
+                if (dir.exists()) {
+                    FileUtil.copyDir(dir, Paths.get(versionDir.toString(), dir.getName()).toFile());
+                }
             }
 
             ZipUtil.addDirToZipRecursively(zipOutputStream, null, versionDir, version, null, null);
