@@ -1,39 +1,47 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.5'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'org.jetbrains.intellij' version '0.4.10'
 }
 
 group 'com.binarysushi'
-version '1.4.1'
+version '1.5.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+        resources {
+            srcDirs 'resources'
+        }
+    }
+    test {
+        java {
+            srcDirs 'test'
+        }
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+intellij {
+    version "IU-193-EAP-SNAPSHOT"
+    plugins = ["JavaScriptLanguage"]
+}
+
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "com.konghq:unirest-java:2.1.01"
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-intellij {
-    version "IU-192-EAP-SNAPSHOT"
-    plugins = ["JavaScriptLanguage"]
-}
 patchPluginXml {
     changeNotes """
       New Features<br/><br/>
-      <em>Updated plugin to work with 2019.2</em><br/>
-      <em>Added new actions to sandbox features, logs, webdav, etc...</em><br/>
-      <em>Updated console logs to contain local file path</em><br/>           
-      <em>Added configuration link when there is a hostname error</em><br/>                
+      <em>Fix for missing cartridges that are present in configuration that have been deleted</em><br/>                       
       """
 }

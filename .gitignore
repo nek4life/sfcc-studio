@@ -12,6 +12,7 @@
 .idea/**/dictionaries
 .idea/**/shelf
 .idea/**/vagrant.xml
+.idea/**/jarRepositories.xml
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

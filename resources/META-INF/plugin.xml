@@ -1,0 +1,116 @@
+<idea-plugin>
+    <id>com.binarysushi.sfcc-studio</id>
+    <name>Salesforce Commerce Cloud Studio</name>
+    <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
+
+    <description><![CDATA[
+        Tools for developing Salesforce Commerce Cloud websites.
+    ]]></description>
+
+    <depends>JavaScript</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends>com.intellij.modules.platform</depends>
+
+    <idea-version since-build="183"/>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>
+
+        <!-- Project Extensions -->
+        <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
+        <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
+        <projectService serviceImplementation="com.binarysushi.studio.webdav.StudioServerConnection"/>
+        <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable"/>
+        <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable"/>
+
+        <!-- Module Extensions -->
+        <moduleType id="SFCC_STUDIO_MODULE" implementationClass="com.binarysushi.studio.projectWizard.StudioModuleType"/>
+        <moduleBuilder builderClass="com.binarysushi.studio.projectWizard.StudioModuleBuilder"/>
+
+        <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
+
+        <!-- ISML Extensions-->
+        <fileTypeFactory implementation="com.binarysushi.studio.language.isml.ISMLLanguageTypeFactory"/>
+        <xml.tagNameProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
+        <xml.elementDescriptorProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
+        <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.language.isml.ISMLTemplatesProvider"/>
+        <multiHostInjector implementation="com.binarysushi.studio.language.isml.ISMLScriptInjector" />
+        <completion.contributor language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor"/>
+        <codeInsight.lineMarkerProvider language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.ISMLLineMarkerProvider"/>
+        <typedHandler implementation="com.binarysushi.studio.language.isml.ISMLTypedHandlerDelegate"/>
+
+        <!-- DS Extensions-->
+        <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
+
+        <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
+        <!-- Static Schema Registration -->
+        <standardResource url="http://www.demandware.com/xml/form/2008-04-19" path="schemas/form.xsd"/>
+
+<!--        <programRunner id="ScriptDebugRunner" implementation="com.binarysushi.studio.debugger.ScripDebuggerRunner"-->
+<!--                       order="last"/>-->
+    </extensions>
+
+    <application-components>
+        <!-- Add your application components here -->
+        <component>
+            <implementation-class>com.binarysushi.studio.webdav.StudioBulkFileListener</implementation-class>
+        </component>
+        <component>
+            <implementation-class>com.binarysushi.studio.language.ds.DSFileTypeAssociator</implementation-class>
+        </component>
+    </application-components>
+
+    <actions>
+        <group id="SFCCActionGroup" text="Commerce Cloud" popup="true" icon="/icons/salesforce.png">
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="last" />
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <add-to-group group-id="ToolsMenu" anchor="last"/>
+        </group>
+
+        <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
+                text="Clean Cartridges" description="Clean Cartridges" icon="/icons/cartridge.png">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxBMAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxBMAction"
+                text="Open Sandbox BM" description="Open Sandbox BM">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxLogsAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxLogsAction"
+                text="Open Sandbox Logs" description="Open Sandbox Logs">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxImpexAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxImpexAction"
+                text="Open Sandbox Impex" description="Open Sandbox Impex">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseXChangeAction" class="com.binarysushi.studio.browseActions.StudioBrowseXChangeAction"
+                text="Browse XChange" description="Browse XChange">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseDocumentationAction" class="com.binarysushi.studio.browseActions.StudioBrowseDocumentationAction"
+                text="Browse Documentation" description="Browse Documentation">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action class="com.binarysushi.studio.templates.StudioCreateISMLFileAction" id="StudioCreateISMLFile">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </action>
+
+        <action class="com.binarysushi.studio.templates.StudioCreateDSFileAction" id="StudioCreateDSFile">
+            <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
+        </action>
+    </actions>
+
+
+</idea-plugin>
