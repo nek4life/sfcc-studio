@@ -42,12 +42,13 @@
         <!-- DS Extensions-->
         <iconProvider implementation="com.binarysushi.studio.language.ds.DSIconProvider" />
 
-        <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
         <!-- Static Schema Registration -->
         <standardResource url="http://www.demandware.com/xml/form/2008-04-19" path="schemas/form.xsd"/>
 
-<!--        <programRunner id="ScriptDebugRunner" implementation="com.binarysushi.studio.debugger.ScripDebuggerRunner"-->
-<!--                       order="last"/>-->
+        <!-- Debugger -->
+        <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
+        <programRunner id="StudioScriptDebuggerRunner" implementation="com.binarysushi.studio.debugger.StudioScriptDebuggerRunner" order="last"/>
+        <xdebugger.breakpointType implementation="com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointType"/>
     </extensions>
 
     <application-components>
@@ -68,25 +69,25 @@
         </group>
 
         <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
-                text="Clean Cartridges" description="Clean Cartridges" icon="/icons/cartridge.png">
+                text="Clean Cartridges" description="Clean cartridges" icon="/icons/cartridge.png">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
         <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxBMAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxBMAction"
-                text="Open Sandbox BM" description="Open Sandbox BM">
+                text="Open Sandbox BM" description="Open sandbox BM">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
         <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxLogsAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxLogsAction"
-                text="Open Sandbox Logs" description="Open Sandbox Logs">
+                text="Open Sandbox Logs" description="Open sandbox logs">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
         <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxImpexAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxImpexAction"
-                text="Open Sandbox Impex" description="Open Sandbox Impex">
+                text="Open Sandbox Impex" description="Open sandbox impex">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
@@ -98,7 +99,7 @@
         </action>
 
         <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseDocumentationAction" class="com.binarysushi.studio.browseActions.StudioBrowseDocumentationAction"
-                text="Browse Documentation" description="Browse Documentation">
+                text="Browse Documentation" description="Browse documentation">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>

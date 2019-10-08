@@ -1,5 +1,6 @@
 package com.binarysushi.studio.debugger.client;
 
+import com.binarysushi.studio.debugger.client.model.Breakpoint;
 import kong.unirest.HttpResponse;
 import kong.unirest.JsonNode;
 import kong.unirest.Unirest;
@@ -21,6 +22,12 @@ public class SDAPIClient {
 
     public HttpResponse<JsonNode> createSession() {
         return Unirest.post(baseURL + "/client").asJson();
+    }
+
+    public HttpResponse<JsonNode> createBreakpoint() {
+        Breakpoint breakpoint = new Breakpoint();
+
+        return Unirest.post("$baseUrl/breakpoints").body(breakpoint).asJson();
     }
 
     public HttpResponse<JsonNode> deleteSession() {

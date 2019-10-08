@@ -16,6 +16,4 @@ public class StudioDebuggerConfigurationFactory extends ConfigurationFactory {
     public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
         return new StudioDebuggerRunConfiguration(project, this, "StudioDebugger");
     }
-
-
 }
