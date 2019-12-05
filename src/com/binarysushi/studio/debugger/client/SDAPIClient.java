@@ -27,7 +27,7 @@ public class SDAPIClient {
     public HttpResponse<JsonNode> createBreakpoint() {
         Breakpoint breakpoint = new Breakpoint();
 
-        return Unirest.post("$baseUrl/breakpoints").body(breakpoint).asJson();
+        return Unirest.post(baseURL + "/breakpoints").body(breakpoint).asJson();
     }
 
     public HttpResponse<JsonNode> deleteSession() {
