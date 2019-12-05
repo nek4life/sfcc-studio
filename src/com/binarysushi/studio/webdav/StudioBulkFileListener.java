@@ -1,7 +1,6 @@
 package com.binarysushi.studio.webdav;
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.progress.PerformInBackgroundOption;
@@ -9,7 +8,6 @@ import com.intellij.openapi.progress.ProgressManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.openapi.vfs.VirtualFileManager;
 import com.intellij.openapi.vfs.newvfs.BulkFileListener;
 import com.intellij.openapi.vfs.newvfs.events.VFileEvent;
 import com.intellij.util.messages.MessageBusConnection;
@@ -17,18 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class StudioBulkFileListener implements BulkFileListener, Disposable {
+public class StudioBulkFileListener implements BulkFileListener {
     private MessageBusConnection connection;
     private static Logger LOG = Logger.getInstance(StudioBulkFileListener.class);
 
     public StudioBulkFileListener() {
         connection = ApplicationManager.getApplication().getMessageBus().connect();
-        connection.subscribe(VirtualFileManager.VFS_CHANGES, this);
-    }
-
-    @Override
-    public void dispose() {
-        connection.disconnect();
     }
 
     @NotNull

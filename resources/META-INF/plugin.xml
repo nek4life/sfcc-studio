@@ -11,7 +11,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
-    <idea-version since-build="183"/>
+    <idea-version since-build="193"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>
@@ -49,17 +49,12 @@
         <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
         <programRunner id="StudioScriptDebuggerRunner" implementation="com.binarysushi.studio.debugger.StudioScriptDebuggerRunner" order="last"/>
         <xdebugger.breakpointType implementation="com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointType"/>
+        <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>
     </extensions>
 
-    <application-components>
-        <!-- Add your application components here -->
-        <component>
-            <implementation-class>com.binarysushi.studio.webdav.StudioBulkFileListener</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.binarysushi.studio.language.ds.DSFileTypeAssociator</implementation-class>
-        </component>
-    </application-components>
+    <applicationListeners>
+        <listener class="com.binarysushi.studio.webdav.StudioBulkFileListener" topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+    </applicationListeners>
 
     <actions>
         <group id="SFCCActionGroup" text="Commerce Cloud" popup="true" icon="/icons/salesforce.png">

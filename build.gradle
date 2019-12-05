@@ -37,7 +37,7 @@ intellij {
 dependencies {
     compile "com.konghq:unirest-java:3.1.00"
     compile "com.konghq:unirest-objectmapper-jackson:3.1.00"
-    testCompile group: 'junit', name: 'junit', version: '‎5.5.2'
+    testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
 }
 
 patchPluginXml {

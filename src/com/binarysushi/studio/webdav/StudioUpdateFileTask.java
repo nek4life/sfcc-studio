@@ -66,6 +66,7 @@ public class StudioUpdateFileTask extends Task.Backgroundable {
     public void run(@NotNull ProgressIndicator indicator) {
         File localFile = new File(myLocalFilePath);
         FileStatus fileStatus;
+        indicator.setIndeterminate(false);
         indicator.setFraction(.33);
 
         int statusCode = testRemoteFileExistence();
