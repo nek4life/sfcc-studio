@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.binarysushi'
-version '1.4.1'
+version '1.4.2'
 
 sourceCompatibility = 1.8
 
@@ -25,15 +25,12 @@ compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
 intellij {
-    version "IU-192-EAP-SNAPSHOT"
+    version "IU-2019.3"
     plugins = ["JavaScriptLanguage"]
 }
 patchPluginXml {
     changeNotes """
       New Features<br/><br/>
-      <em>Updated plugin to work with 2019.2</em><br/>
-      <em>Added new actions to sandbox features, logs, webdav, etc...</em><br/>
-      <em>Updated console logs to contain local file path</em><br/>           
-      <em>Added configuration link when there is a hostname error</em><br/>                
+      <em>Updated plugin to work with 2019.3</em><br/>            
       """
 }
