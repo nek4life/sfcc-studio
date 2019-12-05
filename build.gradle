@@ -1,36 +1,48 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.5'
-    id 'org.jetbrains.kotlin.jvm' version '1.3.31'
+    id 'org.jetbrains.intellij' version '0.4.10'
 }
-
+gi
 group 'com.binarysushi'
-version '1.4.2'
+version '1.5.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceSets {
+    main {
+        java {
+            srcDirs 'src'
+        }
+        resources {
+            srcDirs 'resources'
+        }
+    }
+    test {
+        java {
+            srcDirs 'test'
+        }
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
-dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
-compileKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
-compileTestKotlin {
-    kotlinOptions.jvmTarget = "1.8"
-}
 intellij {
     version "IU-2019.3"
     plugins = ["JavaScriptLanguage"]
 }
+
+dependencies {
+    compile "com.konghq:unirest-java:3.1.00"
+    compile "com.konghq:unirest-objectmapper-jackson:3.1.00"
+    testCompile group: 'junit', name: 'junit', version: '‎5.5.2'
+}
+
 patchPluginXml {
     changeNotes """
       New Features<br/><br/>
-      <em>Updated plugin to work with 2019.3</em><br/>            
+      <em>Fix for missing cartridges that are present in configuration that have been deleted</em><br/>                       
       """
 }
