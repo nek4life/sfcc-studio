@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.binarysushi'
-version '1.5.0-SNAPSHOT'
+version '1.6.0-SNAPSHOT'
 
 sourceSets {
     main {
@@ -30,7 +30,7 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 intellij {
-    version "IU-2019.3"
+    version "IU-201-EAP-SNAPSHOT"
     plugins = ["JavaScriptLanguage"]
 }
 
@@ -43,6 +43,6 @@ dependencies {
 patchPluginXml {
     changeNotes """
       New Features<br/><br/>
-      <em>Fix for missing cartridges that are present in configuration that have been deleted</em><br/>                       
+      <em>2020.1 Compatibility Build</em><br/>                       
       """
 }
