@@ -1,6 +1,17 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.61"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.jetbrains.intellij' version '0.4.16'
+    id "org.jetbrains.kotlin.jvm" version "1.3.61"
+
 }
 
 group 'com.binarysushi'
@@ -28,15 +39,22 @@ repositories {
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
 
 intellij {
+    updateSinceUntilBuild = false
     version "IU-201-EAP-SNAPSHOT"
     plugins = ["JavaScriptLanguage"]
 }
 
 dependencies {
-    compile "com.konghq:unirest-java:3.1.00"
-    compile "com.konghq:unirest-objectmapper-jackson:3.1.00"
+    implementation("com.konghq:unirest-java:3.1.00")
+    implementation("com.konghq:unirest-objectmapper-jackson:3.1.00")
+    implementation("com.squareup.okhttp3:okhttp:4.3.1")
     testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
 }
 
@@ -46,3 +64,5 @@ patchPluginXml {
       <em>2020.1 Compatibility Build</em><br/>                       
       """
 }
+
+
