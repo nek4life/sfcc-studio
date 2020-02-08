@@ -19,7 +19,7 @@
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
         <projectService serviceImplementation="com.binarysushi.studio.webdav.StudioServerConnection"/>
-<!--        <projectService serviceImplementation="com.binarysushi.studio.webdav.StudioWebDavClient"/>-->
+        <projectService serviceImplementation="com.binarysushi.studio.webdav.StudioWebDavClient"/>
         <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
 
         <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable"/>
@@ -32,7 +32,7 @@
         <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
 
         <!-- ISML Extensions-->
-        <fileType name="ISML file" implementationClass="com.binarysushi.studio.language.isml.ISMLFileType" fieldName="INSTANCE"
+        <fileType name="ISML" implementationClass="com.binarysushi.studio.language.isml.ISMLFileType" fieldName="INSTANCE"
                   language="HTML" extensions="isml"/>
         <xml.tagNameProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
         <xml.elementDescriptorProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
