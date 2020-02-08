@@ -36,7 +36,7 @@
                   language="HTML" extensions="isml"/>
         <xml.tagNameProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
         <xml.elementDescriptorProvider implementation="com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptorsProvider"/>
-        <defaultLiveTemplatesProvider implementation="com.binarysushi.studio.language.isml.ISMLTemplatesProvider"/>
+        <defaultLiveTemplates file="liveTemplates/isml"/>
         <multiHostInjector implementation="com.binarysushi.studio.language.isml.ISMLScriptInjector" />
         <completion.contributor language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor"/>
         <codeInsight.lineMarkerProvider language="HTML" implementationClass="com.binarysushi.studio.language.isml.codeInsight.ISMLLineMarkerProvider"/>
