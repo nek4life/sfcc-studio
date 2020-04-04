@@ -19,6 +19,6 @@ class StudioDebuggerBreakpointHandler(private val project: Project, private val 
     }
 
     override fun unregisterBreakpoint(breakpoint: XLineBreakpoint<XBreakpointProperties<*>?>, temporary: Boolean) {
-        client.deleteBreakpoint(breakpoint);
+        client.deleteBreakpoint(breakpoint)
     }
 }

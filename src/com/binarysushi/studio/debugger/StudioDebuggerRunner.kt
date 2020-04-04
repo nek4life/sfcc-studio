@@ -27,7 +27,7 @@ class StudioDebuggerRunner : GenericProgramRunner<RunnerSettings>() {
         return XDebuggerManager.getInstance(environment.project)
             .startSession(environment, object : XDebugProcessStarter() {
                 override fun start(session: XDebugSession): XDebugProcess {
-                    FileDocumentManager.getInstance().saveAllDocuments();
+                    FileDocumentManager.getInstance().saveAllDocuments()
                     val debuggerClient = session.project.service<SDAPIClient>()
                     debuggerClient.createSession()
                     return StudioDebuggerProcess(session)
