@@ -13,6 +13,12 @@ public class StudioDebuggerConfigurationFactory extends ConfigurationFactory {
 
     @NotNull
     @Override
+    public String getId() {
+        return "StudioDebugger";
+    }
+
+    @NotNull
+    @Override
     public RunConfiguration createTemplateConfiguration(@NotNull Project project) {
         return new StudioDebuggerRunConfiguration(project, this, "StudioDebugger");
     }

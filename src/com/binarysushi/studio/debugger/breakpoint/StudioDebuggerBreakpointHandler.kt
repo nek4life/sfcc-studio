@@ -15,14 +15,14 @@ class StudioDebuggerBreakpointHandler(private val project: Project) :
     val client = project.service<SDAPIClient>()
 
     override fun registerBreakpoint(breakpoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
-        val relativeFilePath = breakpoint.presentableFilePath
-            .substring(Paths.get(project.basePath.toString(), "cartridges").toString().length)
-        client.createBreakpoint(breakpoint.line, relativeFilePath)
+//        val relativeFilePath = breakpoint.presentableFilePath
+//            .substring(Paths.get(project.basePath.toString(), "cartridges").toString().length)
+//        client.createBreakpoint(breakpoint.line, relativeFilePath)
     }
 
     override fun unregisterBreakpoint(breakpoint: XLineBreakpoint<XBreakpointProperties<*>?>, temporary: Boolean) {
-        val relativeFilePath = breakpoint.presentableFilePath
-            .substring(Paths.get(project.basePath.toString(), "cartridges").toString().length)
-        client.deleteBreakpoint(1, relativeFilePath);
+//        val relativeFilePath = breakpoint.presentableFilePath
+//            .substring(Paths.get(project.basePath.toString(), "cartridges").toString().length)
+//        client.deleteBreakpoint(1, relativeFilePath);
     }
 }

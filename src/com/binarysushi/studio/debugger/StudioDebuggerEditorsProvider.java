@@ -1,4 +1,4 @@
-package com.binarysushi.studio.debugger.breakpoint;
+package com.binarysushi.studio.debugger;
 
 import com.intellij.lang.javascript.JavaScriptFileType;
 import com.intellij.openapi.fileTypes.FileType;
@@ -11,5 +11,4 @@ public class StudioDebuggerEditorsProvider extends XDebuggerEditorsProvider {
     public FileType getFileType() {
         return JavaScriptFileType.INSTANCE;
     }
-
 }

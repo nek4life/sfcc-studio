@@ -19,6 +19,7 @@
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
         <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
+        <projectService serviceImplementation="com.binarysushi.studio.debugger.client.SDAPIClient"/>
 
         <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable"/>
         <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable"/>
@@ -47,9 +48,9 @@
         <standardResource url="http://www.demandware.com/xml/form/2008-04-19" path="schemas/form.xsd"/>
 
         <!-- Debugger -->
-<!--        <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>-->
-<!--        <programRunner id="StudioScriptDebuggerRunner" implementation="com.binarysushi.studio.debugger.StudioScriptDebuggerRunner" order="last"/>-->
-<!--        <xdebugger.breakpointType implementation="com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointType"/>-->
+        <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
+        <programRunner implementation="com.binarysushi.studio.debugger.StudioDebuggerRunner" />
+        <xdebugger.breakpointType implementation="com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointType"/>
 
         <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>
     </extensions>
