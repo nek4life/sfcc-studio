@@ -11,7 +11,6 @@ class StudioDebuggerBreakpointHandler(private val project: Project, private val 
     XBreakpointHandler<XLineBreakpoint<XBreakpointProperties<*>?>>(
         StudioDebuggerBreakpointType::class.java
     ) {
-
     private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
 
     override fun registerBreakpoint(breakpoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
