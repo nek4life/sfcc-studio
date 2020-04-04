@@ -6,6 +6,7 @@ import com.binarysushi.studio.webdav.StudioServerAuthenticator
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import com.intellij.util.proxy.CommonProxy
+import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import okhttp3.*
@@ -17,6 +18,7 @@ import java.nio.file.Paths
 class SDAPIClient(private val project: Project) {
     private val config = project.service<StudioConfigurationProvider>()
     private val baseURL = "https://${config.hostname}/s/-/dw/debugger/v2_0"
+    @UnstableDefault
     private val json = Json(JsonConfiguration(encodeDefaults = false))
     private var activeBreakpoints = mutableMapOf<String, Int>()
 
@@ -99,7 +101,7 @@ class SDAPIClient(private val project: Project) {
     }
 
     fun deleteBreakpoint(lineNumber: Int, scriptPath: String) {
-        val id = activeBreakpoints["${getRelativeScriptPath(scriptPath)}:${lineNumber}"]
+        val id = activeBreakpoints["${scriptPath}:${lineNumber}"]
         val request = Request.Builder()
             .url("$baseURL/breakpoints/${id}")
             .delete()

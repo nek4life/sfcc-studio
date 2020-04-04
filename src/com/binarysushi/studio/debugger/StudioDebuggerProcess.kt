@@ -12,11 +12,10 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 
 class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
     private val debuggerClient = session.project.service<SDAPIClient>()
-    private val breakpointHandler = StudioDebuggerBreakpointHandler(session.project)
+    private val breakpointHandler = StudioDebuggerBreakpointHandler(session.project, debuggerClient)
 
     override fun sessionInitialized() {
         session.reportMessage("Debug session started", MessageType.INFO)
-
     }
 
     override fun getEditorsProvider(): XDebuggerEditorsProvider {

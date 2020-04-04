@@ -19,7 +19,11 @@ plugins {
 }
 
 group 'com.binarysushi'
+<<<<<<< HEAD
 version '1.6.4'
+=======
+version '1.7.0'
+>>>>>>> a864d95... Removed the default run configuration so the run configuration is debug only
 
 sourceSets {
     main {
