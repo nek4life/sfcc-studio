@@ -1,0 +1,16 @@
+POST {{host}}/client
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+x-dw-client-id: SFCCDebugger
+###
+
+GET {{host}}/threads
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+x-dw-client-id: SFCCDebugger
+###
+
+POST {{host}}/threads/reset
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+x-dw-client-id: SFCCDebugger
