@@ -1,4 +1,5 @@
 package com.binarysushi.studio.debugger.client
+
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -57,21 +58,25 @@ data class ObjectMembers(
     val total: Int
 )
 
+
+@Serializable
+data class ScriptThreadsResponse(
+    @SerialName("_v") val version: String,
+    @SerialName("script_threads")
+    val scriptThreads: List<ScriptThread>? = null
+)
+
 @Serializable
 data class ScriptThread(
-    @SerialName("stack_frame") val stackFrame: StackFrame,
+    @SerialName("call_stack") val callStack: List<StackFrame>,
     val id: Int,
     val status: String
 )
 
 @Serializable
-data class ScriptThreads(
-    @SerialName("script_threads") val scriptThreads: ScriptThread
-)
-
-@Serializable
 data class StackFrame(
-    val index: Int, val location: Location
+    val index: Int,
+    val location: Location
 )
 
 

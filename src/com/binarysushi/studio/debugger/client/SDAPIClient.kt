@@ -17,16 +17,17 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.nio.file.Paths
+import kotlin.concurrent.thread
 
 class SDAPIClient(private val project: Project) {
     private val config = project.service<StudioConfigurationProvider>()
     private val baseURL = "https://${config.hostname}/s/-/dw/debugger/v2_0"
-    val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
+    private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
 
     @UnstableDefault
     private val json = Json(JsonConfiguration(encodeDefaults = false))
 
-    val client = OkHttpClient.Builder()
+    private val client = OkHttpClient.Builder()
         .proxySelector(CommonProxy.getInstance())
         .authenticator(StudioServerAuthenticator(config.username, config.password))
         .addInterceptor(Interceptor.invoke { chain ->
@@ -38,10 +39,6 @@ class SDAPIClient(private val project: Project) {
             chain.proceed(request)
         })
         .build()
-
-    private fun getRelativeScriptPath(filePath: String): String {
-        return filePath.substring(Paths.get(project.basePath.toString(), "cartridges").toString().length)
-    }
 
     fun createSession() {
         val request = Request.Builder()
@@ -71,6 +68,57 @@ class SDAPIClient(private val project: Project) {
 
             override fun onResponse(call: Call, response: Response) {
 
+            }
+        })
+    }
+
+    fun listen() {
+        thread(start = true) {
+            var loop = true
+            while (loop) {
+                try {
+                    getThreads()
+                    resetThreads()
+                    Thread.sleep(10000)
+                } catch (e: Exception) {
+                    loop = false;
+                }
+            }
+        }
+    }
+
+    fun getThreads() {
+        val request = Request.Builder()
+            .url("$baseURL/threads")
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body!!.string()
+                val scriptThreads = json.parse(ScriptThreadsResponse.serializer(), body)
+                val version = scriptThreads.version
+                val callStack = scriptThreads!!.scriptThreads
+            }
+        });
+    }
+
+    fun resetThreads() {
+        val request = Request.Builder()
+            .url("$baseURL/threads/reset")
+            .post("".toRequestBody("application/json".toMediaType()))
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                TODO("Not yet implemented")
             }
         })
     }

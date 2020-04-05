@@ -16,6 +16,8 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
 
     override fun sessionInitialized() {
         session.reportMessage("Debug session started", MessageType.INFO)
+//         Trying to figure out how to poll for threads.
+//         debuggerClient.listen()
     }
 
     override fun getEditorsProvider(): XDebuggerEditorsProvider {
