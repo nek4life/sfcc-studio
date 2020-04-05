@@ -5,7 +5,10 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.binarysushi.studio.webdav.StudioServerAuthenticator
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.Key
 import com.intellij.util.proxy.CommonProxy
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
@@ -18,9 +21,10 @@ import java.nio.file.Paths
 class SDAPIClient(private val project: Project) {
     private val config = project.service<StudioConfigurationProvider>()
     private val baseURL = "https://${config.hostname}/s/-/dw/debugger/v2_0"
+    val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
+
     @UnstableDefault
     private val json = Json(JsonConfiguration(encodeDefaults = false))
-    private var activeBreakpoints = mutableMapOf<String, Int>()
 
     val client = OkHttpClient.Builder()
         .proxySelector(CommonProxy.getInstance())
@@ -66,16 +70,18 @@ class SDAPIClient(private val project: Project) {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                activeBreakpoints = mutableMapOf()
+
             }
         })
     }
 
-    fun createBreakpoint(lineNumber: Int, scriptPath: String) {
+    fun createBreakpoint(xBreakPoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
         val breakpoint = Breakpoint(
-            lineNumber = lineNumber,
-            scriptPath = scriptPath)
-
+            lineNumber = xBreakPoint.line,
+            scriptPath = xBreakPoint.presentableFilePath.substring(
+                Paths.get(project.basePath.toString(), "cartridges").toString().length
+            )
+        )
 
         val breakpoints = Breakpoints(listOf(breakpoint))
         val jsonList = json.stringify(Breakpoints.serializer(), breakpoints)
@@ -85,7 +91,7 @@ class SDAPIClient(private val project: Project) {
             .post(jsonList.toRequestBody("application/json".toMediaType()))
             .build()
 
-        client.newCall(request).enqueue(object: Callback {
+        client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
             }
@@ -93,28 +99,25 @@ class SDAPIClient(private val project: Project) {
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
                 val jsonResponse = json.parse(BreakpointsResponse.serializer(), body)
-                for (bp in jsonResponse.breakpoints) {
-                    activeBreakpoints["${bp.scriptPath}:${bp.lineNumber}"] = bp.id!!
-                }
+                xBreakPoint.putUserData(idKey, jsonResponse.breakpoints[0].id!!)
             }
         })
     }
 
-    fun deleteBreakpoint(lineNumber: Int, scriptPath: String) {
-        val id = activeBreakpoints["${scriptPath}:${lineNumber}"]
+    fun deleteBreakpoint(xBreakPoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
         val request = Request.Builder()
-            .url("$baseURL/breakpoints/${id}")
+            .url("$baseURL/breakpoints/${xBreakPoint.getUserData(idKey)}")
             .delete()
             .build()
 
-      client.newCall(request).enqueue(object: Callback {
-          override fun onFailure(call: Call, e: IOException) {
-              e.printStackTrace()
-          }
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                e.printStackTrace()
+            }
 
-          override fun onResponse(call: Call, response: Response) {
-              print(response.body!!.string())
-          }
-      })
+            override fun onResponse(call: Call, response: Response) {
+                print(response.body!!.string())
+            }
+        })
     }
 }
