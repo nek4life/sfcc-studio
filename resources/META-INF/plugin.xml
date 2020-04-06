@@ -67,31 +67,49 @@
         </group>
 
         <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
-                text="Clean Cartridges" description="Clean cartridges" icon="/icons/cartridge.png">
+                text="Clean Cartridges"
+                description="Clean cartridges"
+                icon="/icons/cartridge.png">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
-        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxBMAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxBMAction"
-                text="Open Sandbox BM" description="Open sandbox BM">
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxBMAction"
+                class="com.binarysushi.studio.browseActions.StudioBrowseSandboxBMAction"
+                text="Open Sandbox BM"
+                description="Open sandbox BM">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
-        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxLogsAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxLogsAction"
-                text="Open Sandbox Logs" description="Open sandbox logs">
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxLogsAction"
+                class="com.binarysushi.studio.browseActions.StudioBrowseSandboxLogsAction"
+                text="Open Sandbox Logs"
+                description="Open sandbox logs">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
-        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxImpexAction" class="com.binarysushi.studio.browseActions.StudioBrowseSandboxImpexAction"
-                text="Open Sandbox Impex" description="Open sandbox impex">
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxImpexAction"
+                class="com.binarysushi.studio.browseActions.StudioBrowseSandboxImpexAction"
+                text="Open Sandbox Impex"
+                description="Open sandbox impex">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
-        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseXChangeAction" class="com.binarysushi.studio.browseActions.StudioBrowseXChangeAction"
-                text="Browse XChange" description="Browse XChange">
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseXChangeAction"
+                class="com.binarysushi.studio.browseActions.StudioBrowseXChangeAction"
+                text="Browse XChange"
+                description="Browse XChange">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseDeveloperCenterAction"
+                class="com.binarysushi.studio.browseActions.StudioBrowseDeveloperCenterAction"
+                text="Browse Developer Center"
+                description="Developer center">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
@@ -110,6 +128,4 @@
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
         </action>
     </actions>
-
-
 </idea-plugin>
