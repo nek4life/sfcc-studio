@@ -4,6 +4,7 @@ import com.intellij.openapi.fileChooser.FileChooser;
 import com.intellij.openapi.fileChooser.FileChooserDescriptor;
 import com.intellij.openapi.fileChooser.FileChooserDescriptorFactory;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.LocalFileSystem;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.ui.AddDeleteListPanel;
 import org.jetbrains.annotations.Nullable;
@@ -29,12 +30,13 @@ public class StudioCartridgeAddEditDeleteListPanel extends AddDeleteListPanel {
     @Override
     protected Object findItemToAdd() {
         final FileChooserDescriptor folderChooserDescriptor = FileChooserDescriptorFactory.createMultipleFoldersDescriptor();
+        final VirtualFile basePath = LocalFileSystem.getInstance().findFileByPath(myProject.getBasePath());
         folderChooserDescriptor.setTitle("Choose Cartridge Paths");
-        folderChooserDescriptor.setRoots(myProject.getBaseDir());
+        folderChooserDescriptor.setRoots(basePath);
         folderChooserDescriptor.withTreeRootVisible(true);
         folderChooserDescriptor.setShowFileSystemRoots(false);
         folderChooserDescriptor.setHideIgnored(true);
-        VirtualFile[] chosen = FileChooser.chooseFiles(folderChooserDescriptor, myProject, myProject.getBaseDir());
+        VirtualFile[] chosen = FileChooser.chooseFiles(folderChooserDescriptor, myProject, basePath);
 
         for (VirtualFile virtualFile : chosen) {
             ArrayList existingPaths = new ArrayList<>(Arrays.asList(this.getListItems()));
