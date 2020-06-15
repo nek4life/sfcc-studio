@@ -39,7 +39,7 @@ class StudioCleanTask internal constructor(
     override fun run(indicator: ProgressIndicator) {
         val configurationProvider = project.service<StudioConfigurationProvider>()
         val consoleView = project.service<StudioConsoleService>().consoleView
-        val serverConnection = project.service<StudioServerConnection>()
+        val serverConnection = StudioServerConnection(configurationProvider);
 
         val cartridgeRoots = configurationProvider.cartridgeRoots
 
