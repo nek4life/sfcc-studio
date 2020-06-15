@@ -1,5 +1,6 @@
 package com.binarysushi.studio.webdav
 
+import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
 import com.binarysushi.studio.toolWindow.StudioConsoleService
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.service
@@ -24,7 +25,8 @@ class StudioUpdateFileTask(
     sourceRootPath: String,
     private val eventFile: VirtualFile
 ) : Backgroundable(project, title, canBeCancelled, backgroundOption) {
-    private val serverConnection = project.service<StudioServerConnection>()
+    private val configurationProvider = project.service<StudioConfigurationProvider>();
+    private val serverConnection = StudioServerConnection(configurationProvider);
     private val consoleView = project.service<StudioConsoleService>().consoleView
     private val remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath,  eventFile.path)
     private val remoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath,  eventFile.path)
