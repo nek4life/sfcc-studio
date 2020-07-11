@@ -4,6 +4,12 @@ Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
+GET {{host}}/breakpoints
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+x-dw-client-id: SFCCDebugger
+###
+
 GET {{host}}/threads
 Authorization: Basic {{username}} {{password}}
 Accept: application/json

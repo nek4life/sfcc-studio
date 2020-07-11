@@ -19,7 +19,6 @@
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
         <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
-        <projectService serviceImplementation="com.binarysushi.studio.debugger.client.SDAPIClient"/>
 
         <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable"/>
         <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable"/>

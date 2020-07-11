@@ -1,38 +1,47 @@
 package com.binarysushi.studio.debugger.client
 
 
-import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
 import com.binarysushi.studio.webdav.StudioServerAuthenticator
-import com.intellij.openapi.components.service
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.Key
 import com.intellij.util.proxy.CommonProxy
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
+import kotlinx.serialization.serializerByTypeToken
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
-import java.nio.file.Paths
-import kotlin.concurrent.thread
+import java.lang.reflect.Type
 
-class SDAPIClient(private val project: Project) {
-    private val config = project.service<StudioConfigurationProvider>()
-    private val baseURL = "https://${config.hostname}/s/-/dw/debugger/v2_0"
+
+@UnstableDefault
+private val json = Json(JsonConfiguration(encodeDefaults = false))
+
+@OptIn(UnstableDefault::class)
+class JSONCallback(val type: Type, val then: (Any) -> Unit) : Callback {
+    override fun onFailure(call: Call, e: IOException) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onResponse(call: Call, response: Response) {
+        val body = response.body!!.string()
+        then(json.parse(serializerByTypeToken(type), body))
+    }
+}
+
+class SDAPIClient(private val hostname: String, private val username: String, private val password: String) {
+    private val baseURL = "https://${hostname}/s/-/dw/debugger/v2_0"
+    private val CLIENT_ID = "SFCCDebugger"
     private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
 
-    @UnstableDefault
-    private val json = Json(JsonConfiguration(encodeDefaults = false))
 
     private val client = OkHttpClient.Builder()
         .proxySelector(CommonProxy.getInstance())
-        .authenticator(StudioServerAuthenticator(config.username, config.password))
+        .authenticator(StudioServerAuthenticator(username, password))
         .addInterceptor(Interceptor.invoke { chain ->
             val request = chain.request().newBuilder()
-                .header("x-dw-client-id", "SFCCDebugger")
+                .header("x-dw-client-id", CLIENT_ID)
                 .header("Content-Type", "application/json")
                 .build()
 
@@ -40,7 +49,8 @@ class SDAPIClient(private val project: Project) {
         })
         .build()
 
-    fun createSession() {
+
+    fun createSession(then: ((Response)) -> Unit) {
         val request = Request.Builder()
             .url("$baseURL/client")
             .post("".toRequestBody())
@@ -48,11 +58,14 @@ class SDAPIClient(private val project: Project) {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
+                println("Sheeeeeeit")
+                println(call)
             }
 
-            override fun onResponse(call: Call, response: Response) {}
-        })
+            override fun onResponse(call: Call, response: Response) {
+                then(response)
+            }
+        });
     }
 
     fun deleteSession() {
@@ -72,22 +85,8 @@ class SDAPIClient(private val project: Project) {
         })
     }
 
-    fun listen() {
-        thread(start = true) {
-            var loop = true
-            while (loop) {
-                try {
-                    getThreads()
-                    resetThreads()
-                    Thread.sleep(10000)
-                } catch (e: Exception) {
-                    loop = false;
-                }
-            }
-        }
-    }
 
-    fun getThreads() {
+    fun getThreads(then: (List<ScriptThread>) -> Unit) {
         val request = Request.Builder()
             .url("$baseURL/threads")
             .build()
@@ -99,11 +98,10 @@ class SDAPIClient(private val project: Project) {
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
-                val scriptThreads = json.parse(ScriptThreadsResponse.serializer(), body)
-                val version = scriptThreads.version
-                val callStack = scriptThreads!!.scriptThreads
+                val jsonBody = json.parse(ScriptThreadsResponse.serializer(), body)
+                jsonBody.scriptThreads?.let { then(it) }
             }
-        });
+        })
     }
 
     fun resetThreads() {
@@ -123,12 +121,10 @@ class SDAPIClient(private val project: Project) {
         })
     }
 
-    fun createBreakpoint(xBreakPoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
+    fun createBreakpoint(lineNumber: Int, scriptPath: String, onSuccess: (Breakpoint) -> Unit = {}, onFailure: (Call) -> Unit = {}) {
         val breakpoint = Breakpoint(
-            lineNumber = xBreakPoint.line,
-            scriptPath = xBreakPoint.presentableFilePath.substring(
-                Paths.get(project.basePath.toString(), "cartridges").toString().length
-            )
+            lineNumber = lineNumber,
+            scriptPath = scriptPath
         )
 
         val breakpoints = Breakpoints(listOf(breakpoint))
@@ -141,20 +137,20 @@ class SDAPIClient(private val project: Project) {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
+                onFailure(call)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
                 val jsonResponse = json.parse(BreakpointsResponse.serializer(), body)
-                xBreakPoint.putUserData(idKey, jsonResponse.breakpoints[0].id!!)
+                onSuccess(jsonResponse.breakpoints[0])
             }
         })
     }
 
-    fun deleteBreakpoint(xBreakPoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
+    fun deleteBreakpoint(breakpointId: Int, onSuccess: (Any) -> Unit = {}, onFailure: (Any) -> Unit = {}) {
         val request = Request.Builder()
-            .url("$baseURL/breakpoints/${xBreakPoint.getUserData(idKey)}")
+            .url("$baseURL/breakpoints/${breakpointId}")
             .delete()
             .build()
 
@@ -164,7 +160,7 @@ class SDAPIClient(private val project: Project) {
             }
 
             override fun onResponse(call: Call, response: Response) {
-                print(response.body!!.string())
+                onSuccess(response.body!!.string())
             }
         })
     }
