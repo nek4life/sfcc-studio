@@ -42,6 +42,15 @@ data class Location(
 )
 
 @Serializable
+data class ObjectMemberResponse(
+ @SerialName("_v") val version: String,
+ @SerialName("object_members") val objectMembers: List<ObjectMember>,
+ val count: Int,
+ val start: Int,
+ val total: Int
+)
+
+@Serializable
 data class ObjectMember(
     val name: String,
     val parent: String,
@@ -51,24 +60,19 @@ data class ObjectMember(
 )
 
 @Serializable
-data class ObjectMembers(
-    val count: Int,
-    @SerialName("object_members") val objectMembers: ObjectMember,
-    val start: Int,
-    val total: Int
-)
-
-
-@Serializable
 data class ScriptThreadsResponse(
-    @SerialName("_v") val version: String,
+    @SerialName("_v")
+    val version: String,
+
     @SerialName("script_threads")
-    val scriptThreads: List<ScriptThread>? = null
+    val scriptThreads: List<ScriptThread>? = listOf()
 )
 
 @Serializable
 data class ScriptThread(
-    @SerialName("call_stack") val callStack: List<StackFrame>,
+    @SerialName("call_stack")
+    val callStack: List<StackFrame>,
+
     val id: Int,
     val status: String
 )

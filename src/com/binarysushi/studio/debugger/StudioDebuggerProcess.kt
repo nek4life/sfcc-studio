@@ -2,9 +2,8 @@ package com.binarysushi.studio.debugger
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
 import com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointHandler
-import com.binarysushi.studio.debugger.client.DebuggerConnectionState
 import com.binarysushi.studio.debugger.client.SDAPIClient
-import com.binarysushi.studio.debugger.client.SDAPIDebugger
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Key
@@ -19,7 +18,7 @@ import java.nio.file.Paths
 
 class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
     private val config = session.project.service<StudioConfigurationProvider>()
-    private val debuggerClient = SDAPIClient(config.hostname, config.username, config.password)
+    val debuggerClient = SDAPIClient(config.hostname, config.username, config.password)
     private val breakpointHandler = StudioDebuggerBreakpointHandler(this)
     private val debugger = SDAPIDebugger(session, this)
     private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
@@ -52,6 +51,7 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
         if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
             debuggerClient.createBreakpoint(line, path, onSuccess = { breakpoint ->
                 xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
+                session.updateBreakpointPresentation(xLineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null)
             })
         } else {
             awaitingBreakpoints.add(xLineBreakpoint)

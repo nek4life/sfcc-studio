@@ -2,7 +2,6 @@ package com.binarysushi.studio.debugger.client
 
 
 import com.binarysushi.studio.webdav.StudioServerAuthenticator
-import com.intellij.openapi.util.Key
 import com.intellij.util.proxy.CommonProxy
 import kotlinx.serialization.UnstableDefault
 import kotlinx.serialization.json.Json
@@ -33,7 +32,6 @@ class JSONCallback(val type: Type, val then: (Any) -> Unit) : Callback {
 class SDAPIClient(private val hostname: String, private val username: String, private val password: String) {
     private val baseURL = "https://${hostname}/s/-/dw/debugger/v2_0"
     private val CLIENT_ID = "SFCCDebugger"
-    private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
 
 
     private val client = OkHttpClient.Builder()
@@ -58,7 +56,6 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                println("Sheeeeeeit")
                 println(call)
             }
 
@@ -86,20 +83,22 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
     }
 
 
-    fun getThreads(then: (List<ScriptThread>) -> Unit) {
+    fun getThreads(onSuccess: (List<ScriptThread>?) -> Unit = {}, onFailure: (Any) -> Unit = {}) {
         val request = Request.Builder()
             .url("$baseURL/threads")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
+                onFailure(call)
             }
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
                 val jsonBody = json.parse(ScriptThreadsResponse.serializer(), body)
-                jsonBody.scriptThreads?.let { then(it) }
+                if (jsonBody.scriptThreads != null) {
+                    onSuccess(jsonBody.scriptThreads)
+                }
             }
         })
     }
@@ -112,16 +111,19 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
+                println(e.message)
             }
 
-            override fun onResponse(call: Call, response: Response) {
-                TODO("Not yet implemented")
-            }
+            override fun onResponse(call: Call, response: Response) {}
         })
     }
 
-    fun createBreakpoint(lineNumber: Int, scriptPath: String, onSuccess: (Breakpoint) -> Unit = {}, onFailure: (Call) -> Unit = {}) {
+    fun createBreakpoint(
+        lineNumber: Int,
+        scriptPath: String,
+        onSuccess: (Breakpoint) -> Unit = {},
+        onFailure: (Call) -> Unit = {}
+    ) {
         val breakpoint = Breakpoint(
             lineNumber = lineNumber,
             scriptPath = scriptPath
@@ -161,6 +163,65 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 onSuccess(response.body!!.string())
+            }
+        })
+    }
+
+    fun getMembers(
+        threadId: Int,
+        frameIndex: Int,
+        objectPath: String? = null,
+        start: Int? = 0,
+        count: Int? = 100,
+        onSuccess: (ObjectMemberResponse) -> Unit = {},
+        onFailure: (Call) -> Unit = {}
+    ) {
+        var url = "$baseURL/threads/${threadId}/frames/${frameIndex}/members?start=${start}&count=${count}"
+
+        if (objectPath != null) {
+            url = "${url}&object_path=${objectPath}"
+        }
+
+        val request = Request.Builder()
+            .url(url)
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onFailure(call)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body!!.string()
+                val jsonResponse = json.parse(ObjectMemberResponse.serializer(), body)
+                onSuccess(jsonResponse)
+            }
+        })
+    }
+
+    fun getVariables(
+        threadId: Int,
+        frameIndex: Int,
+        start: Int? = 0,
+        count: Int? = 100,
+        onSuccess: (ObjectMemberResponse) -> Unit = {},
+        onFailure: (Call) -> Unit = {}
+    ) {
+        val request = Request.Builder()
+            .url("$baseURL/threads/${threadId}/frames/${frameIndex}/variables?start=${start}&count=${count}")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onFailure(call)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val body = response.body!!.string()
+                val jsonResponse = json.parse(ObjectMemberResponse.serializer(), body)
+                onSuccess(jsonResponse)
             }
         })
     }

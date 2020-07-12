@@ -4,7 +4,7 @@
     <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
 
     <description><![CDATA[
-        Tools for developing Salesforce Commerce Cloud websites.
+        The original plugin for developing Salesforce B2C Commerce (Salesforce Commerce Cloud, SFCC, and formerly Demandware) sites.
     ]]></description>
 
     <depends>JavaScript</depends>
