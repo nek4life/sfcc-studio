@@ -81,8 +81,20 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     private tailrec fun threadResetLoop() {
         if (connectionState === DebuggerConnectionState.CONNECTED) {
             debuggerClient.resetThreads()
-            Thread.sleep(25000)
+            Thread.sleep(29000)
             threadResetLoop()
+        }
+    }
+
+    private fun suspendDebugger(thread: ScriptThread) {
+        ApplicationManager.getApplication().runReadAction {
+            val suspendContext = StudioDebuggerSuspendContext(process, thread)
+            val breakpoint = findBreakpoint(thread.callStack[0].location.scriptPath, thread.callStack[0].location.lineNumber)
+            if (breakpoint != null) {
+                session.breakpointReached(breakpoint, null, suspendContext)
+            } else {
+                session.positionReached(suspendContext)
+            }
         }
     }
 
@@ -92,23 +104,10 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                 if (threads != null) {
                     for (thread in threads) {
                         if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
-                            val suspendContext = StudioDebuggerSuspendContext(process, thread)
-                            val breakpoint = findBreakpoint(thread.callStack[0].location.scriptPath)
-                            if (breakpoint != null) {
-                                session.breakpointReached(breakpoint, null, suspendContext)
-                            } else {
-                                session.positionReached(suspendContext)
-                            }
-
+                            suspendDebugger(thread)
                             currentThreads[thread.id] = thread
                         } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
-                            val suspendContext = StudioDebuggerSuspendContext(process, thread)
-                            val breakpoint = findBreakpoint(thread.callStack[0].location.scriptPath)
-                            if (breakpoint != null) {
-                                session.breakpointReached(breakpoint, null, suspendContext)
-                            } else {
-                                session.positionReached(suspendContext)
-                            }
+                            suspendDebugger(thread)
                             currentThreads[thread.id] = thread;
                             this.pendingThreads.remove(thread.id);
                         }
@@ -133,7 +132,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         debuggerClient.resume(scriptThread.id)
     }
 
-    private fun findBreakpoint(scriptPath: String): XLineBreakpoint<out XBreakpointProperties<Any>>? {
+    private fun findBreakpoint(scriptPath: String, lineNumber: Int): XLineBreakpoint<out XBreakpointProperties<Any>>? {
         val manager = XDebuggerManager.getInstance(session.project).breakpointManager
         val type: XLineBreakpointType<*>? = XDebuggerUtil.getInstance().findBreakpointType(
             StudioDebuggerBreakpointType::class.java
@@ -142,7 +141,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         if (type != null) {
             val breakpoints = manager.getBreakpoints(type)
             for (breakpoint in breakpoints) {
-                if (breakpoint.fileUrl.contains(scriptPath)) {
+                if (breakpoint.fileUrl.contains(scriptPath) && breakpoint.line == lineNumber - 1) {
                     return breakpoint
                 }
             }

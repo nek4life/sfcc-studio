@@ -234,11 +234,11 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                TODO("Not yet implemented")
+                println("resume failed")
             }
 
             override fun onResponse(call: Call, response: Response) {
-                TODO("Not yet implemented")
+                response.body!!.close()
             }
 
         })

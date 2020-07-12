@@ -52,6 +52,7 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
         if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
             debuggerClient.createBreakpoint(line + 1, path, onSuccess = { breakpoint ->
                 xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
+                session.setBreakpointVerified(xLineBreakpoint)
                 session.updateBreakpointPresentation(xLineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null)
             })
         } else {

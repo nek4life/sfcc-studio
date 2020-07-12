@@ -20,7 +20,7 @@ class StudioDebuggerStackFrame(
         val basePath = process.session.project.basePath
         val filePath = "${basePath}/cartridges${stackFrame.location.scriptPath}"
         val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(Paths.get(filePath).normalize())
-        return XDebuggerUtil.getInstance().createPosition(virtualFile, stackFrame.location.lineNumber);
+        return XDebuggerUtil.getInstance().createPosition(virtualFile, stackFrame.location.lineNumber - 1);
     }
 
     override fun computeChildren(node: XCompositeNode) {
