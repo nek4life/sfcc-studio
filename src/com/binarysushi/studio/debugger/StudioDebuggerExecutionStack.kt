@@ -4,12 +4,13 @@ import com.binarysushi.studio.debugger.client.ScriptThread
 import com.intellij.xdebugger.frame.XExecutionStack
 import com.intellij.xdebugger.frame.XStackFrame
 
-class StudioDebuggerExecutionStack(private val process: StudioDebuggerProcess, private val thread: ScriptThread) : XExecutionStack(thread.id.toString()) {
+class StudioDebuggerExecutionStack(private val process: StudioDebuggerProcess, val scriptThread: ScriptThread) :
+    XExecutionStack(scriptThread.id.toString()) {
     val stackFrames: MutableList<StudioDebuggerStackFrame> = mutableListOf();
 
     init {
-        for (call in thread.callStack) {
-            stackFrames.add(StudioDebuggerStackFrame(process, thread, call))
+        for (call in scriptThread.callStack) {
+            stackFrames.add(StudioDebuggerStackFrame(process, scriptThread, call))
         }
     }
 

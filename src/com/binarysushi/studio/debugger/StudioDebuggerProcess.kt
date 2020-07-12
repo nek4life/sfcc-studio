@@ -14,6 +14,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpointHandler
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
+import com.intellij.xdebugger.frame.XSuspendContext
 import java.nio.file.Paths
 
 class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
@@ -49,7 +50,7 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
         )
 
         if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
-            debuggerClient.createBreakpoint(line, path, onSuccess = { breakpoint ->
+            debuggerClient.createBreakpoint(line + 1, path, onSuccess = { breakpoint ->
                 xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
                 session.updateBreakpointPresentation(xLineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null)
             })
@@ -68,4 +69,10 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
         }
     }
 
+    override fun resume(context: XSuspendContext?) {
+        if (context != null) {
+            val activeExecutionStack = context.activeExecutionStack as StudioDebuggerExecutionStack
+            debugger.resume(activeExecutionStack.scriptThread)
+        }
+    }
 }

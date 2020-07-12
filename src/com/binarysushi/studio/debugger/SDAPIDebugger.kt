@@ -93,16 +93,22 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                     for (thread in threads) {
                         if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
                             val suspendContext = StudioDebuggerSuspendContext(process, thread)
-                            session.positionReached(suspendContext)
                             val breakpoint = findBreakpoint(thread.callStack[0].location.scriptPath)
                             if (breakpoint != null) {
                                 session.breakpointReached(breakpoint, null, suspendContext)
+                            } else {
+                                session.positionReached(suspendContext)
                             }
 
                             currentThreads[thread.id] = thread
                         } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
                             val suspendContext = StudioDebuggerSuspendContext(process, thread)
-                            session.positionReached(suspendContext)
+                            val breakpoint = findBreakpoint(thread.callStack[0].location.scriptPath)
+                            if (breakpoint != null) {
+                                session.breakpointReached(breakpoint, null, suspendContext)
+                            } else {
+                                session.positionReached(suspendContext)
+                            }
                             currentThreads[thread.id] = thread;
                             this.pendingThreads.remove(thread.id);
                         }
@@ -122,6 +128,11 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         }
     }
 
+    fun resume(scriptThread: ScriptThread) {
+        this.pendingThreads[scriptThread.id] = scriptThread
+        debuggerClient.resume(scriptThread.id)
+    }
+
     private fun findBreakpoint(scriptPath: String): XLineBreakpoint<out XBreakpointProperties<Any>>? {
         val manager = XDebuggerManager.getInstance(session.project).breakpointManager
         val type: XLineBreakpointType<*>? = XDebuggerUtil.getInstance().findBreakpointType(
@@ -138,6 +149,8 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         }
         return null
     }
+
+
 }
 
 enum class DebuggerConnectionState {
