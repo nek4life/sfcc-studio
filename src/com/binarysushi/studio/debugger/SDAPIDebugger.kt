@@ -27,8 +27,17 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     var currentThreads = HashMap<Int, ScriptThread>()
     var pendingThreads = HashMap<Int, ScriptThread>()
 
+
+    private companion object {
+        const val THREAD_RESET_TIMEOUT = 29000L
+        const val THREAD_TIMEOUT = 3000L
+    }
+
+
     public fun connect(awaitingBreakpoints: MutableList<XLineBreakpoint<JavaScriptLineBreakpointProperties>>) {
         ApplicationManager.getApplication().executeOnPooledThread {
+            // TODO add retry here
+            // TODO investigate the need to kill existing client before creating a new one
             debuggerClient.createSession() { response ->
                 if (response.isSuccessful) {
                     connectionState = DebuggerConnectionState.CONNECTED;
@@ -75,6 +84,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         try {
             threadResetLoop()
         } catch (exception: Exception) {
+            // TODO figure out if session should stop here as well if there's an error
             println(exception.message)
         }
     }
@@ -82,7 +92,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     private tailrec fun threadResetLoop() {
         if (connectionState === DebuggerConnectionState.CONNECTED) {
             debuggerClient.resetThreads()
-            Thread.sleep(29000)
+            Thread.sleep(THREAD_RESET_TIMEOUT)
             threadResetLoop()
         }
     }
@@ -123,7 +133,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                 }
             })
 
-            Thread.sleep(3000)
+            Thread.sleep(THREAD_TIMEOUT)
             threadLoop()
         }
     }
@@ -149,8 +159,6 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         }
         return null
     }
-
-
 }
 
 enum class DebuggerConnectionState {
