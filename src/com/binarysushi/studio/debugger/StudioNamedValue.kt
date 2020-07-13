@@ -16,10 +16,26 @@ class StudioNamedValue(
 ) : XNamedValue(member.name) {
 
     override fun computePresentation(node: XValueNode, place: XValuePlace) {
+        // TODO Figure out which values have children
+        // TODO Update presentation based on value type
+        var hasChildren = false
+
+        if (member.value.toLowerCase().contains("[object")) {
+            hasChildren = true
+        }
+
+        if (member.value.toLowerCase().contains("[javaclass")) {
+            hasChildren = true
+        }
+
+        if (member.value.toLowerCase().contains("[map")) {
+            hasChildren = true
+        }
+
         node.setPresentation(
             AllIcons.Debugger.Value,
             XStringValuePresentation(member.value),
-            member.value == "[object Object]"
+            hasChildren
         )
     }
 
