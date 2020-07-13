@@ -4,11 +4,11 @@ import com.binarysushi.studio.debugger.client.ScriptThread
 import com.intellij.xdebugger.frame.XExecutionStack
 import com.intellij.xdebugger.frame.XSuspendContext
 
-class StudioDebuggerSuspendContext(private val process: StudioDebuggerProcess, private val thread: ScriptThread) : XSuspendContext() {
-    private var activeExecutionStack: StudioDebuggerExecutionStack? = null;
+class StudioSuspendContext(private val process: StudioDebugProcess, private val thread: ScriptThread) : XSuspendContext() {
+    private var activeExecutionStack: StudioExecutionStack? = null;
 
     init {
-        activeExecutionStack = StudioDebuggerExecutionStack(process, thread)
+        activeExecutionStack = StudioExecutionStack(process, thread)
     }
 
     override fun getActiveExecutionStack(): XExecutionStack? {
@@ -16,6 +16,6 @@ class StudioDebuggerSuspendContext(private val process: StudioDebuggerProcess, p
     }
 
     override fun getExecutionStacks(): Array<XExecutionStack> {
-        return Array(1) { StudioDebuggerExecutionStack(process, thread)}
+        return Array(1) { StudioExecutionStack(process, thread)}
     }
 }

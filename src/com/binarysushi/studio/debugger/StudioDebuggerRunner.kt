@@ -26,7 +26,7 @@ class StudioDebuggerRunner : GenericProgramRunner<RunnerSettings>() {
             .startSession(environment, object : XDebugProcessStarter() {
                 override fun start(session: XDebugSession): XDebugProcess {
                     FileDocumentManager.getInstance().saveAllDocuments()
-                    return StudioDebuggerProcess(session)
+                    return StudioDebugProcess(session)
                 }
             }).runContentDescriptor
     }

@@ -7,8 +7,8 @@ import com.intellij.icons.AllIcons
 import com.intellij.xdebugger.frame.*
 import com.intellij.xdebugger.frame.presentation.XStringValuePresentation
 
-class StudioDebuggerValue(
-    private val process: StudioDebuggerProcess,
+class StudioNamedValue(
+    private val process: StudioDebugProcess,
     private val thread: ScriptThread,
     private val stackFrame: StackFrame,
     private val member: ObjectMember,
@@ -38,7 +38,7 @@ class StudioDebuggerValue(
                 val children = XValueChildrenList()
 
                 for (childMember in response.objectMembers) {
-                    children.add(StudioDebuggerValue(process, thread, stackFrame, childMember, objectPath))
+                    children.add(StudioNamedValue(process, thread, stackFrame, childMember, objectPath))
                 }
 
                 node.addChildren(children, true)

@@ -15,7 +15,7 @@ import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.breakpoints.*
 
 
-class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebuggerProcess) {
+class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebugProcess) {
     private val config = session.project.service<StudioConfigurationProvider>()
     private val debuggerClient = SDAPIClient(
         config.hostname,
@@ -89,7 +89,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
     private fun suspendDebugger(thread: ScriptThread) {
         ApplicationManager.getApplication().runReadAction {
-            val suspendContext = StudioDebuggerSuspendContext(process, thread)
+            val suspendContext = StudioSuspendContext(process, thread)
             val breakpoint = findBreakpoint(thread.callStack[0].location.scriptPath, thread.callStack[0].location.lineNumber)
             if (breakpoint != null) {
                 session.breakpointReached(breakpoint, null, suspendContext)

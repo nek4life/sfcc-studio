@@ -16,7 +16,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
 import java.nio.file.Paths
 
-class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
+class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
     private val config = session.project.service<StudioConfigurationProvider>()
     val debuggerClient = SDAPIClient(config.hostname, config.username, config.password)
     private val breakpointHandler = StudioDebuggerJSLineBreakpointHandler(this)
@@ -43,7 +43,7 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
     }
 
     fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
-
+        // TODO remove hardcoded reference to cartridges folder if possible.
         val line = xLineBreakpoint.line
         val path = xLineBreakpoint.presentableFilePath.substring(
             Paths.get(session.project.basePath.toString(), "cartridges").toString().length
@@ -70,7 +70,7 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
 
     override fun resume(context: XSuspendContext?) {
         if (context != null) {
-            val activeExecutionStack = context.activeExecutionStack as StudioDebuggerExecutionStack
+            val activeExecutionStack = context.activeExecutionStack as StudioExecutionStack
             debugger.resume(activeExecutionStack.scriptThread)
         }
     }

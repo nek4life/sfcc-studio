@@ -10,8 +10,8 @@ import com.intellij.xdebugger.frame.XStackFrame
 import com.intellij.xdebugger.frame.XValueChildrenList
 import java.nio.file.Paths
 
-class StudioDebuggerStackFrame(
-    private val process: StudioDebuggerProcess,
+class StudioStackFrame(
+    private val process: StudioDebugProcess,
     private val thread: ScriptThread,
     private val stackFrame: StackFrame
 ) : XStackFrame() {
@@ -28,7 +28,7 @@ class StudioDebuggerStackFrame(
             val children = XValueChildrenList()
 
             for (member in response.objectMembers) {
-                children.add(StudioDebuggerValue(process, thread, stackFrame, member))
+                children.add(StudioNamedValue(process, thread, stackFrame, member))
             }
 
             node.addChildren(children, true)
