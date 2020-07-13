@@ -1,10 +1,11 @@
 package com.binarysushi.studio.debugger
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointType
 import com.binarysushi.studio.debugger.client.SDAPIClient
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.javascript.debugger.breakpoints.JavaScriptBreakpointType
+import com.intellij.javascript.debugger.breakpoints.JavaScriptLineBreakpointProperties
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageType
@@ -26,7 +27,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     var currentThreads = HashMap<Int, ScriptThread>()
     var pendingThreads = HashMap<Int, ScriptThread>()
 
-    public fun connect(awaitingBreakpoints: MutableList<XLineBreakpoint<XBreakpointProperties<*>?>>) {
+    public fun connect(awaitingBreakpoints: MutableList<XLineBreakpoint<JavaScriptLineBreakpointProperties>>) {
         ApplicationManager.getApplication().executeOnPooledThread {
             debuggerClient.createSession() { response ->
                 if (response.isSuccessful) {
@@ -135,7 +136,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     private fun findBreakpoint(scriptPath: String, lineNumber: Int): XLineBreakpoint<out XBreakpointProperties<Any>>? {
         val manager = XDebuggerManager.getInstance(session.project).breakpointManager
         val type: XLineBreakpointType<*>? = XDebuggerUtil.getInstance().findBreakpointType(
-            StudioDebuggerBreakpointType::class.java
+            JavaScriptBreakpointType::class.java
         )
 
         if (type != null) {

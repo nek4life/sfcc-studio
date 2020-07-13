@@ -61,18 +61,13 @@ data class ObjectMember(
 
 @Serializable
 data class ScriptThreadsResponse(
-    @SerialName("_v")
-    val version: String,
-
-    @SerialName("script_threads")
-    val scriptThreads: List<ScriptThread>? = listOf()
+    @SerialName("_v") val version: String,
+    @SerialName("script_threads") val scriptThreads: List<ScriptThread>? = listOf()
 )
 
 @Serializable
 data class ScriptThread(
-    @SerialName("call_stack")
-    val callStack: List<StackFrame>,
-
+    @SerialName("call_stack") val callStack: List<StackFrame>,
     val id: Int,
     val status: String
 )

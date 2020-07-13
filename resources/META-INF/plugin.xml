@@ -4,10 +4,12 @@
     <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
 
     <description><![CDATA[
-        The original plugin for developing Salesforce B2C Commerce (Salesforce Commerce Cloud, SFCC, and formerly Demandware) sites.
+        <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites</h1>
+        <p>SFCC Studio has features such as file debugging, code synchronization, syntax highlighting, auto complete and more...</p>
     ]]></description>
 
     <depends>JavaScript</depends>
+    <depends>JavaScriptDebugger</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
@@ -49,7 +51,6 @@
         <!-- Debugger -->
         <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
         <programRunner implementation="com.binarysushi.studio.debugger.StudioDebuggerRunner" />
-        <xdebugger.breakpointType implementation="com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointType"/>
 
         <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>
     </extensions>

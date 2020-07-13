@@ -1,18 +1,17 @@
 package com.binarysushi.studio.debugger
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.binarysushi.studio.debugger.breakpoint.StudioDebuggerBreakpointHandler
+import com.binarysushi.studio.debugger.breakpoint.StudioDebuggerJSLineBreakpointHandler
 import com.binarysushi.studio.debugger.client.SDAPIClient
 import com.intellij.icons.AllIcons
+import com.intellij.javascript.debugger.breakpoints.JavaScriptLineBreakpointProperties
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Key
 import com.intellij.util.ArrayUtil
 import com.intellij.xdebugger.XDebugProcess
 import com.intellij.xdebugger.XDebugSession
-import com.intellij.xdebugger.breakpoints.XBreakpointHandler
-import com.intellij.xdebugger.breakpoints.XBreakpointProperties
-import com.intellij.xdebugger.breakpoints.XLineBreakpoint
+import com.intellij.xdebugger.breakpoints.*
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
 import java.nio.file.Paths
@@ -20,10 +19,10 @@ import java.nio.file.Paths
 class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
     private val config = session.project.service<StudioConfigurationProvider>()
     val debuggerClient = SDAPIClient(config.hostname, config.username, config.password)
-    private val breakpointHandler = StudioDebuggerBreakpointHandler(this)
+    private val breakpointHandler = StudioDebuggerJSLineBreakpointHandler(this)
     private val debugger = SDAPIDebugger(session, this)
     private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
-    private val awaitingBreakpoints = mutableListOf<XLineBreakpoint<XBreakpointProperties<*>?>>()
+    private val awaitingBreakpoints = mutableListOf<XLineBreakpoint<JavaScriptLineBreakpointProperties>>()
 
     override fun sessionInitialized() {
         debugger.connect(awaitingBreakpoints)
@@ -43,8 +42,9 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
         return ArrayUtil.append(breakpointHandlers, breakpointHandler)
     }
 
-    fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
-        val line = xLineBreakpoint.line;
+    fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
+
+        val line = xLineBreakpoint.line
         val path = xLineBreakpoint.presentableFilePath.substring(
             Paths.get(session.project.basePath.toString(), "cartridges").toString().length
         )
@@ -60,13 +60,11 @@ class StudioDebuggerProcess(session: XDebugSession) : XDebugProcess(session) {
         }
     }
 
-    fun removeBreakpoint(xLineBreakpoint: XLineBreakpoint<XBreakpointProperties<*>?>) {
+    fun removeBreakpoint(xLineBreakpoint: XBreakpoint<JavaScriptLineBreakpointProperties>) {
         if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
             debuggerClient.deleteBreakpoint(xLineBreakpoint.getUserData(idKey)!!, onSuccess = {
                 println("Success!")
             })
-        } else {
-            awaitingBreakpoints.add(xLineBreakpoint)
         }
     }
 
