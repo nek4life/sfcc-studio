@@ -47,7 +47,7 @@ class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
         val line = xLineBreakpoint.line
         val path = xLineBreakpoint.presentableFilePath.substring(
             Paths.get(session.project.basePath.toString(), "cartridges").toString().length
-        )
+        ).replace("\\", "/")
 
         if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
             debuggerClient.createBreakpoint(line + 1, path, onSuccess = { breakpoint ->
