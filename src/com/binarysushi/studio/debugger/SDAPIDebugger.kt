@@ -4,15 +4,20 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.binarysushi.studio.debugger.client.SDAPIClient
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.icons.AllIcons
 import com.intellij.javascript.debugger.breakpoints.JavaScriptBreakpointType
 import com.intellij.javascript.debugger.breakpoints.JavaScriptLineBreakpointProperties
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageType
+import com.intellij.openapi.util.Key
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
 import com.intellij.xdebugger.XDebuggerUtil
-import com.intellij.xdebugger.breakpoints.*
+import com.intellij.xdebugger.breakpoints.XBreakpointProperties
+import com.intellij.xdebugger.breakpoints.XLineBreakpoint
+import com.intellij.xdebugger.breakpoints.XLineBreakpointType
+import java.nio.file.Paths
 
 
 class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebugProcess) {
@@ -22,19 +27,23 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         config.username,
         config.password
     )
+    private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
+    private val awaitingBreakpoints = mutableListOf<XLineBreakpoint<JavaScriptLineBreakpointProperties>>()
 
     var connectionState = DebuggerConnectionState.DISCONNECTED;
     var currentThreads = HashMap<Int, ScriptThread>()
     var pendingThreads = HashMap<Int, ScriptThread>()
-
 
     private companion object {
         const val THREAD_RESET_TIMEOUT = 29000L
         const val THREAD_TIMEOUT = 3000L
     }
 
+    fun addAwaitingBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
+        awaitingBreakpoints.add(xLineBreakpoint)
+    }
 
-    public fun connect(awaitingBreakpoints: MutableList<XLineBreakpoint<JavaScriptLineBreakpointProperties>>) {
+    fun connect() {
         ApplicationManager.getApplication().executeOnPooledThread {
             // TODO add retry here
             // TODO investigate the need to kill existing client before creating a new one
@@ -131,6 +140,13 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                         }
                     }
                 }
+            }, onError = {
+                if (it.type == "DebuggerDisabledException") {
+                    session.stop()
+                    // TODO change these to resources
+                    session.consoleView.print("The current debug session has become inactive. Please restart your debug session.\n", ConsoleViewContentType.NORMAL_OUTPUT)
+                    session.reportMessage("Please restart debug session", MessageType.ERROR)
+                }
             })
 
             Thread.sleep(THREAD_TIMEOUT)
@@ -139,8 +155,32 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     }
 
     fun resume(scriptThread: ScriptThread) {
-        this.pendingThreads[scriptThread.id] = scriptThread
+        pendingThreads[scriptThread.id] = scriptThread
         debuggerClient.resume(scriptThread.id)
+    }
+
+    fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
+        // TODO remove hardcoded reference to cartridges folder if possible.
+        val line = xLineBreakpoint.line
+        val path = xLineBreakpoint.presentableFilePath.substring(
+            Paths.get(session.project.basePath.toString(), "cartridges").toString().length
+        ).replace("\\", "/")
+
+        debuggerClient.createBreakpoint(line + 1, path, onSuccess = { breakpoint ->
+            xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
+            session.setBreakpointVerified(xLineBreakpoint)
+            session.updateBreakpointPresentation(xLineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null)
+        }, onError = {
+            if (it.type == "DebuggerDisabledException") {
+                session.stop()
+                session.consoleView.print("The current debug session has become inactive. Please restart your debug session.\n", ConsoleViewContentType.NORMAL_OUTPUT)
+                session.reportMessage("Please restart debug session", MessageType.ERROR)
+            }
+        })
+    }
+
+    fun removeBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
+        debuggerClient.deleteBreakpoint(xLineBreakpoint.getUserData(idKey)!!)
     }
 
     private fun findBreakpoint(scriptPath: String, lineNumber: Int): XLineBreakpoint<out XBreakpointProperties<Any>>? {
@@ -159,6 +199,8 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         }
         return null
     }
+
+
 }
 
 enum class DebuggerConnectionState {

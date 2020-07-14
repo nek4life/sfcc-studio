@@ -29,6 +29,12 @@ data class EvalResult(
 )
 
 @Serializable
+data class FaultResponse(
+    @SerialName("_v") val version: String,
+    val fault: Fault
+)
+
+@Serializable
 data class Fault(
     val message: String,
     val type: String

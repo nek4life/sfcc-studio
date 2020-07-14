@@ -47,7 +47,6 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         })
         .build()
 
-
     fun createSession(then: ((Response)) -> Unit) {
         val request = Request.Builder()
             .url("$baseURL/client")
@@ -83,7 +82,12 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
     }
 
 
-    fun getThreads(onSuccess: (List<ScriptThread>?) -> Unit = {}, onFailure: (Any) -> Unit = {}) {
+    fun getThreads(
+        onSuccess: (List<ScriptThread>?) -> Unit = {},
+        onError: (Fault) -> Unit = {},
+        onFailure: (Any) -> Unit = {}
+    ) {
+
         val request = Request.Builder()
             .url("$baseURL/threads")
             .build()
@@ -95,9 +99,14 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
-                val jsonBody = json.parse(ScriptThreadsResponse.serializer(), body)
-                if (jsonBody.scriptThreads != null) {
-                    onSuccess(jsonBody.scriptThreads)
+                if (response.isSuccessful) {
+                    val jsonBody = json.parse(ScriptThreadsResponse.serializer(), body)
+                    if (jsonBody.scriptThreads != null) {
+                        onSuccess(jsonBody.scriptThreads)
+                    }
+                } else {
+                    val jsonBody = json.parse(FaultResponse.serializer(), body)
+                    onError(jsonBody.fault)
                 }
             }
         })
@@ -122,6 +131,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         lineNumber: Int,
         scriptPath: String,
         onSuccess: (Breakpoint) -> Unit = {},
+        onError: (Fault) -> Unit = {},
         onFailure: (Call) -> Unit = {}
     ) {
         val breakpoint = Breakpoint(
@@ -144,8 +154,13 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
-                val jsonResponse = json.parse(BreakpointsResponse.serializer(), body)
-                onSuccess(jsonResponse.breakpoints[0])
+                if (response.isSuccessful) {
+                    val jsonBody = json.parse(BreakpointsResponse.serializer(), body)
+                    onSuccess(jsonBody.breakpoints[0])
+                } else {
+                    val jsonBody = json.parse(FaultResponse.serializer(), body)
+                    onError(jsonBody.fault)
+                }
             }
         })
     }
@@ -162,7 +177,8 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
 
             override fun onResponse(call: Call, response: Response) {
-                onSuccess(response.body!!.string())
+                // not sure if we need to do anything when breakpoint is removed
+                onSuccess(response.body!!.close())
             }
         })
     }
