@@ -24,7 +24,7 @@ class StudioStackFrame(
     }
 
     override fun computeChildren(node: XCompositeNode) {
-        process.debuggerClient.getMembers(thread.id, stackFrame.index, onSuccess = { response ->
+        process.debuggerClient.getVariables(thread.id, stackFrame.index, onSuccess = { response ->
             val children = XValueChildrenList()
 
             for (member in response.objectMembers) {

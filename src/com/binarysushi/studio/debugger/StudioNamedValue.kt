@@ -1,11 +1,13 @@
 package com.binarysushi.studio.debugger
 
+import com.binarysushi.studio.StudioIcons
 import com.binarysushi.studio.debugger.client.ObjectMember
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.binarysushi.studio.debugger.client.StackFrame
 import com.intellij.icons.AllIcons
 import com.intellij.xdebugger.frame.*
-import com.intellij.xdebugger.frame.presentation.XStringValuePresentation
+import com.intellij.xdebugger.frame.presentation.*
+import javax.swing.Icon
 
 class StudioNamedValue(
     private val process: StudioDebugProcess,
@@ -20,6 +22,10 @@ class StudioNamedValue(
         // TODO Update presentation based on value type
         var hasChildren = false
 
+        if (member.type == "Array") {
+            hasChildren = true
+        }
+
         if (member.value.toLowerCase().contains("[object")) {
             hasChildren = true
         }
@@ -33,10 +39,42 @@ class StudioNamedValue(
         }
 
         node.setPresentation(
-            AllIcons.Debugger.Value,
-            XStringValuePresentation(member.value),
+            getIcon(member.value, member.type),
+            getValuePresentation(member.value, member.type),
             hasChildren
         )
+    }
+
+    private fun getIcon(value: String, type: String): Icon {
+        if (type == "Function") {
+            return AllIcons.Nodes.Function
+        }
+
+        if (type == "string") {
+            return AllIcons.Nodes.Static
+        }
+
+        if (value.contains("JavaClass") || type.startsWith("dw.")) {
+            return StudioIcons.STUDIO_ICON
+        }
+
+        return AllIcons.Debugger.Value
+    }
+
+    private fun getValuePresentation(value: String, type: String) : XValuePresentation {
+        if (type == "Function") {
+            XKeywordValuePresentation(value)
+        }
+
+        if (type == "string") {
+            return XStringValuePresentation(value)
+        }
+
+        if (type == "number") {
+            return XNumericValuePresentation(value)
+        }
+
+        return XRegularValuePresentation(value, type)
     }
 
     override fun computeChildren(node: XCompositeNode) {
@@ -60,4 +98,6 @@ class StudioNamedValue(
                 node.addChildren(children, true)
             })
     }
+
+
 }
