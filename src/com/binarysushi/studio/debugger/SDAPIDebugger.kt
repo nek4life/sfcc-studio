@@ -180,7 +180,11 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     }
 
     fun removeBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
-        debuggerClient.deleteBreakpoint(xLineBreakpoint.getUserData(idKey)!!)
+        val breakpointId = xLineBreakpoint.getUserData(idKey)
+        if (breakpointId != null) {
+            debuggerClient.deleteBreakpoint(breakpointId)
+        }
+
     }
 
     private fun findBreakpoint(scriptPath: String, lineNumber: Int): XLineBreakpoint<out XBreakpointProperties<Any>>? {
