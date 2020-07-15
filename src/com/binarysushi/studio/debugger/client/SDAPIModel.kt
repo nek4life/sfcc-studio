@@ -73,7 +73,7 @@ data class ScriptThreadsResponse(
 
 @Serializable
 data class ScriptThread(
-    @SerialName("call_stack") val callStack: List<StackFrame>,
+    @SerialName("call_stack") val callStack: List<StackFrame> = listOf(),
     val id: Int,
     val status: String
 )
