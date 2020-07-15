@@ -3,15 +3,13 @@ package com.binarysushi.studio.debugger
 import com.binarysushi.studio.debugger.client.ObjectMember
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.binarysushi.studio.debugger.client.StackFrame
-import com.intellij.icons.AllIcons
 import com.intellij.openapi.vfs.LocalFileSystem
-import com.intellij.util.containers.reverse
 import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.XSourcePosition
-import com.intellij.xdebugger.frame.*
-import org.jetbrains.debugger.Variable
+import com.intellij.xdebugger.frame.XCompositeNode
+import com.intellij.xdebugger.frame.XStackFrame
+import com.intellij.xdebugger.frame.XValueChildrenList
 import java.nio.file.Paths
-import javax.swing.Icon
 
 class StudioStackFrame(
     private val process: StudioDebugProcess,
@@ -31,6 +29,7 @@ class StudioStackFrame(
             val scopes = HashMap<String, MutableList<ObjectMember>>()
             val scopeChildrenList = XValueChildrenList()
 
+            // Create map of scopes and store child object members for each scope
             for (member in response.objectMembers) {
                 if (scopes.containsKey(member.scope)) {
                     scopes[member.scope]?.add(member)
