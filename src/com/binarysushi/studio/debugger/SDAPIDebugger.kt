@@ -35,7 +35,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     var pendingThreads = HashMap<Int, ScriptThread>()
 
     private companion object {
-        const val THREAD_RESET_TIMEOUT = 29000L
+        const val THREAD_RESET_TIMEOUT = 30000L
         const val THREAD_TIMEOUT = 3000L
     }
 
@@ -71,9 +71,16 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
     public fun disconnect() {
         ApplicationManager.getApplication().executeOnPooledThread {
-            debuggerClient.deleteSession()
-            connectionState = DebuggerConnectionState.DISCONNECTED
-            session.reportMessage("Debug session stopped", MessageType.INFO)
+            session.consoleView.print("Debugger shutting down...\n", ConsoleViewContentType.NORMAL_OUTPUT)
+            debuggerClient.deleteSession(onSuccess = {
+                connectionState = DebuggerConnectionState.DISCONNECTED
+                session.consoleView.print("Debug session has ended\n", ConsoleViewContentType.NORMAL_OUTPUT)
+                session.reportMessage("Debug session stopped", MessageType.INFO)
+            }, onFailure = {
+                connectionState = DebuggerConnectionState.DISCONNECTED
+                session.consoleView.print("Debug session has ended\n", ConsoleViewContentType.NORMAL_OUTPUT)
+                session.reportMessage("Debug session stopped", MessageType.INFO)
+            })
         }
     }
 
@@ -120,6 +127,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
     private tailrec fun threadLoop() {
         if (connectionState === DebuggerConnectionState.CONNECTED) {
+            // TODO This logic seems prone to race conditions when I set a faster timeout setting
             debuggerClient.getThreads(onSuccess = { threads ->
                 if (threads != null) {
                     for (thread in threads) {
@@ -145,7 +153,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                     session.stop()
                     // TODO change these to resources
                     session.consoleView.print("The current debug session has become inactive. Please restart your debug session.\n", ConsoleViewContentType.NORMAL_OUTPUT)
-                    session.reportMessage("Please restart debug session", MessageType.ERROR)
+                    session.reportMessage("Please restart debug session\n", MessageType.ERROR)
                 }
             })
 
@@ -157,6 +165,21 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     fun resume(scriptThread: ScriptThread) {
         pendingThreads[scriptThread.id] = scriptThread
         debuggerClient.resume(scriptThread.id)
+    }
+
+    fun stepInto(scriptThread: ScriptThread) {
+        pendingThreads[scriptThread.id] = scriptThread
+        debuggerClient.stepInto(scriptThread.id)
+    }
+
+    fun stepOver(scriptThread: ScriptThread) {
+        pendingThreads[scriptThread.id] = scriptThread
+        debuggerClient.stepInto(scriptThread.id)
+    }
+
+    fun stepOut(scriptThread: ScriptThread) {
+        pendingThreads[scriptThread.id] = scriptThread
+        debuggerClient.stepOut(scriptThread.id)
     }
 
     fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
@@ -174,7 +197,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
             if (it.type == "DebuggerDisabledException") {
                 session.stop()
                 session.consoleView.print("The current debug session has become inactive. Please restart your debug session.\n", ConsoleViewContentType.NORMAL_OUTPUT)
-                session.reportMessage("Please restart debug session", MessageType.ERROR)
+                session.reportMessage("Please restart debug session\n", MessageType.ERROR)
             }
         })
     }
@@ -204,6 +227,9 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         return null
     }
 
+}
+
+enum class ThreadCommands() {
 
 }
 

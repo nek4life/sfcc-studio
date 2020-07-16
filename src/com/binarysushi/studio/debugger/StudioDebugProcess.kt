@@ -58,4 +58,25 @@ class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
             debugger.resume(activeExecutionStack.scriptThread)
         }
     }
+
+    override fun startStepInto(context: XSuspendContext?) {
+        if (context != null) {
+            val activeExecutionStack = context.activeExecutionStack as StudioExecutionStack
+            debugger.stepInto(activeExecutionStack.scriptThread)
+        }
+    }
+
+    override fun startStepOver(context: XSuspendContext?) {
+        if (context != null) {
+            val activeExecutionStack = context.activeExecutionStack as StudioExecutionStack
+            debugger.stepOver(activeExecutionStack.scriptThread)
+        }
+    }
+
+    override fun startStepOut(context: XSuspendContext?) {
+        if (context != null) {
+            val activeExecutionStack = context.activeExecutionStack as StudioExecutionStack
+            debugger.stepOver(activeExecutionStack.scriptThread)
+        }
+    }
 }

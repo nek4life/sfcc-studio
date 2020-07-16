@@ -64,7 +64,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         });
     }
 
-    fun deleteSession() {
+    fun deleteSession(onSuccess: () -> Unit, onFailure: () -> Unit) {
         val request = Request.Builder()
             .url("$baseURL/client")
             .delete()
@@ -72,11 +72,11 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                e.printStackTrace()
+                onFailure()
             }
 
             override fun onResponse(call: Call, response: Response) {
-
+                onSuccess()
             }
         })
     }
@@ -257,6 +257,57 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
                 response.body!!.close()
             }
 
+        })
+    }
+
+    fun stepInto(threadId: Int) {
+        val request = Request.Builder()
+            .url("$baseURL/threads/${threadId}/into")
+            .post("".toRequestBody())
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("step into failed")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body!!.close()
+            }
+        })
+    }
+
+    fun stepOver(threadId: Int) {
+        val request = Request.Builder()
+            .url("$baseURL/threads/${threadId}/over")
+            .post("".toRequestBody())
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("step over failed")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body!!.close()
+            }
+        })
+    }
+
+    fun stepOut(threadId: Int) {
+        val request = Request.Builder()
+            .url("$baseURL/threads/${threadId}/out")
+            .post("".toRequestBody())
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("step out failed")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                response.body!!.close()
+            }
         })
     }
 }
