@@ -22,6 +22,12 @@ Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
+GET {{host}}/threads/33/frames/0/members?start=0&count=100&object_path=cache
+Authorization: Basic {{username}} {{password}}
+Accept: application/json
+x-dw-client-id: SFCCDebugger
+###
+
 POST {{host}}/threads/reset
 Authorization: Basic {{username}} {{password}}
 Accept: application/json

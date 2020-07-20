@@ -20,22 +20,10 @@ class StudioNamedValue(
     override fun computePresentation(node: XValueNode, place: XValuePlace) {
         // TODO Figure out which values have children
         // TODO Update presentation based on value type
-        var hasChildren = false
+        var hasChildren = true
 
-        if (member.type == "Array") {
-            hasChildren = true
-        }
-
-        if (member.value.toLowerCase().contains("[object")) {
-            hasChildren = true
-        }
-
-        if (member.value.toLowerCase().contains("[javaclass")) {
-            hasChildren = true
-        }
-
-        if (member.value.toLowerCase().contains("[map")) {
-            hasChildren = true
+        if (member.type == "Function" || member.type == "string" || member.type == "number") {
+            hasChildren = false
         }
 
         node.setPresentation(
