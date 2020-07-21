@@ -242,7 +242,11 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         })
     }
 
-    fun resume(threadId: Int) {
+    fun resume(
+        threadId: Int, onSuccess: () -> Unit = {},
+        onError: (Fault) -> Unit = {},
+        onFailure: (Any) -> Unit = {}
+    ) {
         val request = Request.Builder()
             .url("$baseURL/threads/${threadId}/resume")
             .post("".toRequestBody())
@@ -255,12 +259,17 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 response.body!!.close()
+                onSuccess()
             }
 
         })
     }
 
-    fun stepInto(threadId: Int) {
+    fun stepInto(
+        threadId: Int, onSuccess: (ScriptThread) -> Unit = {},
+        onError: (Fault) -> Unit = {},
+        onFailure: (Any) -> Unit = {}
+    ) {
         val request = Request.Builder()
             .url("$baseURL/threads/${threadId}/into")
             .post("".toRequestBody())
@@ -272,12 +281,22 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
 
             override fun onResponse(call: Call, response: Response) {
-                response.body!!.close()
+                if (response.isSuccessful) {
+                    val jsonResponse = json.parse(ScriptThread.serializer(), response.body!!.string())
+                    onSuccess(jsonResponse)
+                } else {
+                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    onError(jsonResponse.fault)
+                }
             }
         })
     }
 
-    fun stepOver(threadId: Int) {
+    fun stepOver(
+        threadId: Int, onSuccess: (ScriptThread) -> Unit = {},
+        onError: (Fault) -> Unit = {},
+        onFailure: (Any) -> Unit = {}
+    ) {
         val request = Request.Builder()
             .url("$baseURL/threads/${threadId}/over")
             .post("".toRequestBody())
@@ -289,12 +308,22 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
 
             override fun onResponse(call: Call, response: Response) {
-                response.body!!.close()
+                if (response.isSuccessful) {
+                    val jsonResponse = json.parse(ScriptThread.serializer(), response.body!!.string())
+                    onSuccess(jsonResponse)
+                } else {
+                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    onError(jsonResponse.fault)
+                }
             }
         })
     }
 
-    fun stepOut(threadId: Int) {
+    fun stepOut(
+        threadId: Int, onSuccess: (ScriptThread) -> Unit = {},
+        onError: (Fault) -> Unit = {},
+        onFailure: (Any) -> Unit = {}
+    ) {
         val request = Request.Builder()
             .url("$baseURL/threads/${threadId}/out")
             .post("".toRequestBody())
@@ -306,7 +335,13 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
 
             override fun onResponse(call: Call, response: Response) {
-                response.body!!.close()
+                if (response.isSuccessful) {
+                    val jsonResponse = json.parse(ScriptThread.serializer(), response.body!!.string())
+                    onSuccess(jsonResponse)
+                } else {
+                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    onError(jsonResponse.fault)
+                }
             }
         })
     }
