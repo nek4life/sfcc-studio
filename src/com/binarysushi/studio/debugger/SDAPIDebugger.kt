@@ -1,5 +1,6 @@
 package com.binarysushi.studio.debugger
 
+import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
 import com.binarysushi.studio.debugger.client.SDAPIClient
 import com.binarysushi.studio.debugger.client.ScriptThread
@@ -218,24 +219,28 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
         // TODO remove hardcoded reference to cartridges folder if possible.
         val line = xLineBreakpoint.line
-        val path = xLineBreakpoint.presentableFilePath.substring(
-            Paths.get(session.project.basePath.toString(), "cartridges").toString().length
-        ).replace("\\", "/")
+        val cartridgeRootPath = CartridgePathUtil.getCartridgeRootPathForFile(session.project, xLineBreakpoint.presentableFilePath)
 
-        debuggerClient.createBreakpoint(line + 1, path, onSuccess = { breakpoint ->
-            xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
-            session.setBreakpointVerified(xLineBreakpoint)
-            session.updateBreakpointPresentation(xLineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null)
-        }, onError = {
-            if (it.type == "DebuggerDisabledException") {
-                session.stop()
-                session.consoleView.print(
-                    "The current debug session has become inactive. Please restart your debug session.\n",
-                    ConsoleViewContentType.NORMAL_OUTPUT
-                )
-                session.reportMessage("Please restart debug session\n", MessageType.ERROR)
-            }
-        })
+        // TODO Add messaging about breakpoint not set if file is not part of current cartridge root settings
+        if (cartridgeRootPath != null) {
+            // Replace is for Windows...
+            val filePath = CartridgePathUtil.getCartridgePath(cartridgeRootPath, xLineBreakpoint.presentableFilePath).replace("\\", "/")
+
+            debuggerClient.createBreakpoint(line + 1, "/${filePath}", onSuccess = { breakpoint ->
+                xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
+                session.setBreakpointVerified(xLineBreakpoint)
+                session.updateBreakpointPresentation(xLineBreakpoint, AllIcons.Debugger.Db_verified_breakpoint, null)
+            }, onError = {
+                if (it.type == "DebuggerDisabledException") {
+                    session.stop()
+                    session.consoleView.print(
+                        "The current debug session has become inactive. Please restart your debug session.\n",
+                        ConsoleViewContentType.NORMAL_OUTPUT
+                    )
+                    session.reportMessage("Please restart debug session\n", MessageType.ERROR)
+                }
+            })
+        }
     }
 
     fun removeBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
