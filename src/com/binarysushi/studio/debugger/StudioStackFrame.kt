@@ -3,7 +3,11 @@ package com.binarysushi.studio.debugger
 import com.binarysushi.studio.debugger.client.ObjectMember
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.binarysushi.studio.debugger.client.StackFrame
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.vfs.LocalFileSystem
+import com.intellij.ui.ColoredTextContainer
+import com.intellij.ui.SimpleTextAttributes
+import com.intellij.xdebugger.XDebuggerBundle
 import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.frame.XCompositeNode
@@ -16,6 +20,19 @@ class StudioStackFrame(
     private val thread: ScriptThread,
     private val stackFrame: StackFrame
 ) : XStackFrame() {
+
+    override fun customizePresentation(component: ColoredTextContainer) {
+        val position = sourcePosition
+        if (position != null) {
+            component.append(stackFrame.location.functionName, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.append(" – " + position.file.name, SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.append(":" + (position.line + 1), SimpleTextAttributes.REGULAR_ATTRIBUTES)
+            component.setIcon(AllIcons.Debugger.Frame)
+        } else {
+            component.append(XDebuggerBundle.message("invalid.frame"), SimpleTextAttributes.ERROR_ATTRIBUTES)
+        }
+    }
+
     override fun getSourcePosition(): XSourcePosition? {
         // Maybe try to match a breakpoint and file from that instead?
         val basePath = process.session.project.basePath
