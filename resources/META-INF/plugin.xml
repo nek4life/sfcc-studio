@@ -5,7 +5,7 @@
 
     <description><![CDATA[
         <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites</h1>
-        <p>SFCC Studio has features such as file debugging, code synchronization, syntax highlighting, auto complete and more...</p>
+        <p>SFCC Studio has features such as script debugging, code synchronization, syntax highlighting, auto complete and more...</p>
     ]]></description>
 
     <depends>JavaScript</depends>
