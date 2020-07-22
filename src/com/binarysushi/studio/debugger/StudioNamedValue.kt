@@ -22,7 +22,7 @@ class StudioNamedValue(
         // TODO Update presentation based on value type
         var hasChildren = true
 
-        if (member.type == "Function" || member.type == "string" || member.type == "number") {
+        if (member.type == "Function" || member.type == "string" || member.type == "number" || member.type == "undefined") {
             hasChildren = false
         }
 
@@ -49,7 +49,7 @@ class StudioNamedValue(
         return AllIcons.Debugger.Value
     }
 
-    private fun getValuePresentation(value: String, type: String) : XValuePresentation {
+    private fun getValuePresentation(value: String, type: String): XValuePresentation {
         if (type == "Function") {
             XKeywordValuePresentation(value)
         }
@@ -87,5 +87,9 @@ class StudioNamedValue(
             })
     }
 
+    // TODO this needs to be implemented in order to show debugger data in the editor
+//    override fun computeInlineDebuggerData(callback: XInlineDebuggerDataCallback): ThreeState {
+//        return super.computeInlineDebuggerData(callback)
+//    }
 
 }
