@@ -18,7 +18,7 @@ import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.breakpoints.XBreakpointProperties
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
-import java.nio.file.Paths
+import java.util.concurrent.ConcurrentHashMap
 
 
 class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebugProcess) {
@@ -32,8 +32,8 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     private val awaitingBreakpoints = mutableListOf<XLineBreakpoint<JavaScriptLineBreakpointProperties>>()
 
     var connectionState = DebuggerConnectionState.DISCONNECTED;
-    var currentThreads = HashMap<Int, ScriptThread>()
-    var pendingThreads = HashMap<Int, ScriptThread>()
+    var currentThreads = ConcurrentHashMap<Int, ScriptThread>()
+    var pendingThreads = ConcurrentHashMap<Int, ScriptThread>()
 
     private companion object {
         const val THREAD_RESET_TIMEOUT = 30000L
@@ -219,12 +219,14 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
         // TODO remove hardcoded reference to cartridges folder if possible.
         val line = xLineBreakpoint.line
-        val cartridgeRootPath = CartridgePathUtil.getCartridgeRootPathForFile(session.project, xLineBreakpoint.presentableFilePath)
+        val cartridgeRootPath =
+            CartridgePathUtil.getCartridgeRootPathForFile(session.project, xLineBreakpoint.presentableFilePath)
 
         // TODO Add messaging about breakpoint not set if file is not part of current cartridge root settings
         if (cartridgeRootPath != null) {
             // Replace is for Windows...
-            val filePath = CartridgePathUtil.getCartridgePath(cartridgeRootPath, xLineBreakpoint.presentableFilePath).replace("\\", "/")
+            val filePath = CartridgePathUtil.getCartridgePath(cartridgeRootPath, xLineBreakpoint.presentableFilePath)
+                .replace("\\", "/")
 
             debuggerClient.createBreakpoint(line + 1, "/${filePath}", onSuccess = { breakpoint ->
                 xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
