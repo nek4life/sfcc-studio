@@ -65,7 +65,9 @@ dependencies {
 patchPluginXml {
     changeNotes """
       New Features<br/><br/>
-      <em>2020.2 Compatibility Build</em><br/>
+      <em>Script Debugger</em>
+      <br/><br/>   
+      Bug Fixes<br/><br/>
       <em>Fixed settings not updating without restart</em>
       """
 }
