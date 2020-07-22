@@ -14,9 +14,9 @@ class CartridgePathUtil() {
             return config.cartridgeRoots
         }
 
-        fun getCartridgeRootPathForFile(project: Project, localeFilePath: String): String? {
+        fun getCartridgeRootPathForFile(project: Project, localFilePath: String): String? {
             for (root in getActiveCartridgeRoots(project)) {
-                if (localeFilePath.replace("\\", "/").contains(root)) {
+                if (localFilePath.replace("\\", "/").contains(root)) {
                     return root
                 }
             }
