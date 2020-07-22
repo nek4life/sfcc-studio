@@ -76,7 +76,7 @@ class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
     override fun startStepOut(context: XSuspendContext?) {
         if (context != null) {
             val activeExecutionStack = context.activeExecutionStack as StudioExecutionStack
-            debugger.stepOver(activeExecutionStack.scriptThread)
+            debugger.stepOut(activeExecutionStack.scriptThread)
         }
     }
 }
