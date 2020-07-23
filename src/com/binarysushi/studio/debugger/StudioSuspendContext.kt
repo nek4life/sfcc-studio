@@ -16,6 +16,6 @@ class StudioSuspendContext(private val process: StudioDebugProcess, private val 
     }
 
     override fun getExecutionStacks(): Array<XExecutionStack> {
-        return Array(1) { StudioExecutionStack(process, thread)}
+        return Array(1) { StudioExecutionStack(process, thread) }
     }
 }
