@@ -138,23 +138,20 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         if (connectionState === DebuggerConnectionState.CONNECTED) {
             // TODO This logic seems prone to race conditions when I set a faster timeout setting
             debuggerClient.getThreads(onSuccess = { threads ->
-                if (threads != null) {
-                    for (thread in threads) {
-                        if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
-                            suspendDebugger(thread)
-                            currentThreads[thread.id] = thread
-                        } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
-                            suspendDebugger(thread)
-                            currentThreads[thread.id] = thread;
-                            this.pendingThreads.remove(thread.id);
-                        }
+                for (thread in threads!!) {
+                    if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
+                        suspendDebugger(thread)
+                        currentThreads[thread.id] = thread
+                    } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
+                        suspendDebugger(thread)
+                        pendingThreads.remove(thread.id);
+                        currentThreads[thread.id] = thread;
                     }
+                }
 
-                    for ((_, value) in currentThreads) {
-                        val currentThreadId = value.id
-                        if (!threads.any { it.id == currentThreadId }) {
-                            currentThreads.remove(currentThreadId)
-                        }
+                for ((_, value) in currentThreads) {
+                    if (!threads.any { it.id == value.id }) {
+                        currentThreads.remove(value.id)
                     }
                 }
             }, onError = {
