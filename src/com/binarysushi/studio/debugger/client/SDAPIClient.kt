@@ -81,8 +81,23 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         })
     }
 
+    fun cancelRequests(requestTag: String) {
+        for (call in client.dispatcher.queuedCalls()) {
+            if (call.request().tag() != null && call.request().tag() == requestTag) {
+                call.cancel()
+            }
+        }
+
+        for (call in client.dispatcher.runningCalls()) {
+            if (call.request().tag() != null && call.request().tag() == requestTag) {
+                call.cancel()
+            }
+        }
+    }
+
 
     fun getThreads(
+        requestTag: String? = null,
         onSuccess: (List<ScriptThread>?) -> Unit = {},
         onError: (Fault) -> Unit = {},
         onFailure: (Any) -> Unit = {}
@@ -90,9 +105,12 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
         val request = Request.Builder()
             .url("$baseURL/threads")
-            .build()
 
-        client.newCall(request).enqueue(object : Callback {
+        if (requestTag != null) {
+            request.tag(requestTag)
+        }
+
+        client.newCall(request.build()).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 onFailure(call)
             }

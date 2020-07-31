@@ -51,7 +51,7 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 intellij {
     updateSinceUntilBuild = false
-    version "IU-LATEST-EAP-SNAPSHOT"
+    version "IU-2020.2"
     plugins = ["JavaScriptLanguage", "JavaScriptDebugger"]
 }
 

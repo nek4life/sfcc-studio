@@ -31,7 +31,8 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     private val idKey: Key<Int> = Key.create("STUDIO_BP_ID")
     private val awaitingBreakpoints = mutableListOf<XLineBreakpoint<JavaScriptLineBreakpointProperties>>()
 
-    var connectionState = DebuggerConnectionState.DISCONNECTED;
+    var connectionState = DebuggerConnectionState.DISCONNECTED
+    var processState = DebuggerProcessState.STOPPED
     var currentThreads = ConcurrentHashMap<Int, ScriptThread>()
     var pendingThreads = ConcurrentHashMap<Int, ScriptThread>()
 
@@ -46,11 +47,11 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
     fun connect() {
         ApplicationManager.getApplication().executeOnPooledThread {
-            // TODO add retry here
-            // TODO investigate the need to kill existing client before creating a new one
+            // TODO add connection retry here
             debuggerClient.createSession() { response ->
                 if (response.isSuccessful) {
                     connectionState = DebuggerConnectionState.CONNECTED;
+                    processState = DebuggerProcessState.WAITING;
 
                     session.consoleView.print("Settings breakpoints...\n", ConsoleViewContentType.NORMAL_OUTPUT)
 
@@ -115,7 +116,9 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     }
 
     private tailrec fun threadLoop() {
-        getThreads()
+        if (processState == DebuggerProcessState.WAITING) {
+            getThreads("threadLoop")
+        }
         Thread.sleep(THREAD_TIMEOUT)
         threadLoop()
     }
@@ -134,10 +137,10 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         }
     }
 
-    private fun getThreads() {
+    private fun getThreads(requestTag: String? = null) {
         if (connectionState === DebuggerConnectionState.CONNECTED) {
             // TODO This logic seems prone to race conditions when I set a faster timeout setting
-            debuggerClient.getThreads(onSuccess = { threads ->
+            debuggerClient.getThreads(requestTag, onSuccess = { threads ->
                 for (thread in threads!!) {
                     if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
                         suspendDebugger(thread)
@@ -170,29 +173,57 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
     fun resume(scriptThread: ScriptThread) {
         pendingThreads[scriptThread.id] = scriptThread
+        processState = DebuggerProcessState.EXECUTING
+        debuggerClient.cancelRequests("threadLoop")
         debuggerClient.resume(scriptThread.id, onSuccess = {
             getThreads()
+            processState = DebuggerProcessState.WAITING
+        }, onError = {
+            processState = DebuggerProcessState.WAITING
+        }, onFailure = {
+            processState = DebuggerProcessState.WAITING
         })
     }
 
     fun stepInto(scriptThread: ScriptThread) {
         pendingThreads[scriptThread.id] = scriptThread
+        processState = DebuggerProcessState.EXECUTING
+        debuggerClient.cancelRequests("threadLoop")
         debuggerClient.stepInto(scriptThread.id, onSuccess = {
             getThreads()
+            processState = DebuggerProcessState.WAITING
+        }, onError = {
+            processState = DebuggerProcessState.WAITING
+        }, onFailure = {
+            processState = DebuggerProcessState.WAITING
         })
     }
 
     fun stepOver(scriptThread: ScriptThread) {
         pendingThreads[scriptThread.id] = scriptThread
+        processState = DebuggerProcessState.EXECUTING
+        debuggerClient.cancelRequests("threadLoop")
         debuggerClient.stepOver(scriptThread.id, onSuccess = {
             getThreads()
+            processState = DebuggerProcessState.WAITING
+        }, onError = {
+            processState = DebuggerProcessState.WAITING
+        }, onFailure = {
+            processState = DebuggerProcessState.WAITING
         })
     }
 
     fun stepOut(scriptThread: ScriptThread) {
         pendingThreads[scriptThread.id] = scriptThread
+        processState = DebuggerProcessState.EXECUTING
+        debuggerClient.cancelRequests("threadLoop")
         debuggerClient.stepOut(scriptThread.id, onSuccess = {
             getThreads()
+            processState = DebuggerProcessState.WAITING
+        }, onError = {
+            processState = DebuggerProcessState.WAITING
+        }, onFailure = {
+            processState = DebuggerProcessState.WAITING
         })
     }
 
@@ -252,4 +283,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
 enum class DebuggerConnectionState {
     CONNECTED, DISCONNECTED
+}
+enum class DebuggerProcessState {
+    STOPPED, WAITING, EXECUTING
 }
