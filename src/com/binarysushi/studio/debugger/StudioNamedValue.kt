@@ -22,8 +22,16 @@ class StudioNamedValue(
         // TODO Update presentation based on value type
         var hasChildren = true
 
-        if (member.type == "Function" || member.type == "string" || member.type == "number" || member.type == "undefined") {
-            hasChildren = false
+        when (member.type) {
+            "Function" -> hasChildren = false
+            "string" -> hasChildren = false
+            "number" -> hasChildren = false
+            "undefined" -> hasChildren = false
+            "boolean" -> hasChildren = false
+        }
+
+        when (member.value) {
+            "null" -> hasChildren = false
         }
 
         node.setPresentation(
