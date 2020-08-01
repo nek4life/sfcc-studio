@@ -39,17 +39,11 @@ class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
     }
 
     fun addBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
-        if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
-            debugger.addBreakpoint(xLineBreakpoint)
-        } else {
-            debugger.addAwaitingBreakpoint(xLineBreakpoint)
-        }
+        debugger.addBreakpoint(xLineBreakpoint)
     }
 
     fun removeBreakpoint(xLineBreakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>) {
-        if (debugger.connectionState === DebuggerConnectionState.CONNECTED) {
-            debugger.removeBreakpoint(xLineBreakpoint)
-        }
+        debugger.removeBreakpoint(xLineBreakpoint)
     }
 
     override fun resume(context: XSuspendContext?) {
