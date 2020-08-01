@@ -64,11 +64,11 @@ dependencies {
 
 patchPluginXml {
     changeNotes """
-      <h3>New Features</h3>
+      <h4>New Features</h4>
       <ul>
         <li><em>Script Debugger</em></li>
       </ul     
-      <h3>Bug Fixes</h3>
+      <h4>Bug Fixes</h4>
       <ul>
         <li><em>Fixed settings not updating without restart</em></li>
       </ul>
