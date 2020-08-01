@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.binarysushi.sfcc-studio</id>
-    <name>Salesforce Commerce Cloud Studio</name>
+    <name>Salesforce Commerce Cloud (SFCC) Studio</name>
     <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
 
     <description><![CDATA[
@@ -18,6 +18,7 @@
              <li>Basic auto completion for ISML tags, attributes, and known valid attribute values.</li>
              <li>Live template shortcuts for ISML tags.</li>
              <li>New DS and ISML file actions</li>
+             <li>And more...</li>
         </li>
     ]]></description>
 
