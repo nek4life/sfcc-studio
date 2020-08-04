@@ -27,7 +27,7 @@
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
-    <idea-version since-build="201.2935"/>
+    <idea-version since-build="202.5958.24"/>
 
     <extensions defaultExtensionNs="com.intellij">
         <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>

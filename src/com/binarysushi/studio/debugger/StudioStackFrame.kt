@@ -10,6 +10,7 @@ import com.intellij.ui.SimpleTextAttributes
 import com.intellij.xdebugger.XDebuggerBundle
 import com.intellij.xdebugger.XDebuggerUtil
 import com.intellij.xdebugger.XSourcePosition
+import com.intellij.xdebugger.evaluation.XDebuggerEvaluator
 import com.intellij.xdebugger.frame.XCompositeNode
 import com.intellij.xdebugger.frame.XStackFrame
 import com.intellij.xdebugger.frame.XValueChildrenList
@@ -33,8 +34,12 @@ class StudioStackFrame(
         }
     }
 
+    override fun getEvaluator(): XDebuggerEvaluator? {
+        return StudioEvaluator(process, thread, stackFrame)
+    }
+
     override fun getSourcePosition(): XSourcePosition? {
-        // Maybe try to match a breakpoint and file from that instead?
+        // TODO look up cartridge path and get match based on that to remove hardcoded cartridges
         val basePath = process.session.project.basePath
         val filePath = "${basePath}/cartridges${stackFrame.location.scriptPath}"
         val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(Paths.get(filePath).normalize())

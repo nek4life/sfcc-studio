@@ -23,7 +23,8 @@ data class BreakpointsResponse(
 )
 
 @Serializable
-data class EvalResult(
+data class EvalResultResponse(
+    @SerialName("_v") val version: String,
     val expression: String,
     val result: String
 )

@@ -363,4 +363,34 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
         })
     }
+
+    fun evaluate(
+        threadId: Int,
+        frameIndex: Int,
+        expression: String,
+        onSuccess: (EvalResultResponse) -> Unit = {},
+        onError: (Fault) -> Unit = {},
+        onFailure: (Any) -> Unit = {}
+    ) {
+        val request = Request.Builder()
+            .url("$baseURL/threads/${threadId}/frames/${frameIndex}/eval?expr=${expression}")
+            .get()
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                onFailure(call)
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    val jsonResponse = json.parse(EvalResultResponse.serializer(), response.body!!.string())
+                    onSuccess(jsonResponse)
+                } else {
+                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    onError(jsonResponse.fault)
+                }
+            }
+        })
+    }
 }

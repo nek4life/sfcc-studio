@@ -134,7 +134,8 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
     private fun suspendDebugger(thread: ScriptThread) {
         ApplicationManager.getApplication().runReadAction {
-            val suspendContext = StudioSuspendContext(process, thread)
+            val suspendContext = StudioSuspendContext(process, thread, currentThreads)
+
             val breakpoint =
                 findBreakpoint(thread.callStack[0].location.scriptPath, thread.callStack[0].location.lineNumber)
             if (breakpoint != null) {
@@ -150,13 +151,19 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
             // TODO This logic seems prone to race conditions when I set a faster timeout setting
             debuggerClient.getThreads(requestTag, onSuccess = { threads ->
                 for (thread in threads!!) {
+
+
                     if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
-                        suspendDebugger(thread)
                         currentThreads[thread.id] = thread
-                    } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
                         suspendDebugger(thread)
-                        pendingThreads.remove(thread.id);
+                    } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
                         currentThreads[thread.id] = thread;
+                        pendingThreads.remove(thread.id);
+                        suspendDebugger(thread)
+                    } else if (currentThreads.containsKey(thread.id) && thread.status == "halted" && threads.size > 1 && !session.isSuspended) {
+                        // This last condition ensures that if there were multiple threads and a thread reaches the end of its
+                        // steps that the remaining threads are caught and suspended. I'm not sure if this is the way most debuggers work or not...
+                        suspendDebugger(thread)
                     }
                 }
 
