@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.MessageType
 import com.intellij.util.ArrayUtil
 import com.intellij.xdebugger.XDebugProcess
 import com.intellij.xdebugger.XDebugSession
+import com.intellij.xdebugger.XSourcePosition
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
@@ -72,5 +73,9 @@ class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
             val activeExecutionStack = context.activeExecutionStack as StudioExecutionStack
             debugger.stepOut(activeExecutionStack.scriptThread)
         }
+    }
+
+    override fun runToPosition(position: XSourcePosition, context: XSuspendContext?) {
+        // TODO Not implemented
     }
 }
