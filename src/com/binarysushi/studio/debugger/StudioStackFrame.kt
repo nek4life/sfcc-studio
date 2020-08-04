@@ -1,5 +1,6 @@
 package com.binarysushi.studio.debugger
 
+import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.debugger.client.ObjectMember
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.binarysushi.studio.debugger.client.StackFrame
@@ -40,9 +41,12 @@ class StudioStackFrame(
 
     override fun getSourcePosition(): XSourcePosition? {
         // TODO look up cartridge path and get match based on that to remove hardcoded cartridges
-        val basePath = process.session.project.basePath
-        val filePath = "${basePath}/cartridges${stackFrame.location.scriptPath}"
-        val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(Paths.get(filePath).normalize())
+
+        val path = CartridgePathUtil.getAbsolutFilePathFromCartridgeRelativePath(process.session.project, stackFrame.location.scriptPath)
+
+//        val basePath = process.session.project.basePath
+//        val filePath = "${basePath}/cartridges${stackFrame.location.scriptPath}"
+        val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(Paths.get(path).normalize())
         return XDebuggerUtil.getInstance().createPosition(virtualFile, stackFrame.location.lineNumber - 1);
     }
 

@@ -267,8 +267,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
             if (cartridgeRootPath != null) {
                 // Replace is for Windows...
                 val filePath =
-                    CartridgePathUtil.getCartridgePath(cartridgeRootPath, xLineBreakpoint.presentableFilePath)
-                        .replace("\\", "/")
+                    CartridgePathUtil.getCartridgeRelativeFilePath(cartridgeRootPath, xLineBreakpoint.presentableFilePath)
 
                 debuggerClient.createBreakpoint(line + 1, "/${filePath}", onSuccess = { breakpoint ->
                     xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
