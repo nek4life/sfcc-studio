@@ -13,6 +13,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
+import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,8 +29,8 @@ class StudioUpdateFileTask(
     private val configurationProvider = project.service<StudioConfigurationProvider>();
     private val serverConnection = StudioServerConnection(configurationProvider);
     private val consoleView = project.service<StudioConsoleService>().consoleView
-    private val remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath,  eventFile.path)
-    private val remoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath,  eventFile.path)
+    private val remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath, eventFile.path)
+    private val remoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath, eventFile.path)
     private val timeFormat = SimpleDateFormat("hh:mm:ss")
 
     override fun run(indicator: ProgressIndicator) {
@@ -45,13 +46,13 @@ class StudioUpdateFileTask(
         }
 
         // If the status code is 200 a file exists
-         if (statusCode == 200) {
+        if (statusCode == 200) {
             // Check the existence of the local virtual file to determine whether to update or delete.
-             fileStatus = if (eventFile.exists()) {
-                 FileStatus.UPDATED
-             } else {
-                 FileStatus.DELETED
-             }
+            fileStatus = if (eventFile.exists()) {
+                FileStatus.UPDATED
+            } else {
+                FileStatus.DELETED
+            }
         }
 
         indicator.fraction = .5
@@ -61,7 +62,7 @@ class StudioUpdateFileTask(
             .build()
 
         when (fileStatus) {
-            FileStatus.NEW -> doHttpRequest(request, localFile, "Created file")
+            FileStatus.NEW -> createNewFile(request, localFile)
             FileStatus.UPDATED -> doHttpRequest(request, localFile, "Updated file")
             FileStatus.DELETED -> doHttpRequest(
                 Request.Builder().url(remoteFilePath).delete().build(), localFile, "Deleted"
@@ -78,7 +79,9 @@ class StudioUpdateFileTask(
                 val response = serverConnection.client.newCall(request).execute()
                 if (response.code == 201) {
                     consoleView.print(
-                        "[${timeFormat.format(Date())}] [Created folder] ${request.url}", ConsoleViewContentType.NORMAL_OUTPUT)
+                        "[${timeFormat.format(Date())}] [Created folder] ${request.url}\n",
+                        ConsoleViewContentType.NORMAL_OUTPUT
+                    )
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -86,13 +89,25 @@ class StudioUpdateFileTask(
         }
     }
 
+    private fun createNewFile(request: Request, localFile: File) {
+        createRemoteDirectories()
+        doHttpRequest(request, localFile, "Created file")
+    }
+
     private fun doHttpRequest(request: Request, localFile: File, message: String) {
-       serverConnection.client.newCall(request).execute().use {
-           consoleView.print(
-               "[" + timeFormat.format(Date()) + "] " + "[" + message + " (" + localFile.name + ")] " + request.url
-                   .toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT
-           )
-       }
+        try {
+            serverConnection.client.newCall(request).execute().use { response ->
+                response.close()
+
+                consoleView.print(
+                    "[" + timeFormat.format(Date()) + "] " + "[" + message + " (" + localFile.name + ")] " + request.url
+                        .toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT
+                )
+            }
+        } catch (e: FileNotFoundException) {
+            // TODO handle file not found
+        }
+
     }
 
     private enum class FileStatus {

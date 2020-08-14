@@ -72,6 +72,9 @@ patchPluginXml {
       <ul>
         <li><em>Fixed settings not updating without restart</em></li>
       </ul>
+      <ul>
+        <li><em>Fixed folders not being created when uploading a new file</em></li>
+      </ul>
       """
 }
 
