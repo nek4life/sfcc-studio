@@ -71,10 +71,9 @@ patchPluginXml {
       <h4>Bug Fixes</h4>
       <ul>
         <li><em>Fixed settings not updating without restart</em></li>
-      </ul>
-      <ul>
         <li><em>Fixed folders not being created when uploading a new file</em></li>
-      </ul>
+        <li><em>Fixed bug that caused Vue.js goto component references to stop working</em></li>
+      </ul>     
       """
 }
 
