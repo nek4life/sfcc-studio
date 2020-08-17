@@ -9,8 +9,8 @@ public class ISMLXmlAttributeDescriptor extends AnyXmlAttributeDescriptor {
     public final String tagName;
     public final Map<String, Map<String, String[]>> attrMap = new HashMap<>();
 
-    public ISMLXmlAttributeDescriptor(String tagName, String attibuteName) {
-        super(attibuteName);
+    public ISMLXmlAttributeDescriptor(String tagName, String attributeName) {
+        super(attributeName);
         this.tagName = tagName;
 
         Map<String, String[]> iscacheMap = new HashMap<>();
