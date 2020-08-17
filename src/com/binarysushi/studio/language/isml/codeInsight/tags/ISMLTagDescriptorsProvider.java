@@ -1,5 +1,6 @@
 package com.binarysushi.studio.language.isml.codeInsight.tags;
 
+import com.binarysushi.studio.language.isml.ISMLFileType;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.html.HtmlTag;
@@ -9,8 +10,10 @@ import com.intellij.xml.XmlElementDescriptor;
 import com.intellij.xml.XmlNSDescriptor;
 import com.intellij.xml.XmlTagNameProvider;
 import com.intellij.xml.impl.schema.AnyXmlElementDescriptor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ISMLTagDescriptorsProvider implements XmlElementDescriptorProvider, XmlTagNameProvider {
@@ -49,7 +52,7 @@ public class ISMLTagDescriptorsProvider implements XmlElementDescriptorProvider,
     @Nullable
     @Override
     public XmlElementDescriptor getDescriptor(XmlTag tag) {
-        if (!(tag instanceof HtmlTag)) {
+        if (!(tag instanceof HtmlTag) || !Arrays.asList(ismlTagNames).contains(tag.getName())) {
             return null;
         }
 
@@ -63,8 +66,11 @@ public class ISMLTagDescriptorsProvider implements XmlElementDescriptorProvider,
     }
 
     @Override
-    public void addTagNameVariants(List<LookupElement> elements, XmlTag tag, String prefix) {
-        if (!(tag instanceof HtmlTag)) return;
+    public void addTagNameVariants(List<LookupElement> elements, @NotNull XmlTag tag, String prefix) {
+        if (!(tag instanceof HtmlTag || tag.getContainingFile().getFileType() != ISMLFileType.INSTANCE || !Arrays.asList(ismlTagNames).contains(tag.getName()))) {
+            return;
+        }
+
         for (String tagName : ismlTagNames) {
             elements.add(LookupElementBuilder.create(tagName));
         }
