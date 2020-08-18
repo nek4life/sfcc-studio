@@ -1,6 +1,5 @@
 package com.binarysushi.studio.language.isml.codeInsight.tags;
 
-import com.binarysushi.studio.language.isml.ISMLFileType;
 import com.intellij.codeInsight.lookup.LookupElement;
 import com.intellij.codeInsight.lookup.LookupElementBuilder;
 import com.intellij.psi.html.HtmlTag;
@@ -67,7 +66,7 @@ public class ISMLTagDescriptorsProvider implements XmlElementDescriptorProvider,
 
     @Override
     public void addTagNameVariants(List<LookupElement> elements, @NotNull XmlTag tag, String prefix) {
-        if (!(tag instanceof HtmlTag || tag.getContainingFile().getFileType() != ISMLFileType.INSTANCE || !Arrays.asList(ismlTagNames).contains(tag.getName()))) {
+        if (!(tag instanceof HtmlTag || !Arrays.asList(ismlTagNames).contains(tag.getName()))) {
             return;
         }
 
