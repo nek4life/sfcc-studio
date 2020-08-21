@@ -1,7 +1,7 @@
 # Salesforce Commerce Cloud Studio
 
 ### Features
- * Project wizard to setup a project with ease.
+ * Project wizard to set up a project with ease.
  * Cartridge root configuration settings.
  * Sandbox filesystem sync
  * Sandbox filesystem clean
