@@ -10,8 +10,10 @@ class CartridgePathUtil() {
     companion object {
 
         /**
-         * Returns the current cartridge roots for this project. Currently based on project settings, but could
-         * potentially be used to handle multiple active server settings
+         * Returns the current cartridge roots for this project.
+         *
+         * Currently based on project settings, but could potentially be used to handle multiple
+         * active server settings in the future
          */
         private fun getActiveCartridgeRoots(project: Project): ArrayList<String> {
             val config = project.service<StudioConfigurationProvider>()
@@ -19,7 +21,9 @@ class CartridgePathUtil() {
         }
 
         /**
-         * Matches and returns the absolute cartridge root path for a file /some/filesystem/path/for/this/cartridge/app_storefront
+         * Matches and returns the absolute cartridge root path for a file
+         *
+         * /Users/username/project/cartridges/app_storefront_base
          */
         fun getCartridgeRootPathForFile(project: Project, localFilePath: String): String? {
             for (root in getActiveCartridgeRoots(project)) {
@@ -31,14 +35,18 @@ class CartridgePathUtil() {
         }
 
         /**
-         * Returns the cartridge name. app_storefront
+         * Returns the cartridge name from absolute cartridge root path
+         *
+         * /Users/username/project/cartridges/app_storefront_base --> app_storefront_base
          */
         private fun getCartridgeNameFromRootPath(cartridgeRootPath: String): String {
             return Paths.get(cartridgeRootPath).fileName.toString()
         }
 
         /**
-         * Returns a path relative to cartridge root. app_storefront/some/file/name.js
+         * Returns a path relative to cartridge root.
+         *
+         * app_storefront/some/file/name.js --> /Users/username/project/cartridges/app_storefront_base/some/file/name.js
          */
         fun getCartridgeRelativeFilePath(cartridgeRootPath: String, localFilePath: String): String {
             val relativePath = localFilePath.substring(cartridgeRootPath.length)
@@ -46,6 +54,11 @@ class CartridgePathUtil() {
             return "$cartridgeName$relativePath".replace("\\", "/")
         }
 
+        /**
+         * Returns an absolute system path from a cartridge relative path.
+         *
+         * app_storefront_base/some/file/name.js --> /Users/username/project/cartridges/app_storefront_base/some/file/name.js
+         */
         fun getAbsolutFilePathFromCartridgeRelativePath(project: Project, localFilePath: String): String? {
             for (root in getActiveCartridgeRoots(project)) {
                 val cartridgeName = getCartridgeNameFromRootPath(root)

@@ -40,12 +40,9 @@ class StudioStackFrame(
     }
 
     override fun getSourcePosition(): XSourcePosition? {
-        // TODO look up cartridge path and get match based on that to remove hardcoded cartridges
-
         val path = CartridgePathUtil.getAbsolutFilePathFromCartridgeRelativePath(process.session.project, stackFrame.location.scriptPath)
+            ?: return null
 
-//        val basePath = process.session.project.basePath
-//        val filePath = "${basePath}/cartridges${stackFrame.location.scriptPath}"
         val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(Paths.get(path).normalize())
         return XDebuggerUtil.getInstance().createPosition(virtualFile, stackFrame.location.lineNumber - 1);
     }
