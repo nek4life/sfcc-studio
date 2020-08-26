@@ -1,6 +1,5 @@
-package com.binarysushi.studio.debugger.breakpoint
+package com.binarysushi.studio.debugger
 
-import com.binarysushi.studio.debugger.StudioDebugProcess
 import com.intellij.javascript.debugger.breakpoints.JavaScriptBreakpointType
 import com.intellij.javascript.debugger.breakpoints.JavaScriptLineBreakpointProperties
 import com.intellij.xdebugger.breakpoints.XBreakpointHandler

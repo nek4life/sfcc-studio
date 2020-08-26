@@ -1,7 +1,6 @@
 package com.binarysushi.studio.debugger
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.binarysushi.studio.debugger.breakpoint.StudioDebuggerJSLineBreakpointHandler
 import com.binarysushi.studio.debugger.client.SDAPIClient
 import com.intellij.javascript.debugger.breakpoints.JavaScriptLineBreakpointProperties
 import com.intellij.openapi.components.service
