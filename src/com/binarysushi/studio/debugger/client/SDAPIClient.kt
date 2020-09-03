@@ -3,10 +3,9 @@ package com.binarysushi.studio.debugger.client
 
 import com.binarysushi.studio.webdav.StudioServerAuthenticator
 import com.intellij.util.proxy.CommonProxy
-import kotlinx.serialization.UnstableDefault
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonConfiguration
-import kotlinx.serialization.serializerByTypeToken
+import kotlinx.serialization.serializer
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -14,18 +13,19 @@ import java.io.IOException
 import java.lang.reflect.Type
 
 
-@UnstableDefault
-private val json = Json(JsonConfiguration(encodeDefaults = false))
+private val json = Json {
+    encodeDefaults = false
+}
 
-@OptIn(UnstableDefault::class)
 class JSONCallback(val type: Type, val then: (Any) -> Unit) : Callback {
     override fun onFailure(call: Call, e: IOException) {
         TODO("Not yet implemented")
     }
 
+    @ExperimentalSerializationApi
     override fun onResponse(call: Call, response: Response) {
         val body = response.body!!.string()
-        then(json.parse(serializerByTypeToken(type), body))
+        then(json.decodeFromString(serializer(type), body))
     }
 }
 
@@ -118,12 +118,12 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
                 if (response.isSuccessful) {
-                    val jsonBody = json.parse(ScriptThreadsResponse.serializer(), body)
+                    val jsonBody = json.decodeFromString(ScriptThreadsResponse.serializer(), body)
                     if (jsonBody.scriptThreads != null) {
                         onSuccess(jsonBody.scriptThreads)
                     }
                 } else {
-                    val jsonBody = json.parse(FaultResponse.serializer(), body)
+                    val jsonBody = json.decodeFromString(FaultResponse.serializer(), body)
                     onError(jsonBody.fault)
                 }
             }
@@ -158,7 +158,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         )
 
         val breakpoints = Breakpoints(listOf(breakpoint))
-        val jsonList = json.stringify(Breakpoints.serializer(), breakpoints)
+        val jsonList = json.encodeToString(Breakpoints.serializer(), breakpoints)
 
         val request = Request.Builder()
             .url("$baseURL/breakpoints")
@@ -173,10 +173,10 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
                 if (response.isSuccessful) {
-                    val jsonBody = json.parse(BreakpointsResponse.serializer(), body)
+                    val jsonBody = json.decodeFromString(BreakpointsResponse.serializer(), body)
                     onSuccess(jsonBody.breakpoints[0])
                 } else {
-                    val jsonBody = json.parse(FaultResponse.serializer(), body)
+                    val jsonBody = json.decodeFromString(FaultResponse.serializer(), body)
                     onError(jsonBody.fault)
                 }
             }
@@ -228,7 +228,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
-                val jsonResponse = json.parse(ObjectMemberResponse.serializer(), body)
+                val jsonResponse = json.decodeFromString(ObjectMemberResponse.serializer(), body)
                 onSuccess(jsonResponse)
             }
         })
@@ -254,7 +254,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 val body = response.body!!.string()
-                val jsonResponse = json.parse(ObjectMemberResponse.serializer(), body)
+                val jsonResponse = json.decodeFromString(ObjectMemberResponse.serializer(), body)
                 onSuccess(jsonResponse)
             }
         })
@@ -300,10 +300,10 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val jsonResponse = json.parse(ScriptThread.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(ScriptThread.serializer(), response.body!!.string())
                     onSuccess(jsonResponse)
                 } else {
-                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(FaultResponse.serializer(), response.body!!.string())
                     onError(jsonResponse.fault)
                 }
             }
@@ -327,10 +327,10 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val jsonResponse = json.parse(ScriptThread.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(ScriptThread.serializer(), response.body!!.string())
                     onSuccess(jsonResponse)
                 } else {
-                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(FaultResponse.serializer(), response.body!!.string())
                     onError(jsonResponse.fault)
                 }
             }
@@ -354,10 +354,10 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val jsonResponse = json.parse(ScriptThread.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(ScriptThread.serializer(), response.body!!.string())
                     onSuccess(jsonResponse)
                 } else {
-                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(FaultResponse.serializer(), response.body!!.string())
                     onError(jsonResponse.fault)
                 }
             }
@@ -384,10 +384,10 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
-                    val jsonResponse = json.parse(EvalResultResponse.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(EvalResultResponse.serializer(), response.body!!.string())
                     onSuccess(jsonResponse)
                 } else {
-                    val jsonResponse = json.parse(FaultResponse.serializer(), response.body!!.string())
+                    val jsonResponse = json.decodeFromString(FaultResponse.serializer(), response.body!!.string())
                     onError(jsonResponse.fault)
                 }
             }
