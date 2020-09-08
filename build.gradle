@@ -70,9 +70,7 @@ patchPluginXml {
       </ul     
       <h4>Bug Fixes</h4>
       <ul>
-        <li><em>Fixed settings not updating without restart</em></li>
-        <li><em>Fixed folders not being created when uploading a new file</em></li>
-        <li><em>Fixed bug that caused Vue.js goto component references to stop working</em></li>
+        <li><em>Removed Xchange link as Xchange no longer exists</em></li>
       </ul>     
       """
 }

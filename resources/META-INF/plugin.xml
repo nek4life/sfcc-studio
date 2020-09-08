@@ -126,15 +126,6 @@
             <add-to-group group-id="SFCCActionGroup" />
         </action>
 
-        <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseXChangeAction"
-                class="com.binarysushi.studio.browseActions.StudioBrowseXChangeAction"
-                text="Browse XChange"
-                description="Browse XChange">
-
-            <add-to-group group-id="SFCCActionGroup" />
-        </action>
-
-
         <action class="com.binarysushi.studio.templates.StudioCreateISMLFileAction" id="StudioCreateISMLFile">
             <add-to-group group-id="NewGroup" anchor="before" relative-to-action="NewFromTemplate"/>
         </action>
