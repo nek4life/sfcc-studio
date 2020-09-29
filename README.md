@@ -1,6 +1,11 @@
-# Salesforce Commerce Cloud Studio
+# Salesforce Commerce Cloud (SFCC) Studio
+
+## The original plugin for developing Salesforce B2C Commerce (SFCC) sites</h2>
+
+SFCC Studio has features such as script debugging, code synchronization, syntax highlighting, auto complete and more...
 
 ### Features
+ * Script Debugger
  * Project wizard to set up a project with ease.
  * Cartridge root configuration settings.
  * Sandbox filesystem sync
@@ -10,6 +15,7 @@
  * Basic auto completion for ISML tags, attributes, and known valid attribute values.
  * Live template shortcuts for ISML tags.
  * New DS and ISML file actions
+ * And more...
  
  ### Plugin Development
  
