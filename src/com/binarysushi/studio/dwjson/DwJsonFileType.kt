@@ -19,7 +19,7 @@ class DwJsonFileType : LanguageFileType(JsonLanguage.INSTANCE, true) {
     }
 
     override fun getDefaultExtension(): String {
-        TODO("Not yet implemented")
+        return ".json"
     }
 
     override fun getIcon(): Icon? {
