@@ -4,7 +4,7 @@
     <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
 
     <description><![CDATA[
-        <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites</h1>
+        <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites with Jetbrains IDEs</h1>
         <p>SFCC Studio has features such as script debugging, code synchronization, syntax highlighting, auto complete and more...</p>
 
         <ul>
@@ -44,6 +44,8 @@
         <moduleBuilder builderClass="com.binarysushi.studio.projectWizard.StudioModuleBuilder"/>
 
         <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
+
+        <fileType name="DW_JSON" fileNames="dw.json" implementationClass="com.binarysushi.studio.dwjson.DwJsonFileType" fieldName="INSTANCE"/>
 
         <!-- ISML Extensions-->
         <fileType name="ISML" implementationClass="com.binarysushi.studio.language.isml.ISMLFileType" fieldName="INSTANCE"
