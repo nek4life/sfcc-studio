@@ -4,8 +4,9 @@
     <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
 
     <description><![CDATA[
-        <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites with Jetbrains IDEs</h1>
-        <p>SFCC Studio has features such as script debugging, code synchronization, syntax highlighting, auto complete and more...</p>
+        <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites on the Jetbrains IDE platform</h1>
+
+        <p>Salesforce Commerce Cloud (SFCC) Studio has features such as script debugging, code synchronization, syntax highlighting, auto complete and more...</p>
 
         <ul>
              <li>Script Debugger</li>
@@ -20,6 +21,8 @@
              <li>New DS and ISML file actions</li>
              <li>And more...</li>
         </li>
+
+        <p>If you'd like to contribute to this plugin or report an issue please visit the <a href="https://github.com/nek4life/sfcc-studio">Github page</a> for this project.</p>
     ]]></description>
 
     <depends>JavaScript</depends>
