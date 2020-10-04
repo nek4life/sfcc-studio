@@ -13,6 +13,7 @@ http-client.private.env.json
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea/**/misc.xml
 .idea/**/vagrant.xml
 .idea/**/jarRepositories.xml
 .idea/
