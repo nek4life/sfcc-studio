@@ -1,4 +1,4 @@
-package com.binarysushi.studio.dwjson
+package com.binarysushi.studio.language.dwjson
 
 import com.binarysushi.studio.StudioIcons
 import com.intellij.json.JsonLanguage

@@ -48,7 +48,9 @@
 
         <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
 
-        <fileType name="DW_JSON" fileNames="dw.json" implementationClass="com.binarysushi.studio.dwjson.DwJsonFileType" fieldName="INSTANCE"/>
+        <fileType name="DW_JSON" fileNames="dw.json" implementationClass="com.binarysushi.studio.language.dwjson.DwJsonFileType" fieldName="INSTANCE"/>
+        <completion.contributor language="JSON" implementationClass="com.binarysushi.studio.language.dwjson.DWJsonCompletionContributor"/>
+        <codeInsight.lineMarkerProvider language="JSON" implementationClass="com.binarysushi.studio.language.dwjson.DwJsonLineMarkerProvider"/>
 
         <!-- ISML Extensions-->
         <fileType name="ISML" implementationClass="com.binarysushi.studio.language.isml.ISMLFileType" fieldName="INSTANCE"
