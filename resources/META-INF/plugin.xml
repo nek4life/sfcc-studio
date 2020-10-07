@@ -50,7 +50,6 @@
 
         <fileType name="DW_JSON" fileNames="dw.json" implementationClass="com.binarysushi.studio.language.dwjson.DwJsonFileType" fieldName="INSTANCE"/>
         <completion.contributor language="JSON" implementationClass="com.binarysushi.studio.language.dwjson.DWJsonCompletionContributor"/>
-        <codeInsight.lineMarkerProvider language="JSON" implementationClass="com.binarysushi.studio.language.dwjson.DwJsonLineMarkerProvider"/>
 
         <!-- ISML Extensions-->
         <fileType name="ISML" implementationClass="com.binarysushi.studio.language.isml.ISMLFileType" fieldName="INSTANCE"
