@@ -11,7 +11,7 @@ import com.intellij.util.ProcessingContext
 class DWJsonCompletionContributor : CompletionContributor() {
     init {
         extend(
-            CompletionType.SMART,
+            CompletionType.BASIC,
             PlatformPatterns.psiElement().withLanguage(JsonLanguage.INSTANCE),
             DWJsonCompletionProvider()
         )
