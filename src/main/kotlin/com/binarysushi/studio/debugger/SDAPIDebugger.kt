@@ -19,9 +19,8 @@ import com.intellij.xdebugger.breakpoints.XBreakpointProperties
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
 import java.util.concurrent.ConcurrentHashMap
-
 
 class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebugProcess) {
     private val config = session.project.service<StudioConfigurationProvider>()
@@ -38,7 +37,6 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     var processState = DebuggerProcessState.STOPPED
     var currentThreads = ConcurrentHashMap<Int, ScriptThread>()
     var pendingThreads = ConcurrentHashMap<Int, ScriptThread>()
-
 
     private companion object {
         const val THREAD_RESET_TIMEOUT = 30000L
@@ -58,8 +56,8 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
             // TODO add connection retry here
             debuggerClient.createSession() { response ->
                 if (response.isSuccessful) {
-                    connectionState = DebuggerConnectionState.CONNECTED;
-                    processState = DebuggerProcessState.WAITING;
+                    connectionState = DebuggerConnectionState.CONNECTED
+                    processState = DebuggerProcessState.WAITING
 
                     printToConsole("Setting breakpoints...")
 
@@ -75,22 +73,25 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                     session.reportError("Session failed to start")
                     session.stop()
                 }
-            };
+            }
         }
     }
 
     fun disconnect() {
         ApplicationManager.getApplication().executeOnPooledThread {
             printToConsole("Debugger shutting down...")
-            debuggerClient.deleteSession(onSuccess = {
-                connectionState = DebuggerConnectionState.DISCONNECTED
-                printToConsole("Debug session has ended")
-                session.reportMessage("Debug session stopped", MessageType.INFO)
-            }, onFailure = {
-                connectionState = DebuggerConnectionState.DISCONNECTED
-                printToConsole("Debug session has ended")
-                session.reportMessage("Debug session stopped", MessageType.INFO)
-            })
+            debuggerClient.deleteSession(
+                onSuccess = {
+                    connectionState = DebuggerConnectionState.DISCONNECTED
+                    printToConsole("Debug session has ended")
+                    session.reportMessage("Debug session stopped", MessageType.INFO)
+                },
+                onFailure = {
+                    connectionState = DebuggerConnectionState.DISCONNECTED
+                    printToConsole("Debug session has ended")
+                    session.reportMessage("Debug session stopped", MessageType.INFO)
+                }
+            )
         }
     }
 
@@ -131,7 +132,6 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         threadLoop()
     }
 
-
     private fun suspendDebugger(thread: ScriptThread) {
         ApplicationManager.getApplication().runReadAction {
             val suspendContext = StudioSuspendContext(process, thread, currentThreads)
@@ -149,38 +149,39 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
     private fun getThreads(requestTag: String? = null) {
         if (connectionState === DebuggerConnectionState.CONNECTED) {
             // TODO This logic seems prone to race conditions when I set a faster timeout setting
-            debuggerClient.getThreads(requestTag, onSuccess = { threads ->
-                for (thread in threads!!) {
-
-
-                    if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
-                        currentThreads[thread.id] = thread
-                        suspendDebugger(thread)
-                    } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
-                        currentThreads[thread.id] = thread;
-                        pendingThreads.remove(thread.id);
-                        suspendDebugger(thread)
-                    } else if (currentThreads.containsKey(thread.id) && thread.status == "halted" && threads.size > 1 && !session.isSuspended) {
-                        // This last condition ensures that if there were multiple threads and a thread reaches the end of its
-                        // steps that the remaining threads are caught and suspended. I'm not sure if this is the way most debuggers work or not...
-                        suspendDebugger(thread)
+            debuggerClient.getThreads(
+                requestTag,
+                onSuccess = { threads ->
+                    for (thread in threads!!) {
+                        if (!currentThreads.containsKey(thread.id) && thread.status == "halted") {
+                            currentThreads[thread.id] = thread
+                            suspendDebugger(thread)
+                        } else if (pendingThreads.containsKey(thread.id) && thread.status == "halted") {
+                            currentThreads[thread.id] = thread
+                            pendingThreads.remove(thread.id)
+                            suspendDebugger(thread)
+                        } else if (currentThreads.containsKey(thread.id) && thread.status == "halted" && threads.size > 1 && !session.isSuspended) {
+                            // This last condition ensures that if there were multiple threads and a thread reaches the end of its
+                            // steps that the remaining threads are caught and suspended. I'm not sure if this is the way most debuggers work or not...
+                            suspendDebugger(thread)
+                        }
                     }
-                }
 
-                for ((_, value) in currentThreads) {
-                    if (!threads.any { it.id == value.id }) {
-                        currentThreads.remove(value.id)
+                    for ((_, value) in currentThreads) {
+                        if (!threads.any { it.id == value.id }) {
+                            currentThreads.remove(value.id)
+                        }
                     }
-                }
-            }, onError = {
-                if (it.type == "DebuggerDisabledException") {
-                    session.stop()
-                    // TODO change these to resources
+                },
+                onError = {
+                    if (it.type == "DebuggerDisabledException") {
+                        session.stop()
+                        // TODO change these to resources
 
-                    printToConsole("The current debug session has become inactive. Please restart your debug session.\n")
-                    session.reportMessage("Please restart debug session\n", MessageType.ERROR)
-                }
-            })
+                        printToConsole("The current debug session has become inactive. Please restart your debug session.\n")
+                        session.reportMessage("Please restart debug session\n", MessageType.ERROR)
+                    }
+                })
         }
     }
 
@@ -188,14 +189,20 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
         pendingThreads[scriptThread.id] = scriptThread
         processState = DebuggerProcessState.EXECUTING
         debuggerClient.cancelRequests("threadLoop")
-        debuggerClient.resume(scriptThread.id, onSuccess = {
-            getThreads()
-            processState = DebuggerProcessState.WAITING
-        }, onError = {
-            processState = DebuggerProcessState.WAITING
-        }, onFailure = {
-            processState = DebuggerProcessState.WAITING
-        })
+
+        debuggerClient.resume(
+            scriptThread.id,
+            onSuccess = {
+                getThreads()
+                processState = DebuggerProcessState.WAITING
+            },
+            onError = {
+                processState = DebuggerProcessState.WAITING
+            },
+            onFailure = {
+                processState = DebuggerProcessState.WAITING
+            }
+        )
     }
 
     fun stepInto(scriptThread: ScriptThread) {
@@ -267,9 +274,12 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
             if (cartridgeRootPath != null) {
                 // Replace is for Windows...
                 val filePath =
-                    CartridgePathUtil.getCartridgeRelativeFilePath(cartridgeRootPath, xLineBreakpoint.presentableFilePath)
+                    CartridgePathUtil.getCartridgeRelativeFilePath(
+                        cartridgeRootPath,
+                        xLineBreakpoint.presentableFilePath
+                    )
 
-                debuggerClient.createBreakpoint(line + 1, "/${filePath}", onSuccess = { breakpoint ->
+                debuggerClient.createBreakpoint(line + 1, "/$filePath", onSuccess = { breakpoint ->
                     xLineBreakpoint.putUserData(idKey, breakpoint.id!!)
                     session.setBreakpointVerified(xLineBreakpoint)
                     session.updateBreakpointPresentation(
@@ -278,7 +288,7 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                         null
                     )
 
-                    printToConsole("Listening on: ${xLineBreakpoint.fileUrl}:${xLineBreakpoint.line  + 1}")
+                    printToConsole("Listening on: ${xLineBreakpoint.fileUrl}:${xLineBreakpoint.line + 1}")
                 }, onError = {
                     if (it.type == "DebuggerDisabledException") {
                         session.stop()

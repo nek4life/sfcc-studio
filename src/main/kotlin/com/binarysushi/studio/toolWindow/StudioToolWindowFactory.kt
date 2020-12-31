@@ -21,7 +21,9 @@ class StudioToolWindowFactory : ToolWindowFactory {
     private val linksComponent: JComponent
         get() {
             val documentationLabel = HyperlinkLabel("Documentation")
-            documentationLabel.setHyperlinkTarget("https://documentation.b2c.commercecloud.salesforce.com/DOC1/index.jsp")
+
+            documentationLabel.setHyperlinkTarget(
+                "https://documentation.b2c.commercecloud.salesforce.com/DOC1/index.jsp")
 
             val slackLabel = HyperlinkLabel("Slack")
             slackLabel.setHyperlinkTarget("https://sfcc-unofficial.slack.com")

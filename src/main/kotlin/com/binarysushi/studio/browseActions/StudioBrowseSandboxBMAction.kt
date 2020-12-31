@@ -17,7 +17,8 @@ class StudioBrowseSandboxBMAction : AnAction(), DumbAware {
         val hostname = configurationProvider.hostname
 
         if (hostname != null && hostname.isNotEmpty()) {
-            BrowserUtil.browse("https://$hostname/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage")
+            BrowserUtil.browse(
+                "https://$hostname/on/demandware.store/Sites-Site/default/ViewApplication-DisplayWelcomePage")
         } else {
             Notifications.Bus.notify(
                 Notification(

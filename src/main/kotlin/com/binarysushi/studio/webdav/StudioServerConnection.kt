@@ -8,7 +8,7 @@ import java.net.UnknownHostException
 import java.nio.file.Paths
 import java.util.*
 
-class StudioServerConnection(config : StudioConfigurationProvider) {
+class StudioServerConnection(config: StudioConfigurationProvider) {
     val basePath = "https://${config.hostname}/on/demandware.servlet/webdav/Sites/Cartridges/${config.version}"
     val client = OkHttpClient.Builder()
         .proxySelector(CommonProxy.getInstance())
@@ -55,7 +55,7 @@ class StudioServerConnection(config : StudioConfigurationProvider) {
             call.code
         } catch (e: UnknownHostException) {
             StudioServerNotifier.notify("Unknown Host")
-            -1;
+            -1
         }
     }
 }

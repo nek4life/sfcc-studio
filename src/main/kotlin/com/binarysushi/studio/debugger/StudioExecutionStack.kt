@@ -4,7 +4,11 @@ import com.binarysushi.studio.debugger.client.ScriptThread
 import com.intellij.xdebugger.frame.XExecutionStack
 import com.intellij.xdebugger.frame.XStackFrame
 
-class StudioExecutionStack(private val process: StudioDebugProcess, private val suspendContext: StudioSuspendContext, val scriptThread: ScriptThread) :
+class StudioExecutionStack(
+    private val process: StudioDebugProcess,
+    private val suspendContext: StudioSuspendContext,
+    val scriptThread: ScriptThread
+) :
     XExecutionStack(scriptThread.id.toString()) {
 
     private val stackFrames: List<StudioStackFrame> by lazy {

@@ -6,4 +6,4 @@ class StudioProjectWizardData(
     val password: String,
     val version: String,
     val autoUploadEnabled: Boolean
-) 
+)

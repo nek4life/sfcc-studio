@@ -5,12 +5,16 @@ import com.intellij.xdebugger.frame.XExecutionStack
 import com.intellij.xdebugger.frame.XSuspendContext
 import java.util.concurrent.ConcurrentHashMap
 
-class StudioSuspendContext(process: StudioDebugProcess, currentThread: ScriptThread, currentThreads: ConcurrentHashMap<Int, ScriptThread>) : XSuspendContext() {
-    private var activeExecutionStack: StudioExecutionStack?;
+class StudioSuspendContext(
+    process: StudioDebugProcess,
+    currentThread: ScriptThread,
+    currentThreads: ConcurrentHashMap<Int, ScriptThread>
+) : XSuspendContext() {
+    private var activeExecutionStack: StudioExecutionStack?
     private var stackFrames: MutableList<StudioExecutionStack>
 
     init {
-        activeExecutionStack = null;
+        activeExecutionStack = null
         stackFrames = mutableListOf()
 
         currentThreads.forEach {

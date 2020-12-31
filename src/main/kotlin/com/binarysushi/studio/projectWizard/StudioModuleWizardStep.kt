@@ -36,5 +36,4 @@ class StudioModuleWizardStep(private val myWizardContext: WizardContext, private
 //        }
         return super.validate()
     }
-
 }

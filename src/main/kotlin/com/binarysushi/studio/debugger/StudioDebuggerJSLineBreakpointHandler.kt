@@ -12,7 +12,10 @@ class StudioDebuggerJSLineBreakpointHandler(private val process: StudioDebugProc
         process.addBreakpoint(breakpoint)
     }
 
-    override fun unregisterBreakpoint(breakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>, temporary: Boolean) {
+    override fun unregisterBreakpoint(
+        breakpoint: XLineBreakpoint<JavaScriptLineBreakpointProperties>,
+        temporary: Boolean
+    ) {
         process.removeBreakpoint(breakpoint)
     }
 }

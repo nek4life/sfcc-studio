@@ -77,7 +77,7 @@ class StudioNamedValue(
         var objectPath = member.name
 
         if (parentObjectPath != null) {
-            objectPath = "${parentObjectPath}.${member.name}"
+            objectPath = "$parentObjectPath.${member.name}"
         }
 
         process.debuggerClient.getMembers(
@@ -99,5 +99,4 @@ class StudioNamedValue(
 //    override fun computeInlineDebuggerData(callback: XInlineDebuggerDataCallback): ThreeState {
 //        return super.computeInlineDebuggerData(callback)
 //    }
-
 }

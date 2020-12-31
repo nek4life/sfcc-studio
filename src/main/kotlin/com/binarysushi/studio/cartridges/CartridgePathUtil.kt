@@ -4,9 +4,8 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import java.nio.file.Paths
-import java.util.*
 
-class CartridgePathUtil() {
+class CartridgePathUtil {
     companion object {
 
         /**
@@ -63,8 +62,8 @@ class CartridgePathUtil() {
             for (root in getActiveCartridgeRoots(project)) {
                 val cartridgeName = getCartridgeNameFromRootPath(root)
                 if (localFilePath.contains(cartridgeName)) {
-                    val nioRoot = Paths.get(root).parent;
-                    return "${nioRoot}${localFilePath}"
+                    val nioRoot = Paths.get(root).parent
+                    return "$nioRoot$localFilePath"
                 }
             }
 

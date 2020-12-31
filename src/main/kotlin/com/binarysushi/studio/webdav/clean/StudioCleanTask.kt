@@ -34,7 +34,7 @@ class StudioCleanTask internal constructor(
     override fun run(indicator: ProgressIndicator) {
         val configurationProvider = project.service<StudioConfigurationProvider>()
         val consoleView = project.service<StudioConsoleService>().consoleView
-        val serverConnection = StudioServerConnection(configurationProvider);
+        val serverConnection = StudioServerConnection(configurationProvider)
 
         val cartridgeRoots = configurationProvider.cartridgeRoots
 
@@ -120,7 +120,8 @@ class StudioCleanTask internal constructor(
         }
 
         consoleView.print(
-            "[" + timeFormat.format(Date()) + "] " + "Cleaned " + serverConnection.basePath + "\n", ConsoleViewContentType.NORMAL_OUTPUT
+            "[" + timeFormat.format(Date()) + "] " + "Cleaned " + serverConnection.basePath + "\n",
+            ConsoleViewContentType.NORMAL_OUTPUT
         )
 
         FileUtil.delete(tempDir)

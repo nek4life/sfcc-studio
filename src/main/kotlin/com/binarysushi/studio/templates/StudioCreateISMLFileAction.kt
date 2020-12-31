@@ -7,7 +7,8 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 
-class StudioCreateISMLFileAction : CreateFileFromTemplateAction("ISML File", "Creates a new ISML file", StudioIcons.STUDIO_ISML_ICON), DumbAware {
+class StudioCreateISMLFileAction :
+    CreateFileFromTemplateAction("ISML File", "Creates a new ISML file", StudioIcons.STUDIO_ISML_ICON), DumbAware {
 
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
         builder.setTitle("ISML").addKind("ISML File", StudioIcons.STUDIO_ISML_ICON, "ISML File.isml")

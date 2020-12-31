@@ -56,7 +56,10 @@ class StudioProjectGenerator : WebProjectTemplate<StudioProjectWizardData?>() {
             return myConfigurationPanel.createPanel()
         }
 
-        override fun buildUI(settingsStep: SettingsStep) {}
+        override fun buildUI(settingsStep: SettingsStep) {
+            TODO("Not yet implemented")
+        }
+
         override fun getSettings(): StudioProjectWizardData {
             return StudioProjectWizardData(
                 myConfigurationPanel.hostname,

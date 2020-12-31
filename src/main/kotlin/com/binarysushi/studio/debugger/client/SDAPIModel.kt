@@ -50,11 +50,11 @@ data class Location(
 
 @Serializable
 data class ObjectMemberResponse(
- @SerialName("_v") val version: String,
- @SerialName("object_members") val objectMembers: List<ObjectMember> = listOf(),
- val count: Int,
- val start: Int,
- val total: Int
+    @SerialName("_v") val version: String,
+    @SerialName("object_members") val objectMembers: List<ObjectMember> = listOf(),
+    val count: Int,
+    val start: Int,
+    val total: Int
 )
 
 @Serializable
@@ -85,5 +85,3 @@ data class StackFrame(
     val index: Int,
     val location: Location
 )
-
-

@@ -26,8 +26,8 @@ class StudioUpdateFileTask(
     sourceRootPath: String,
     private val eventFile: VirtualFile
 ) : Backgroundable(project, title, canBeCancelled, backgroundOption) {
-    private val configurationProvider = project.service<StudioConfigurationProvider>();
-    private val serverConnection = StudioServerConnection(configurationProvider);
+    private val configurationProvider = project.service<StudioConfigurationProvider>()
+    private val serverConnection = StudioServerConnection(configurationProvider)
     private val consoleView = project.service<StudioConsoleService>().consoleView
     private val remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath, eventFile.path)
     private val remoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath, eventFile.path)
@@ -35,7 +35,7 @@ class StudioUpdateFileTask(
 
     override fun run(indicator: ProgressIndicator) {
         val localFile = File(eventFile.path)
-        var fileStatus = FileStatus.NEW;
+        var fileStatus = FileStatus.NEW
         indicator.isIndeterminate = false
         indicator.fraction = .33
         val statusCode = serverConnection.testRemoteFileExistence(remoteFilePath)
@@ -101,13 +101,13 @@ class StudioUpdateFileTask(
 
                 consoleView.print(
                     "[" + timeFormat.format(Date()) + "] " + "[" + message + " (" + localFile.name + ")] " + request.url
-                        .toString() + "\n", ConsoleViewContentType.NORMAL_OUTPUT
+                        .toString() + "\n",
+                    ConsoleViewContentType.NORMAL_OUTPUT
                 )
             }
         } catch (e: FileNotFoundException) {
             // TODO handle file not found
         }
-
     }
 
     private enum class FileStatus {

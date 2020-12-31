@@ -40,11 +40,13 @@ class StudioStackFrame(
     }
 
     override fun getSourcePosition(): XSourcePosition? {
-        val path = CartridgePathUtil.getAbsolutFilePathFromCartridgeRelativePath(process.session.project, stackFrame.location.scriptPath)
-            ?: return null
+        val path = CartridgePathUtil.getAbsolutFilePathFromCartridgeRelativePath(
+            process.session.project,
+            stackFrame.location.scriptPath
+        ) ?: return null
 
         val virtualFile = LocalFileSystem.getInstance().findFileByNioFile(Paths.get(path).normalize())
-        return XDebuggerUtil.getInstance().createPosition(virtualFile, stackFrame.location.lineNumber - 1);
+        return XDebuggerUtil.getInstance().createPosition(virtualFile, stackFrame.location.lineNumber - 1)
     }
 
     override fun computeChildren(node: XCompositeNode) {

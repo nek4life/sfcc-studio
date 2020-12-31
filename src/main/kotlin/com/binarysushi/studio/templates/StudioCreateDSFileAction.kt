@@ -7,7 +7,8 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.psi.PsiDirectory
 
-class StudioCreateDSFileAction : CreateFileFromTemplateAction("DS File", "Creates a DS file", StudioIcons.STUDIO_DS_ICON), DumbAware {
+class StudioCreateDSFileAction :
+    CreateFileFromTemplateAction("DS File", "Creates a DS file", StudioIcons.STUDIO_DS_ICON), DumbAware {
     override fun buildDialog(project: Project, directory: PsiDirectory, builder: CreateFileFromTemplateDialog.Builder) {
         builder.setTitle("DS File")
             .addKind("DS File", StudioIcons.STUDIO_DS_ICON, "DS File.ds")

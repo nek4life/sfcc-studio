@@ -1,6 +1,5 @@
 package com.binarysushi.studio.debugger.client
 
-
 import com.binarysushi.studio.webdav.StudioServerAuthenticator
 import com.intellij.util.proxy.CommonProxy
 import kotlinx.serialization.ExperimentalSerializationApi
@@ -11,7 +10,6 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 import java.lang.reflect.Type
-
 
 private val json = Json {
     encodeDefaults = false
@@ -30,9 +28,8 @@ class JSONCallback(val type: Type, val then: (Any) -> Unit) : Callback {
 }
 
 class SDAPIClient(private val hostname: String, private val username: String, private val password: String) {
-    private val baseURL = "https://${hostname}/s/-/dw/debugger/v2_0"
+    private val baseURL = "https://$hostname/s/-/dw/debugger/v2_0"
     private val CLIENT_ID = "SFCCDebugger"
-
 
     private val client = OkHttpClient.Builder()
         .proxySelector(CommonProxy.getInstance())
@@ -61,7 +58,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             override fun onResponse(call: Call, response: Response) {
                 then(response)
             }
-        });
+        })
     }
 
     fun deleteSession(onSuccess: () -> Unit, onFailure: () -> Unit) {
@@ -94,7 +91,6 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
         }
     }
-
 
     fun getThreads(
         requestTag: String? = null,
@@ -141,7 +137,9 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
                 println(e.message)
             }
 
-            override fun onResponse(call: Call, response: Response) {}
+            override fun onResponse(call: Call, response: Response) {
+                TODO("Not yet implemented")
+            }
         })
     }
 
@@ -185,7 +183,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
 
     fun deleteBreakpoint(breakpointId: Int, onSuccess: (Any) -> Unit = {}, onFailure: (Any) -> Unit = {}) {
         val request = Request.Builder()
-            .url("$baseURL/breakpoints/${breakpointId}")
+            .url("$baseURL/breakpoints/$breakpointId")
             .delete()
             .build()
 
@@ -210,10 +208,10 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         onSuccess: (ObjectMemberResponse) -> Unit = {},
         onFailure: (Call) -> Unit = {}
     ) {
-        var url = "$baseURL/threads/${threadId}/frames/${frameIndex}/members?start=${start}&count=${count}"
+        var url = "$baseURL/threads/$threadId/frames/$frameIndex/members?start=$start&count=$count"
 
         if (objectPath != null) {
-            url = "${url}&object_path=${objectPath}"
+            url = "$url&object_path=$objectPath"
         }
 
         val request = Request.Builder()
@@ -243,7 +241,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         onFailure: (Call) -> Unit = {}
     ) {
         val request = Request.Builder()
-            .url("$baseURL/threads/${threadId}/frames/${frameIndex}/variables?start=${start}&count=${count}")
+            .url("$baseURL/threads/$threadId/frames/$frameIndex/variables?start=$start&count=$count")
             .get()
             .build()
 
@@ -261,12 +259,13 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
     }
 
     fun resume(
-        threadId: Int, onSuccess: () -> Unit = {},
+        threadId: Int,
+        onSuccess: () -> Unit = {},
         onError: (Fault) -> Unit = {},
         onFailure: (Any) -> Unit = {}
     ) {
         val request = Request.Builder()
-            .url("$baseURL/threads/${threadId}/resume")
+            .url("$baseURL/threads/$threadId/resume")
             .post("".toRequestBody())
             .build()
 
@@ -279,17 +278,17 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
                 response.body!!.close()
                 onSuccess()
             }
-
         })
     }
 
     fun stepInto(
-        threadId: Int, onSuccess: (ScriptThread) -> Unit = {},
+        threadId: Int,
+        onSuccess: (ScriptThread) -> Unit = {},
         onError: (Fault) -> Unit = {},
         onFailure: (Any) -> Unit = {}
     ) {
         val request = Request.Builder()
-            .url("$baseURL/threads/${threadId}/into")
+            .url("$baseURL/threads/$threadId/into")
             .post("".toRequestBody())
             .build()
 
@@ -311,12 +310,13 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
     }
 
     fun stepOver(
-        threadId: Int, onSuccess: (ScriptThread) -> Unit = {},
+        threadId: Int,
+        onSuccess: (ScriptThread) -> Unit = {},
         onError: (Fault) -> Unit = {},
         onFailure: (Any) -> Unit = {}
     ) {
         val request = Request.Builder()
-            .url("$baseURL/threads/${threadId}/over")
+            .url("$baseURL/threads/$threadId/over")
             .post("".toRequestBody())
             .build()
 
@@ -338,12 +338,13 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
     }
 
     fun stepOut(
-        threadId: Int, onSuccess: (ScriptThread) -> Unit = {},
+        threadId: Int,
+        onSuccess: (ScriptThread) -> Unit = {},
         onError: (Fault) -> Unit = {},
         onFailure: (Any) -> Unit = {}
     ) {
         val request = Request.Builder()
-            .url("$baseURL/threads/${threadId}/out")
+            .url("$baseURL/threads/$threadId/out")
             .post("".toRequestBody())
             .build()
 
@@ -373,7 +374,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
         onFailure: (Any) -> Unit = {}
     ) {
         val request = Request.Builder()
-            .url("$baseURL/threads/${threadId}/frames/${frameIndex}/eval?expr=${expression}")
+            .url("$baseURL/threads/$threadId/frames/$frameIndex/eval?expr=$expression")
             .get()
             .build()
 
