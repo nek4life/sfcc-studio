@@ -9,8 +9,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")
-        classpath("org.jetbrains.kotlin:kotlin-serialization:1.4.10")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21-2")
+        classpath("org.jetbrains.kotlin:kotlin-serialization:1.4.21-2")
     }
 }
 
@@ -22,7 +22,7 @@ plugins {
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.6.5"
 
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.21-2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "0.6.2"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
@@ -55,9 +55,8 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.4.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.1")
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
 
