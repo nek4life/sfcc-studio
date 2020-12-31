@@ -1,0 +1,102 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "description": "Sandbox configuration file. Note 'dw.json' should be placed in root of cartridges",
+    "properties": {
+        "hostname": {
+            "type": "string",
+            "default": "*.demandware.net",
+            "format": "hostname",
+            "description": "Domain name of sandbox"
+        },
+        "username": {
+            "type": "string",
+            "default": "admin",
+            "description": "Username/Login"
+        },
+        "password": {
+            "type": "string",
+            "default": "Passw0rd!",
+            "description": "User's password (will be asked if empty)"
+        },
+        "code-version": {
+            "type": "string",
+            "default": "version1",
+            "description": "Version of code. Note: code version should exist before can be uploaded"
+        },
+        "version": {
+            "type": "string",
+            "default": "version1",
+            "description": "Version of code. Note: code version should exist before can be uploaded"
+        },
+        "cartridge": {
+            "type": "array",
+            "description": "List of cartridges. If empty than all subdirectory of current directory is treated as cartridges and will be uploaded",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true
+        },
+        "cartridgesPath": {
+            "type": "string",
+            "description": "List of cartridges, which is in the site cartridges path separated by ':', example: \"app_site:plugin_newsletter:plugin_sitemap:plugin_wishlists:app_storefront_base\""
+        },
+        "p12": {
+            "type": "string",
+            "description": "Absolute path certificate file [Currently not supported]"
+        },
+        "passphrase": {
+            "type": "string",
+            "description": "Passphrase for certificate file [Currently not supported]"
+        },
+        "verbose": {
+            "type": "boolean",
+            "default": false,
+            "description": "Enable more verbose logging"
+        },
+        "cartridgeResolution": {
+            "type": "string",
+            "default": "ask",
+            "enum": [
+                "ask",
+                "remove",
+                "leave"
+            ],
+            "description": "Leaves all the cartridges instead of asking"
+        },
+        "client-id": {
+            "type":"string",
+            "default": "aaaaaaaaaaaaaaaaaaa",
+            "description": "Client id for On-Demand Sandbox API"
+        },
+        "client-secret": {
+            "type":"string",
+            "default": "passw0rd!",
+            "description": "Client secret for On-Demand Sandbox API"
+        }
+    },
+    "dependencies": {
+        "p12": [
+            "passphrase"
+        ]
+    },
+    "oneOf": [
+        {
+            "required": [
+                "hostname",
+                "username",
+                "version",
+                "cartridgesPath"
+            ]
+        },
+        {
+            "required": [
+                "hostname",
+                "username",
+                "code-version",
+                "cartridgesPath"
+            ]
+        }
+    ],
+    "additionalProperties": false
+}

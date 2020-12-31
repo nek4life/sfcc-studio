@@ -72,6 +72,9 @@
         <configurationType implementation="com.binarysushi.studio.configuration.run.StudioDebuggerConfigurationType"/>
         <programRunner implementation="com.binarysushi.studio.debugger.StudioDebuggerRunner" />
 
+        <!-- JavaScript -->
+        <psi.referenceContributor language="JavaScript" implementation="com.binarysushi.studio.language.javascript.RequirePsiReferenceContributor"/>
+
         <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>
     </extensions>
 
