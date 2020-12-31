@@ -56,7 +56,7 @@ repositories {
 }
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.4.0")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.4.21-2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.0-RC")
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
