@@ -33,28 +33,29 @@ SFCC Studio has features such as script debugging, code synchronization, syntax 
 
 - Manually:
 
-  Download the [latest release](https://github.com/nek4life/sfcc-studio-template/releases/latest) and install it manually using
+  Download the [latest release](https://github.com/nek4life/sfcc-studio/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
-  
- ## Plugin Development
  
- This project is now Gradle based and is much easier to get the development 
- environment setup to work on the plugin. You should only need to import the 
- project in either Intellij Community or Intellij Ultimate and execute the runIde
- Gradle task. For more information please see the official Jetbrains plugin
- development documentation. 
- 
- http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system.html
- 
- ## Plugin configurations
- File | Settings | Tools | Commerce Cloud Cartridges
+## Plugin configurations
+
+<kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Tools</kbd> > <kbd>Commerce Cloud Cartridges</kbd>
 
  ![Commerce Cloud Cartridges](_img/Commerce_Cloud_Cartridges.png)
 
- File | Settings | Tools | Commerce Cloud Server
+<kbd>File</kbd> > <kbd>Settings</kbd> > <kbd>Tools</kbd> > <kbd>Commerce Cloud Server</kbd>
 
  ![Commerce Cloud Server](_img/Commerce_Cloud_Server.png)
- 
- 
- ## Plugin on the JetBrains site
- https://plugins.jetbrains.com/plugin/11590-salesforce-commerce-cloud-studio
+
+
+## Plugin Development
+
+This project is now Gradle based and is much easier to get the development
+environment setup to work on the plugin. You should only need to import the
+project in either Intellij Community or Intellij Ultimate and execute the runIde
+Gradle task. For more information please see the official Jetbrains plugin
+development documentation.
+
+http://www.jetbrains.org/intellij/sdk/docs/tutorials/build_system.html
+
+## Plugin on the JetBrains site
+https://plugins.jetbrains.com/plugin/11590-salesforce-commerce-cloud-studio
