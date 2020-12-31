@@ -22,7 +22,7 @@ plugins {
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.6.5"
 
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.0"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.21-2"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "0.6.2"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
