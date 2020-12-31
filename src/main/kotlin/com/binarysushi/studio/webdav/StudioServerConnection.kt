@@ -1,8 +1,6 @@
 package com.binarysushi.studio.webdav
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.intellij.openapi.components.service
-import com.intellij.openapi.project.Project
 import com.intellij.util.proxy.CommonProxy
 import okhttp3.OkHttpClient
 import okhttp3.Request

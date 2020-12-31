@@ -15,11 +15,6 @@ import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.asRequestBody
-import org.apache.http.Consts
-import org.apache.http.client.entity.UrlEncodedFormEntity
-import org.apache.http.client.methods.HttpUriRequest
-import org.apache.http.client.methods.RequestBuilder
-import org.apache.http.message.BasicNameValuePair
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
