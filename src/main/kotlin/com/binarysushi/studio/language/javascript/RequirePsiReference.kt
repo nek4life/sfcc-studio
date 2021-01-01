@@ -8,16 +8,10 @@ import com.intellij.psi.*
 import com.intellij.psi.search.*
 
 
-class RequirePsiReference(private val element: PsiElement) : PsiPolyVariantReference {
-    override fun getElement(): PsiElement {
-        return element
-    }
+class RequirePsiReference(element: PsiElement) :
+    PsiPolyVariantReferenceBase<PsiElement>(element, TextRange(1, element.text.length - 1)) {
 
-    override fun getRangeInElement(): TextRange {
-        return TextRange(1, element.text.length - 1)
-    }
-
-    private fun cleanElementPath(element: PsiElement) : CharSequence {
+    private fun cleanElementPath(element: PsiElement): CharSequence {
         val elementPath = element.text
 
         // Drop the quotes from element text
@@ -81,25 +75,5 @@ class RequirePsiReference(private val element: PsiElement) : PsiPolyVariantRefer
     override fun resolve(): PsiElement? {
         val resolveResults = multiResolve(false)
         return if (resolveResults.size == 1) resolveResults[0].element else null
-    }
-
-    override fun getCanonicalText(): String {
-        return element.text
-    }
-
-    override fun handleElementRename(newElementName: String): PsiElement {
-        TODO("Not yet implemented")
-    }
-
-    override fun bindToElement(element: PsiElement): PsiElement {
-        TODO("Not yet implemented")
-    }
-
-    override fun isReferenceTo(element: PsiElement): Boolean {
-        return this.element == element
-    }
-
-    override fun isSoft(): Boolean {
-        return false
     }
 }
