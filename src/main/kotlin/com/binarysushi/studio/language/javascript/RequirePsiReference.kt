@@ -17,22 +17,55 @@ class RequirePsiReference(private val element: PsiElement) : PsiPolyVariantRefer
         return TextRange(1, element.text.length - 1)
     }
 
+    private fun cleanElementPath(element: PsiElement) : CharSequence {
+        val elementPath = element.text
+
+        // Drop the quotes from element text
+        var cleanedElementPath = elementPath.drop(1).dropLast(1)
+
+        // Remove / charter from beginning of path
+        if (cleanedElementPath.startsWith("/")) {
+            cleanedElementPath = cleanedElementPath.drop(1)
+        }
+
+        // "*" throws an java.util.regex.PatternSyntaxException: Dangling meta character '*' near index 0
+        if (cleanedElementPath.startsWith("*")) {
+            cleanedElementPath = cleanedElementPath.drop(1)
+        }
+
+        // Remove ~ charter from beginning of path
+        if (cleanedElementPath.startsWith("~")) {
+            cleanedElementPath = cleanedElementPath.drop(1)
+        }
+
+        return cleanedElementPath
+    }
+
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
-        val jsFileIndex =
+        // Lookup JavaScript and JSON files by FileType
+        val fileTypeIndex =
             FileTypeIndex.getFiles(
                 JavaScriptFileType.INSTANCE,
                 GlobalSearchScope.projectScope(element.project)
             ) + FileTypeIndex.getFiles(JsonFileType.INSTANCE, GlobalSearchScope.projectScope(element.project))
 
-        val elementPath = element.text
-        val cleanedElementPath = elementPath.drop(2).dropLast(1)
-        val regex = "$cleanedElementPath\\.[js|ds|json]".toRegex()
+        val cleanedElementPath = cleanElementPath(element)
+        // Regex that adds file extensions so that elementPath can match files in the fileTypeIndices
+        val extensionRegex = "$cleanedElementPath\\.[js|ds|json]".toRegex()
 
-        val matches = jsFileIndex.filter {
+        val matches = fileTypeIndex.filter {
             val cartridgeRootPath = CartridgePathUtil.getCartridgeRootPathForFile(element.project, it.path)
+
+            // If file is not part of active cartridge path do not provide match
             if (cartridgeRootPath != null) {
                 val rootRelativePath = CartridgePathUtil.getCartridgeRelativeFilePath(cartridgeRootPath, it.path)
-                rootRelativePath.contains(regex)
+
+                // If cleanedElementPath has extension use that to match against file in index
+                if (".+\\.\\w+$".toRegex().matches(cleanedElementPath)) {
+                    rootRelativePath.contains(cleanedElementPath)
+                } else {
+                    rootRelativePath.contains(extensionRegex)
+                }
             } else {
                 false
             }
