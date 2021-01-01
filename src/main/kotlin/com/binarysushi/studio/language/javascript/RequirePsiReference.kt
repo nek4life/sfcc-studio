@@ -1,7 +1,6 @@
 package com.binarysushi.studio.language.javascript
 
 import com.binarysushi.studio.cartridges.*
-import com.intellij.codeInsight.lookup.*
 import com.intellij.json.*
 import com.intellij.lang.javascript.*
 import com.intellij.openapi.util.*
