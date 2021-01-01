@@ -6,6 +6,8 @@
 ### Added
 – Updated to support Java 11 and 2020.3 IDE versions and above
 – dw.json icon and autocomplete
+- Added require function file references for go to declaration support
+
 
 ## [Unreleased]
 ### Added
