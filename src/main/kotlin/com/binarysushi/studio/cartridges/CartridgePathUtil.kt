@@ -38,7 +38,7 @@ class CartridgePathUtil {
          *
          * /Users/username/project/cartridges/app_storefront_base --> app_storefront_base
          */
-        private fun getCartridgeNameFromRootPath(cartridgeRootPath: String): String {
+        fun getCartridgeNameFromRootPath(cartridgeRootPath: String): String {
             return Paths.get(cartridgeRootPath).fileName.toString()
         }
 

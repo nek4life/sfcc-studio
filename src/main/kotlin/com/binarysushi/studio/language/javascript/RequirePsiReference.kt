@@ -1,9 +1,11 @@
 package com.binarysushi.studio.language.javascript
 
 import com.binarysushi.studio.cartridges.*
+import com.intellij.codeInsight.lookup.*
 import com.intellij.json.*
 import com.intellij.lang.javascript.*
 import com.intellij.openapi.util.*
+import com.intellij.openapi.vfs.*
 import com.intellij.psi.*
 import com.intellij.psi.search.*
 
@@ -35,7 +37,7 @@ class RequirePsiReference(element: PsiElement) :
         return cleanedElementPath
     }
 
-    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+    private fun findFileMatches(element: PsiElement): List<VirtualFile> {
         // Lookup JavaScript and JSON files by FileType
         val fileTypeIndex =
             FileTypeIndex.getFiles(
@@ -47,7 +49,7 @@ class RequirePsiReference(element: PsiElement) :
         // Regex that adds file extensions so that elementPath can match files in the fileTypeIndices
         val extensionRegex = "$cleanedElementPath\\.[js|ds|json]".toRegex()
 
-        val matches = fileTypeIndex.filter {
+        return fileTypeIndex.filter {
             val cartridgeRootPath = CartridgePathUtil.getCartridgeRootPathForFile(element.project, it.path)
 
             // If file is not part of active cartridge path do not provide match
@@ -64,8 +66,10 @@ class RequirePsiReference(element: PsiElement) :
                 false
             }
         }
+    }
 
-        return matches.map {
+    override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        return findFileMatches(element).map {
             PsiElementResolveResult(
                 PsiManager.getInstance(element.project).findFile(it)!!.originalElement
             )
