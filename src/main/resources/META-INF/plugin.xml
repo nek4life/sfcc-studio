@@ -74,6 +74,7 @@
 
         <!-- JavaScript -->
         <psi.referenceContributor language="JavaScript" implementation="com.binarysushi.studio.language.javascript.RequirePsiReferenceContributor"/>
+        <completion.contributor language="JavaScript" implementationClass="com.binarysushi.studio.language.javascript.JavaScriptCompletionContributor" order="first"/>
 
         <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>
     </extensions>
