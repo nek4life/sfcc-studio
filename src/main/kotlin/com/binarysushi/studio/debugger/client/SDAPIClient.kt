@@ -27,7 +27,7 @@ class JSONCallback(val type: Type, val then: (Any) -> Unit) : Callback {
     }
 }
 
-class SDAPIClient(private val hostname: String, private val username: String, private val password: String) {
+class SDAPIClient(hostname: String, username: String, password: String) {
     private val baseURL = "https://$hostname/s/-/dw/debugger/v2_0"
     private val CLIENT_ID = "SFCCDebugger"
 
@@ -138,7 +138,7 @@ class SDAPIClient(private val hostname: String, private val username: String, pr
             }
 
             override fun onResponse(call: Call, response: Response) {
-                TODO("Not yet implemented")
+                // Do nothing be happy
             }
         })
     }
