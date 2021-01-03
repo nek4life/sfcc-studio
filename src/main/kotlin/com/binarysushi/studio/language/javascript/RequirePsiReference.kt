@@ -44,22 +44,26 @@ class RequirePsiReference(element: PsiElement) :
                 GlobalSearchScope.projectScope(element.project)
             ) + FileTypeIndex.getFiles(JsonFileType.INSTANCE, GlobalSearchScope.projectScope(element.project))
 
+
+        // Remove extra characters and special syntax from psiElement which is this case is a
+        // require() module path or Salesforce B2C application path
         val cleanedElementPath = cleanElementPath(element)
+
         // Regex that adds file extensions so that elementPath can match files in the fileTypeIndices
         val extensionRegex = "$cleanedElementPath\\.[js|ds|json]".toRegex()
 
         return fileTypeIndex.filter {
-            val cartridgeRootPath = CartridgePathUtil.getCartridgeRootPathForFile(element.project, it.path)
+            val studioFile = StudioFileManager(element.project).getStudioFile(it)
 
-            // If file is not part of active cartridge path do not provide match
-            if (cartridgeRootPath != null) {
-                val rootRelativePath = CartridgePathUtil.getCartridgeRelativeFilePath(cartridgeRootPath, it.path)
+            if (studioFile != null) {
+                val modulePath = studioFile.getModulePath()
 
-                // If cleanedElementPath has extension use that to match against file in index
+                // If cleanedElementPath has file extension use that to match against file in index otherwise
+                // use the extension regex that fuzzy matches the files with all possible extensions
                 if (".+\\.\\w+$".toRegex().matches(cleanedElementPath)) {
-                    rootRelativePath.contains(cleanedElementPath)
+                    modulePath.contains(cleanedElementPath)
                 } else {
-                    rootRelativePath.contains(extensionRegex)
+                    modulePath.contains(extensionRegex)
                 }
             } else {
                 false
