@@ -7,7 +7,6 @@ import com.intellij.codeInsight.lookup.*
 import com.intellij.json.*
 import com.intellij.lang.javascript.*
 import com.intellij.openapi.project.*
-import com.intellij.openapi.vfs.*
 import com.intellij.psi.search.*
 import com.intellij.util.*
 import org.jetbrains.annotations.*
@@ -23,22 +22,34 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
         val project = parameters.position.project
 
         when {
-            query.startsWith("~") -> handleCompletion(project, result, false)
-            query.startsWith("*") -> handleCompletion(project, result, false)
+            query.startsWith("~") -> handleCompletion(
+                result,
+                findFilesStudioFiles(project, parameters.position.containingFile.originalFile.virtualFile.path),
+                false
+            )
+            query.startsWith("*") -> handleCompletion(result, findFilesStudioFiles(project), false)
             query.startsWith("dw/") -> handleApiCompletion(result)
             else -> {
-                handleCompletion(project, result)
+                handleCompletion(result, findFilesStudioFiles(project))
             }
         }
     }
 
-    private fun findFiles(project: @NotNull Project): List<VirtualFile> {
+    private fun findFilesStudioFiles(project: @NotNull Project, pathScope: String? = null): List<StudioFile> {
         val files = FileTypeIndex.getFiles(
             JavaScriptFileType.INSTANCE,
             GlobalSearchScope.projectScope(project)
         ) + FileTypeIndex.getFiles(JsonFileType.INSTANCE, GlobalSearchScope.projectScope(project))
 
-        return files.filter { StudioFileManager(project).getStudioFile(it) != null }
+        val results = files.mapNotNull { StudioFileManager(project).getStudioFile(it) }
+
+        return if (pathScope != null) {
+            results.filter {
+                pathScope.contains("/${it.getCartridgeName()}")
+            }
+        } else {
+            results
+        }
     }
 
     /**
@@ -46,41 +57,31 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
      *
      */
     private fun handleCompletion(
-        project: @NotNull Project,
         result: CompletionResultSet,
+        studioFiles: List<StudioFile>,
         insertCartridgeName: Boolean = true
     ) {
-        var hasResults = false
+        studioFiles.forEach {
+            var lookupElementBuilder = LookupElementBuilder
+                .create(it.getModulePath())
+                .withPresentableText(it.getRelativeModulePath())
+                .withTypeText(it.getCartridgeName(), StudioIcons.STUDIO_ICON, true)
+                .withTypeIconRightAligned(true)
 
-        findFiles(project).forEach {
-            val studioFile = StudioFileManager(project).getStudioFile(it)
-
-            // TODO figure out why cartridge/cartridge_name/js/home.js isn't inserting the right path
-            if (studioFile != null) {
-                var lookupElementBuilder = LookupElementBuilder
-                    .create(studioFile.getModulePath())
-                    .withPresentableText(studioFile.getRelativeModulePath())
-                    .withTypeText(studioFile.getCartridgeName(), StudioIcons.STUDIO_ICON, true)
-                    .withTypeIconRightAligned(true)
-
-                val insertText = if (insertCartridgeName) {
-                    studioFile.getModulePath(false)
-                } else {
-                    studioFile.getRelativeModulePath(false)
-                }
-
-                lookupElementBuilder = lookupElementBuilder.withInsertHandler(
-                    RequireInsertHandler(insertText)
-                )
-
-                result.addElement(lookupElementBuilder)
-                hasResults = true
+            val insertText = if (insertCartridgeName) {
+                it.getModulePath(false)
+            } else {
+                it.getRelativeModulePath(false)
             }
+
+            lookupElementBuilder = lookupElementBuilder.withInsertHandler(
+                RequireInsertHandler(insertText)
+            )
+
+            result.addElement(lookupElementBuilder)
         }
 
-        if (hasResults) {
-            result.stopHere()
-        }
+        if (studioFiles.isNotEmpty()) result.stopHere()
     }
 }
 
