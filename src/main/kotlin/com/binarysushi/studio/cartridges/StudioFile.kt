@@ -5,6 +5,7 @@ import com.intellij.openapi.components.*
 import com.intellij.openapi.project.*
 import com.intellij.openapi.util.io.*
 import com.intellij.openapi.vfs.*
+import java.io.*
 import java.nio.file.*
 
 /**
@@ -41,6 +42,10 @@ class StudioFile(private val fileSystemPath: String, private val cartridgeName: 
         return cartridgeName == "modules"
     }
 
+    fun fileExtension(): String {
+        return File(independentPath).extension
+    }
+
     /**
      * Get the containing cartridge name for the current file
      */
@@ -71,12 +76,28 @@ class StudioFile(private val fileSystemPath: String, private val cartridgeName: 
      *
      * app_storefront_base/cartridge/controllers/Account.js
      */
-    fun getModulePath(): String {
-        return try {
-            pathParts.subList(cartridgeNameIndex, pathParts.size).joinToString("/")
-        } catch (e: IndexOutOfBoundsException) {
-            ""
-        }
+    fun getModulePath(withExtension: Boolean = true): String {
+        val path = pathParts.subList(cartridgeNameIndex, pathParts.size).joinToString("/")
 
+        return if (withExtension) {
+            path
+        } else {
+            path.substring(0, path.indexOf(fileExtension()) - 1)
+        }
+    }
+
+    /**
+     * Returns a relative path for use throughout the Salesforce B2C application
+     *
+     * app_storefront_base/cartridge/controllers/Account.js
+     */
+    fun getRelativeModulePath(withExtension: Boolean = true): String {
+        val path = pathParts.subList(cartridgeNameIndex + 1, pathParts.size).joinToString("/")
+        return if (withExtension) {
+            path
+        } else {
+            // Add . to string to prevent matching directories with the same name as the file extension
+            path.substring(0, path.indexOf(".${fileExtension()}"))
+        }
     }
 }

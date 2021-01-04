@@ -1,5 +1,7 @@
 package com.binarysushi.studio.language.javascript
 
+import com.binarysushi.studio.*
+import com.binarysushi.studio.cartridges.*
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.*
 import com.intellij.json.*
@@ -18,13 +20,14 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
     ) {
         val caretPositionOffset = parameters.offset - parameters.position.textOffset
         val query = parameters.position.text.substring(1, caretPositionOffset) // Drop the first quote
+        val project = parameters.position.project
 
         when {
-            query.startsWith("*") -> handleStarCompletion(parameters, context, result)
-            query.startsWith("") -> handleTildeCompletion(parameters, context, result)
-            query.startsWith("dw/") -> handleApiCompletion(parameters, context, result)
+            query.startsWith("~") -> handleCompletion(project, result, false)
+            query.startsWith("*") -> handleCompletion(project, result, false)
+            query.startsWith("dw/") -> handleApiCompletion(result)
             else -> {
-                result.addElement(LookupElementBuilder.create("dw/some/path"))
+                handleCompletion(project, result)
             }
         }
     }
@@ -35,41 +38,73 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
             GlobalSearchScope.projectScope(project)
         ) + FileTypeIndex.getFiles(JsonFileType.INSTANCE, GlobalSearchScope.projectScope(project))
 
-        return files.filter { it.path.contains("cartridge") || it.path.contains("module") }
+        return files.filter { StudioFileManager(project).getStudioFile(it) != null }
     }
 
     /**
-     * Tilde should only complete files that are relative to the cartridge path where the original
-     * file is located
+     * Tilde should only suggest files in the same cartridge path as the original file
      *
      */
-    private fun handleTildeCompletion(
-        parameters: CompletionParameters,
-        context: ProcessingContext,
-        result: CompletionResultSet
+    private fun handleCompletion(
+        project: @NotNull Project,
+        result: CompletionResultSet,
+        insertCartridgeName: Boolean = true
     ) {
-        findFiles(parameters.position.project).forEach {
-            result.addElement(LookupElementBuilder.create(it))
+        var hasResults = false
+
+        findFiles(project).forEach {
+            val studioFile = StudioFileManager(project).getStudioFile(it)
+
+            // TODO figure out why cartridge/cartridge_name/js/home.js isn't inserting the right path
+            if (studioFile != null) {
+                var lookupElementBuilder = LookupElementBuilder
+                    .create(studioFile.getModulePath())
+                    .withPresentableText(studioFile.getRelativeModulePath())
+                    .withTypeText(studioFile.getCartridgeName(), StudioIcons.STUDIO_ICON, true)
+                    .withTypeIconRightAligned(true)
+
+                val insertText = if (insertCartridgeName) {
+                    studioFile.getModulePath(false)
+                } else {
+                    studioFile.getRelativeModulePath(false)
+                }
+
+                lookupElementBuilder = lookupElementBuilder.withInsertHandler(
+                    RequireInsertHandler(insertText)
+                )
+
+                result.addElement(lookupElementBuilder)
+                hasResults = true
+            }
+        }
+
+        if (hasResults) {
+            result.stopHere()
         }
     }
+}
 
-    /**
-     * Star should complete files in any cartridge on the active cartridge path
-     *
-     */
-    private fun handleStarCompletion(
-        parameters: CompletionParameters,
-        context: ProcessingContext,
-        result: CompletionResultSet
-    ) {
-        result.addElement(LookupElementBuilder.create("star"))
-    }
+/**
+ * Star should complete files in any cartridge on the active cartridge path
+ *
+ */
 
-    private fun handleApiCompletion(
-        parameters: CompletionParameters,
-        context: ProcessingContext,
-        result: CompletionResultSet
-    ) {
-        result.addElement(LookupElementBuilder.create("api"))
+private fun handleApiCompletion(
+    result: CompletionResultSet
+) {
+    result.addElement(LookupElementBuilder.create("dw/api/result"))
+}
+
+private class RequireInsertHandler(private val insertText: String) : InsertHandler<LookupElement> {
+    override fun handleInsert(context: InsertionContext, item: LookupElement) {
+        val editor = context.editor
+        val document = context.document
+        val caretOffset = editor.caretModel.offset
+
+        document.insertString(caretOffset, insertText)
+        editor.caretModel.moveToOffset(
+            caretOffset + insertText.length
+        )
+        document.deleteString(caretOffset - item.lookupString.length, caretOffset)
     }
 }
