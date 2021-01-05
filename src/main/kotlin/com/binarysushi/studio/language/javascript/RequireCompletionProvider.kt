@@ -64,6 +64,7 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
         studioFiles.forEach {
             var lookupElementBuilder = LookupElementBuilder
                 .create(it.getModulePath())
+                .withLookupString(it.fileName())
                 .withPresentableText(it.getRelativeModulePath())
                 .withTypeText(it.getCartridgeName(), StudioIcons.STUDIO_ICON, true)
                 .withTypeIconRightAligned(true)

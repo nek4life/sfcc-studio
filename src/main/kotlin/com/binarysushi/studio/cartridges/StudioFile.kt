@@ -42,6 +42,10 @@ class StudioFile(private val fileSystemPath: String, private val cartridgeName: 
         return cartridgeName == "modules"
     }
 
+    fun fileName(): String {
+        return nioPath.fileName.toString()
+    }
+
     fun fileExtension(): String {
         return File(independentPath).extension
     }
