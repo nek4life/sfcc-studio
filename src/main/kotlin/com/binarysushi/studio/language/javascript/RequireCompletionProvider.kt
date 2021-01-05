@@ -83,17 +83,18 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
 
         if (studioFiles.isNotEmpty()) result.stopHere()
     }
-}
 
-/**
- * Star should complete files in any cartridge on the active cartridge path
- *
- */
+    /**
+     * Star should complete files in any cartridge on the active cartridge path
+     *
+     */
 
-private fun handleApiCompletion(
-    result: CompletionResultSet
-) {
-    result.addElement(LookupElementBuilder.create("dw/api/result"))
+    private fun handleApiCompletion(
+        result: CompletionResultSet
+    ) {
+        result.addElement(LookupElementBuilder.create("dw/api/result"))
+    }
+
 }
 
 private class RequireInsertHandler(private val insertText: String) : InsertHandler<LookupElement> {
