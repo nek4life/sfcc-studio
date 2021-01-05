@@ -9,6 +9,18 @@
 – Scoped require module references that contain ~/ to the current file's cartridge
 
 ### Security
+## [1.8.0-beta.2]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
 ## [1.8.0-beta.1]
 ### Added
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
