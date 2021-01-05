@@ -6,12 +6,10 @@
 ### Added
 – Scoped require ~/ references to current file's cartridge path
 
-### Security
 ## [1.8.0-beta.2]
 ### Added
 - Scoped require ~/ completion to current file's cartridge path
 
-### Security
 ## [1.8.0-beta.1]
 ### Added
 - Initial scaffold created from [IntelliJ Platform Plugin Template](https://github.com/JetBrains/intellij-platform-plugin-template)
