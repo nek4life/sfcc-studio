@@ -5,13 +5,8 @@
 ## [Unreleased]
 ### Added
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
+- Scoped require module autocomplete that contain a ~/ to the current file's cartridge
+– Scoped require module references that contain ~/ to the current file's cartridge
 
 ### Security
 ## [1.8.0-beta.1]

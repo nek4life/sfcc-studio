@@ -49,11 +49,12 @@ class RequirePsiReference(element: PsiElement) :
         // require() module path or Salesforce B2C application path
         val cleanedElementPath = cleanElementPath(element)
 
-        // Regex that adds file extensions so that elementPath can match files in the fileTypeIndices
+        // Regex that adds file extensions so that elementPath can match files in the fileTypeIndex
         val extensionRegex = "$cleanedElementPath\\.[js|ds|json]".toRegex()
+        val studioFileManager = StudioFileManager(element.project)
 
-        return fileTypeIndex.filter {
-            val studioFile = StudioFileManager(element.project).getStudioFile(it)
+        var result = fileTypeIndex.filter {
+            val studioFile = studioFileManager.getStudioFile(it)
 
             if (studioFile != null) {
                 val modulePath = studioFile.getModulePath()
@@ -69,6 +70,18 @@ class RequirePsiReference(element: PsiElement) :
                 false
             }
         }
+
+        // Scope reference to current file's cartridge path
+        if (element.text.drop(1).startsWith("~/")) {
+            result = result.filter {
+                val studioFile = studioFileManager.getStudioFile(it)
+                studioFile !== null && element.containingFile.originalFile.virtualFile.presentableUrl.contains(
+                    "/${studioFile.getCartridgeName()}"
+                )
+            }
+        }
+
+        return result
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {

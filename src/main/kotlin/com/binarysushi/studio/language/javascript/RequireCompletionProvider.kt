@@ -24,7 +24,7 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
         when {
             query.startsWith("~") -> handleCompletion(
                 result,
-                findFilesStudioFiles(project, parameters.position.containingFile.originalFile.virtualFile.path),
+                findFilesStudioFiles(project, parameters.position.containingFile.originalFile.virtualFile.presentableUrl),
                 false
             )
             query.startsWith("*") -> handleCompletion(result, findFilesStudioFiles(project), false)

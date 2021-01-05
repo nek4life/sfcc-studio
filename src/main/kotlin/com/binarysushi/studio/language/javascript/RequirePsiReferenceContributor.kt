@@ -1,14 +1,15 @@
 package com.binarysushi.studio.language.javascript
 
-import com.intellij.lang.javascript.psi.JSLiteralExpression
-import com.intellij.patterns.PlatformPatterns
-import com.intellij.psi.PsiReferenceContributor
-import com.intellij.psi.PsiReferenceRegistrar
+import com.intellij.lang.javascript.psi.*
+import com.intellij.patterns.*
+import com.intellij.psi.*
 
 class RequirePsiReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {
-        val provider = RequirePsiReferenceProvider()
-
-        registrar.registerReferenceProvider(PlatformPatterns.instanceOf(JSLiteralExpression::class.java), provider)
+        
+            registrar.registerReferenceProvider(
+                PlatformPatterns.instanceOf(JSLiteralExpression::class.java),
+                RequirePsiReferenceProvider()
+            )
     }
 }
