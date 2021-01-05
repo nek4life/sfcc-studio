@@ -4,6 +4,7 @@ import com.binarysushi.studio.cartridges.*
 import com.intellij.json.*
 import com.intellij.lang.javascript.*
 import com.intellij.openapi.util.*
+import com.intellij.openapi.util.io.*
 import com.intellij.openapi.vfs.*
 import com.intellij.psi.*
 import com.intellij.psi.search.*
@@ -75,7 +76,7 @@ class RequirePsiReference(element: PsiElement) :
         if (element.text.drop(1).startsWith("~/")) {
             result = result.filter {
                 val studioFile = studioFileManager.getStudioFile(it)
-                studioFile !== null && element.containingFile.originalFile.virtualFile.presentableUrl.contains(
+                studioFile !== null && FileUtil.toSystemIndependentName(element.containingFile.originalFile.virtualFile.presentableUrl).contains(
                     "/${studioFile.getCartridgeName()}"
                 )
             }

@@ -7,6 +7,7 @@ import com.intellij.codeInsight.lookup.*
 import com.intellij.json.*
 import com.intellij.lang.javascript.*
 import com.intellij.openapi.project.*
+import com.intellij.openapi.util.io.*
 import com.intellij.psi.search.*
 import com.intellij.util.*
 import org.jetbrains.annotations.*
@@ -24,7 +25,7 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
         when {
             query.startsWith("~") -> handleCompletion(
                 result,
-                findFilesStudioFiles(project, parameters.position.containingFile.originalFile.virtualFile.presentableUrl),
+                findFilesStudioFiles(project, FileUtil.toSystemIndependentName(parameters.position.containingFile.originalFile.virtualFile.presentableUrl)),
                 false
             )
             query.startsWith("*") -> handleCompletion(result, findFilesStudioFiles(project), false)
