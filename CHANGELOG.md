@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [1.8.0-beta.4]
+### Added
 - Fixed window path issue with ~/ completion
 
 ## [1.8.0-beta.3]
