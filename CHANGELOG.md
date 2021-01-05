@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [1.8.0-beta.3]
+### Added
 – Scoped require ~/ references to current file's cartridge path
 
 ## [1.8.0-beta.2]
