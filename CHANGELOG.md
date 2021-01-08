@@ -2,21 +2,18 @@
 
 # Salesforce Commerce Cloud (SFCC) Studio
 
-## [Unreleased]
+## [1.8.0]
 ### Added
+- Basic autocomplete and custom icon for dw.json file
+- Require function file references for goto declaration support
+- Require function auto complete for cartridge modules
 
-### Changed
+### Updated
+- Now requires Java 11 and 2020.3 IDE versions and above
 
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [1.8.0-beta.4]
-### Added
-- Fixed window path issue with ~/ completion
+### Fixed
+- window path issue with ~/ completion
 
 ## [1.8.0-beta.3]
 ### Added
