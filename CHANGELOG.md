@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [1.8.0]
+### Added
 - Basic autocomplete and custom icon for dw.json file
 - Require function file references for goto declaration support
 - Require function auto complete for cartridge modules
