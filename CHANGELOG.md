@@ -2,7 +2,7 @@
 
 # Salesforce Commerce Cloud (SFCC) Studio
 
-## [1.8.0]
+## [Unreleased]
 ### Added
 - Basic autocomplete and custom icon for dw.json file
 - Require function file references for goto declaration support
