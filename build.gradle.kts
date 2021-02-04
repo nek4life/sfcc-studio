@@ -52,7 +52,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.1")
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
