@@ -3,15 +3,6 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.30")
-    }
-}
-
 plugins {
     // Java support
     id("java")
@@ -51,6 +42,7 @@ version = pluginVersion
 repositories {
     mavenCentral()
 }
+
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:1.0.1")
