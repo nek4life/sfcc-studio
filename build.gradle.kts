@@ -6,7 +6,6 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 buildscript {
     repositories {
         mavenCentral()
-        jcenter()
     }
     dependencies {
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.21-2")
@@ -51,7 +50,6 @@ version = pluginVersion
 // Configure project's dependencies
 repositories {
     mavenCentral()
-    jcenter()
 }
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
