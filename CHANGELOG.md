@@ -4,16 +4,9 @@
 
 ## [Unreleased]
 ### Added
+- Moved to new versioning scheme
+- Updated to work with the upcoming 2021.1 release
 
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
 ## [1.8.0]
 ### Added
 - Basic autocomplete and custom icon for dw.json file
