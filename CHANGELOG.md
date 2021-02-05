@@ -3,18 +3,10 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
-### Added
-
-### Changed
-
-### Deprecated
-
-### Removed
-
 ### Fixed
+- Kotlin Serialization dependency
 
-### Security
-## [unspecified]
+## [2021.1.0-beta.0]
 ### Added
 - Moved to new versioning scheme
 - Updated to work with the upcoming 2021.1 release
