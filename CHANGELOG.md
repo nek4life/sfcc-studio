@@ -4,6 +4,18 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [unspecified]
+### Added
 - Moved to new versioning scheme
 - Updated to work with the upcoming 2021.1 release
 
