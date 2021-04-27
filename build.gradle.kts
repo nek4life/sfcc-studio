@@ -11,7 +11,7 @@ plugins {
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.6.5"
     // Kotlinx Serialization
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.4.30"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.0"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "1.0.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
