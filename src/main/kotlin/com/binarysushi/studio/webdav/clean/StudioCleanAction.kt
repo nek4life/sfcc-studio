@@ -8,6 +8,7 @@ import com.intellij.openapi.progress.ProgressManager
 class StudioCleanAction : AnAction() {
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project
+
         ProgressManager.getInstance().run(
             StudioCleanTask(project, "Cleaning cartridges...", true, PerformInBackgroundOption.ALWAYS_BACKGROUND)
         )

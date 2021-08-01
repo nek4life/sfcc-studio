@@ -1,4 +1,4 @@
-package com.binarysushi.studio.webdav
+package com.binarysushi.studio.instance
 
 import com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable
 import com.intellij.notification.Notification

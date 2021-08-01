@@ -5,6 +5,7 @@ import com.binarysushi.studio.debugger.client.ObjectMember
 import com.binarysushi.studio.debugger.client.ScriptThread
 import com.binarysushi.studio.debugger.client.StackFrame
 import com.intellij.icons.AllIcons
+import com.intellij.util.ThreeState
 import com.intellij.xdebugger.frame.*
 import com.intellij.xdebugger.frame.presentation.*
 import javax.swing.Icon
@@ -95,8 +96,10 @@ class StudioNamedValue(
             })
     }
 
-    // TODO this needs to be implemented in order to show debugger data in the editor
-//    override fun computeInlineDebuggerData(callback: XInlineDebuggerDataCallback): ThreeState {
-//        return super.computeInlineDebuggerData(callback)
-//    }
+
+
+    override fun computeInlineDebuggerData(callback: XInlineDebuggerDataCallback): ThreeState {
+        callback.computed(process.session.currentPosition)
+        return ThreeState.YES
+    }
 }

@@ -1,8 +1,11 @@
 package com.binarysushi.studio.webdav.clean
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
+import com.binarysushi.studio.instance.StudioServerNotifier
+import com.binarysushi.studio.instance.clients.TopLevelDavFolders
+import com.binarysushi.studio.instance.clients.WebDavClient
+import com.binarysushi.studio.instance.code.CodeManager
 import com.binarysushi.studio.toolWindow.StudioConsoleService
-import com.binarysushi.studio.webdav.StudioServerConnection
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.PerformInBackgroundOption
@@ -10,18 +13,11 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task.Backgroundable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.io.FileUtil
-import com.intellij.util.io.ZipUtil
-import okhttp3.FormBody
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.asRequestBody
+import com.intellij.util.proxy.CommonProxy
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.zip.ZipOutputStream
 
 class StudioCleanTask internal constructor(
     project: Project?,
@@ -34,97 +30,65 @@ class StudioCleanTask internal constructor(
     override fun run(indicator: ProgressIndicator) {
         val configurationProvider = project.service<StudioConfigurationProvider>()
         val consoleView = project.service<StudioConsoleService>().consoleView
-        val serverConnection = StudioServerConnection(configurationProvider)
-
         val cartridgeRoots = configurationProvider.cartridgeRoots
-
         if (configurationProvider.cartridgeRoots.size < 1) {
+            StudioServerNotifier.notify("No Cartridges Found")
             return
         }
 
+        val webDavClient = WebDavClient(
+            configurationProvider.hostname,
+            configurationProvider.username,
+            configurationProvider.password,
+            proxySelector = CommonProxy.getInstance()
+        )
+
         val version = configurationProvider.version
-        val tempDir = Paths.get(FileUtil.getTempDirectory(), project.name).toFile()
-        val versionDir = Paths.get(tempDir.toString(), version).toFile()
-        val zipFile = Paths.get(tempDir.toString(), "$version.zip").toFile()
+        val serverVersionPath = "${TopLevelDavFolders.CARTRIDGES}/${version}"
+        val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}.zip"
 
-        FileUtil.createDirectory(versionDir)
-
-        indicator.text = "Preparing Archive"
-
-        try {
-            val fileOutputStream = FileOutputStream(zipFile)
-            val zipOutputStream = ZipOutputStream(fileOutputStream)
-            for (cartridgeRoot in cartridgeRoots) {
-                val dir = File(cartridgeRoot)
-                if (dir.exists()) {
-                    FileUtil.copyDir(dir, Paths.get(versionDir.toString(), dir.name).toFile())
-                }
-            }
-            ZipUtil.addDirToZipRecursively(zipOutputStream, null, versionDir, version, null, null)
-            zipOutputStream.close()
-            indicator.fraction = .166
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        val uploadRequest: Request = Request.Builder()
-            .url("${serverConnection.basePath}.zip")
-            .put(zipFile.asRequestBody("application/octet-stream".toMediaType()))
-            .build()
-
-        val deleteVersionRequest = Request.Builder()
-            .url(serverConnection.basePath)
-            .delete()
-            .build()
-
-        val formBody = FormBody.Builder()
-            .add("method", "UNZIP")
-            .build()
-
-        val unzipRequest = Request.Builder()
-            .url("${serverConnection.basePath}.zip")
-            .post(formBody)
-            .build()
-
-        val deleteZipRequest = Request.Builder()
-            .url("${serverConnection.basePath}.zip")
-            .delete()
-            .build()
+        indicator.text = "Preparing archive..."
+        val zipFile = CodeManager.zipVersion(version, cartridgeRoots.map { File(it) })
+        indicator.fraction = .166
 
         indicator.text = "Uploading archive..."
         try {
-            serverConnection.client.newCall(uploadRequest).execute().use { indicator.fraction = .332 }
+            webDavClient.put(serverZipPath, zipFile, "application/octet-stream")
+            indicator.fraction = .332
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
         indicator.text = "Removing previous version..."
         try {
-            serverConnection.client.newCall(deleteVersionRequest).execute().use { indicator.fraction = .498 }
+            webDavClient.delete(serverVersionPath)
+            indicator.fraction = .498
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
         indicator.text = "Unzipping archive..."
         try {
-            serverConnection.client.newCall(unzipRequest).execute().use { indicator.fraction = .664 }
+            webDavClient.unzip(serverZipPath)
+            indicator.fraction = .664
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
         indicator.text = "Removing temporary files..."
         try {
-            serverConnection.client.newCall(deleteZipRequest).execute().use { indicator.fraction = .83 }
+            webDavClient.delete(serverZipPath)
         } catch (e: IOException) {
             e.printStackTrace()
         }
+        indicator.fraction = .83
 
         consoleView.print(
-            "[" + timeFormat.format(Date()) + "] " + "Cleaned " + serverConnection.basePath + "\n",
+            "[${timeFormat.format(Date())}] Cleaned ${webDavClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}\n",
             ConsoleViewContentType.NORMAL_OUTPUT
         )
 
-        FileUtil.delete(tempDir)
+        FileUtil.delete(zipFile)
         indicator.fraction = 1.0
     }
 }

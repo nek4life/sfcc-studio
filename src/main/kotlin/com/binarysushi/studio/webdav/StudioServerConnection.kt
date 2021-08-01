@@ -1,6 +1,8 @@
 package com.binarysushi.studio.webdav
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
+import com.binarysushi.studio.instance.StudioServerAuthenticator
+import com.binarysushi.studio.instance.StudioServerNotifier
 import com.intellij.util.proxy.CommonProxy
 import okhttp3.OkHttpClient
 import okhttp3.Request
