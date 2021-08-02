@@ -3,6 +3,18 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+## [unspecified]
 ### Updated
 - Moved to new versioning scheme
 - Updated to work with the upcoming 2021.1 release
