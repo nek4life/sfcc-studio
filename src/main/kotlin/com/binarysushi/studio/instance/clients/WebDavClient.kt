@@ -3,6 +3,7 @@ package com.binarysushi.studio.instance.clients
 import com.binarysushi.studio.instance.StudioServerAuthenticator
 import com.github.sardine.DavResource
 import com.github.sardine.SardineFactory
+import com.github.sardine.impl.SardineException
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -28,8 +29,13 @@ class WebDavClient(
 
     val baseURI = "https://${hostname}/on/demandware.servlet/webdav/Sites"
 
+    fun exists(url: String): Boolean {
+        return sardine.exists("${baseURI}${url}")
+    }
+
     @Throws(IOException::class)
     fun list(url: String): MutableList<DavResource>? {
+
         return sardine.list("${baseURI}${url}")
     }
 
@@ -52,6 +58,7 @@ class WebDavClient(
         httpClient.newCall(unzipRequest).execute()
     }
 
+    @Throws(SardineException::class)
     fun createDirectory(url: String) {
         sardine.createDirectory("${baseURI}${url}")
     }
