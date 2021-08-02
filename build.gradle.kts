@@ -48,6 +48,13 @@ intellij {
     plugins.set(properties("platformPlugins").split(',').map(String::trim).filter(String::isNotEmpty))
 }
 
+// Configure gradle-changelog-plugin plugin.
+// Read more: https://github.com/JetBrains/gradle-changelog-plugin
+changelog {
+    version.set(properties("pluginVersion"))
+    groups.set(emptyList())
+}
+
 // Configure detekt plugin.
 // Read more: https://detekt.github.io/detekt/kotlindsl.html
 //detekt {
