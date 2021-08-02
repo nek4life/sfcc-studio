@@ -14,7 +14,7 @@ plugins {
     // Kotlinx Serialization
     kotlin("plugin.serialization") version "1.5.10"
     // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
-    id("org.jetbrains.changelog") version "1.1.2"
+    id("org.jetbrains.changelog") version "1.2.1"
     // detekt linter - read more: https://detekt.github.io/detekt/gradle.html
 //    id("io.gitlab.arturbosch.detekt") version "1.15.0"
     // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
@@ -31,7 +31,7 @@ repositories {
 
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     implementation("com.github.lookfirst:sardine:5.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
