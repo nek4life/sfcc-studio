@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 ### Updated
+- Updated to work with the 2021.2 release
+
+## [2020.1.0]
+### Updated
 - Moved to new versioning scheme
 - Updated to work with the upcoming 2021.1 release
 
