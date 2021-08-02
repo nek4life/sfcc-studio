@@ -33,6 +33,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.1.0")
     implementation("com.github.lookfirst:sardine:5.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
 
