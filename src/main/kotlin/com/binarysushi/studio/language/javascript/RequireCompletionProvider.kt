@@ -46,7 +46,7 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
 
         return if (pathScope != null) {
             results.filter {
-                pathScope.contains("/${it.getCartridgeName()}")
+                pathScope.contains("${it.getCartridgeName()}/cartridge")
             }
         } else {
             results
