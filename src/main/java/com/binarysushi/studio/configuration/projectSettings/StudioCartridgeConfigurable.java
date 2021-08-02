@@ -1,47 +1,58 @@
-package com.binarysushi.studio.configuration.projectSettings
+package com.binarysushi.studio.configuration.projectSettings;
 
-import com.binarysushi.studio.StudioBundle.message
-import com.binarysushi.studio.configuration.projectSettings.StudioCartridgePanel
-import com.binarysushi.studio.StudioBundle
-import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.intellij.openapi.Disposable
-import com.intellij.openapi.options.Configurable
-import com.intellij.openapi.options.ConfigurationException
-import com.intellij.openapi.options.SearchableConfigurable
-import com.intellij.openapi.project.Project
-import org.jetbrains.annotations.Nls
-import javax.swing.JComponent
+import com.binarysushi.studio.StudioBundle;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.options.Configurable;
+import com.intellij.openapi.options.ConfigurationException;
+import com.intellij.openapi.options.SearchableConfigurable;
+import com.intellij.openapi.project.Project;
+import org.jetbrains.annotations.Nls;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-class StudioCartridgeConfigurable(private val myProject: Project) : SearchableConfigurable, Configurable.NoScroll,
-    Disposable {
-    private var myCartridgePanel: StudioCartridgePanel?
-    override fun dispose() {
-        myCartridgePanel = null
+import javax.swing.*;
+
+public class StudioCartridgeConfigurable implements SearchableConfigurable, Configurable.NoScroll, Disposable {
+    private StudioCartridgePanel myCartridgePanel;
+    private final Project myProject;
+
+    public StudioCartridgeConfigurable(Project project) {
+        myProject = project;
+        myCartridgePanel = new StudioCartridgePanel(project, StudioConfigurationProvider.getInstance(project));
     }
 
-    override fun getId(): String {
-        return "StudioCartridgeConfigurable"
+    @Override
+    public void dispose() {
+        myCartridgePanel = null;
     }
 
-    override fun getDisplayName(): @Nls String? {
-        return message("studio.server.cartridges.panel.title")
+    @NotNull
+    @Override
+    public String getId() {
+        return "StudioCartridgeConfigurable";
     }
 
-    override fun createComponent(): JComponent? {
-        return myCartridgePanel!!.createPanel()
+    @Nls
+    @Override
+    public String getDisplayName() {
+        return StudioBundle.message("studio.server.cartridges.panel.title");
     }
 
-    override fun isModified(): Boolean {
-        return myCartridgePanel!!.isModified
+    @Nullable
+    @Override
+    public JComponent createComponent() {
+        return myCartridgePanel.createPanel();
     }
 
-    @Throws(ConfigurationException::class)
-    override fun apply() {
-        val myConfigurationProvider = StudioConfigurationProvider.getInstance(myProject)
-        myConfigurationProvider.setCartridgeRoots(myCartridgePanel!!.listItems)
+    @Override
+    public boolean isModified() {
+        return myCartridgePanel.isModified();
     }
 
-    init {
-        myCartridgePanel = StudioCartridgePanel(myProject, StudioConfigurationProvider.getInstance(myProject))
+    @Override
+    @SuppressWarnings("unchecked")
+    public void apply() throws ConfigurationException {
+        StudioConfigurationProvider myConfigurationProvider = StudioConfigurationProvider.getInstance(myProject);
+        myConfigurationProvider.setCartridgeRoots(myCartridgePanel.getListItems());
     }
 }
