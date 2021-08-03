@@ -2,6 +2,9 @@ package com.binarysushi.studio.instance.code
 
 import com.binarysushi.studio.instance.clients.TopLevelDavFolders
 import com.binarysushi.studio.instance.clients.WebDavClient
+import com.intellij.execution.ui.ConsoleView
+import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.io.ZipUtil
 import java.io.File
@@ -77,9 +80,19 @@ object CodeManager {
 //     * Deploys a cartridge to an SFCC instance. This consists of uploading an archive, removing the previous
 //     * version, unzipping the archive and removing the temporary files
 //     */
-    fun deployCartridge(davClient: WebDavClient, version: String, zipFile: File) {
+    fun deployCartridge(
+        davClient: WebDavClient,
+        version: String,
+        cartridgeDir: File,
+        indicator: ProgressIndicator?,
+        consoleView: ConsoleView?
+    ) {
         val serverVersionPath = "${TopLevelDavFolders.CARTRIDGES}/${version}"
-        val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${zipFile.name}.zip"
+        val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}.zip"
+
+        indicator?.fraction = .2
+
+        val zipFile = zipCartridge(cartridgeDir)
 
         try {
             if (!davClient.exists(serverVersionPath)) {
@@ -88,12 +101,16 @@ object CodeManager {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-        
+
+        indicator?.fraction = .4
+
         try {
             davClient.put(serverZipPath, zipFile, "application/octet-stream")
         } catch (e: IOException) {
             e.printStackTrace()
         }
+
+        indicator?.fraction = .6
 
         try {
             davClient.unzip(serverZipPath)
@@ -101,13 +118,24 @@ object CodeManager {
             e.printStackTrace()
         }
 
+        indicator?.fraction = .8
+
         try {
             davClient.delete(serverZipPath)
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
+        indicator?.fraction = 1.0
+
         FileUtil.delete(zipFile)
+
+        val timeFormat = SimpleDateFormat("hh:mm:ss")
+
+        consoleView?.print(
+            "[${timeFormat.format(Date())}] Uploaded ${davClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}\n",
+            ConsoleViewContentType.NORMAL_OUTPUT
+        )
     }
 //    fun listVersions(api: OCAPIClient) {}
 //    fun activateVersion(api: OCAPIClient, version: String) {}

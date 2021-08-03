@@ -25,46 +25,35 @@ class UploadCartridgeAction : AnAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        ProgressManager.getInstance().run(object : Task.Backgroundable(
-            e.project,
-            "Upload cartridge",
-            true
-        ) {
-            override fun run(indicator: ProgressIndicator) {
-                val configurationProvider = e.project!!.service<StudioConfigurationProvider>()
-                val consoleView = e.project!!.service<StudioConsoleService>().consoleView
-                val webDavClient = WebDavClient(
-                    configurationProvider.hostname,
-                    configurationProvider.username,
-                    configurationProvider.password,
-                    proxySelector = CommonProxy.getInstance()
-                )
+        val configurationProvider = e.project!!.service<StudioConfigurationProvider>()
+        val consoleView = e.project!!.service<StudioConsoleService>().consoleView
+        val webDavClient = WebDavClient(
+            configurationProvider.hostname,
+            configurationProvider.username,
+            configurationProvider.password,
+            proxySelector = CommonProxy.getInstance()
+        )
 
-                indicator.isIndeterminate = false
+        val dirs = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
 
-                e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)?.forEach {
-                    indicator.fraction = .0
-
-                    val zipFile = CodeManager.zipCartridge(File(it!!.path))
-
-                    indicator.fraction = .50
+        dirs?.forEach {
+            ProgressManager.getInstance().run(object : Task.Backgroundable(
+                e.project,
+                "Uploading cartridges",
+                true
+            ) {
+                override fun run(indicator: ProgressIndicator) {
+                    indicator.isIndeterminate = false
 
                     CodeManager.deployCartridge(
                         webDavClient,
                         configurationProvider.version,
-                        zipFile
-                    )
-
-                    indicator.fraction = 1.0
-
-                    val timeFormat = SimpleDateFormat("hh:mm:ss")
-
-                    consoleView.print(
-                        "[${timeFormat.format(Date())}] Uploaded ${webDavClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${configurationProvider.version}/${it.name}\n",
-                        ConsoleViewContentType.NORMAL_OUTPUT
+                        File(it.path),
+                        indicator,
+                        consoleView
                     )
                 }
-            }
-        })
+            })
+        }
     }
 }
