@@ -11,10 +11,10 @@ class CartridgePathUtil {
         /**
          * Returns the current cartridge roots for this project.
          *
-         * Currently based on project settings, but could potentially be used to handle multiple
+         * Currently, based on project settings, but could potentially be used to handle multiple
          * active server settings in the future
          */
-        private fun getActiveCartridgeRoots(project: Project): ArrayList<String> {
+        fun getActiveCartridgeRoots(project: Project): ArrayList<String> {
             val config = project.service<StudioConfigurationProvider>()
             return config.cartridgeRoots
         }

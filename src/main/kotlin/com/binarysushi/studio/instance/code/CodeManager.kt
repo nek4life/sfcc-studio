@@ -90,6 +90,7 @@ object CodeManager {
         val serverVersionPath = "${TopLevelDavFolders.CARTRIDGES}/${version}"
         val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}.zip"
 
+        indicator?.isIndeterminate = false
         indicator?.fraction = .2
 
         val zipFile = zipCartridge(cartridgeDir)
@@ -137,6 +138,7 @@ object CodeManager {
             ConsoleViewContentType.NORMAL_OUTPUT
         )
     }
+
 //    fun listVersions(api: OCAPIClient) {}
 //    fun activateVersion(api: OCAPIClient, version: String) {}
 }

@@ -1,11 +1,10 @@
 package com.binarysushi.studio.webdav
 
+import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.binarysushi.studio.instance.clients.TopLevelDavFolders
 import com.binarysushi.studio.instance.clients.WebDavClient
 import com.binarysushi.studio.instance.code.CodeManager
 import com.binarysushi.studio.toolWindow.StudioConsoleService
-import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
@@ -15,13 +14,21 @@ import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.util.proxy.CommonProxy
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
 
 class UploadCartridgeAction : AnAction() {
     override fun update(e: AnActionEvent) {
-        val file = e.getData(CommonDataKeys.VIRTUAL_FILE)
-        e.presentation.isVisible = file!!.isDirectory
+        val files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+
+        // Show action if file is a directory and is part of the active cartridge roots
+        e.presentation.isVisible = files?.all { file ->
+            val activeCartridgeRoots = e.project?.let { CartridgePathUtil.getActiveCartridgeRoots(it) }
+            file.isDirectory && activeCartridgeRoots?.contains(file.path) == true
+        } == true
+
+        // Pluralize text if more than one cartridge is selected
+        if (files?.size!! > 1) {
+            e.presentation.text = "Upload Cartridges"
+        }
     }
 
     override fun actionPerformed(e: AnActionEvent) {
@@ -34,17 +41,20 @@ class UploadCartridgeAction : AnAction() {
             proxySelector = CommonProxy.getInstance()
         )
 
-        val dirs = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+        val files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+        var title = "Uploading cartridge"
 
-        dirs?.forEach {
+        if (files?.size!! > 1) {
+            title = "Upload cartridges"
+        }
+
+        files.forEach {
             ProgressManager.getInstance().run(object : Task.Backgroundable(
                 e.project,
-                "Uploading cartridges",
+                title,
                 true
             ) {
                 override fun run(indicator: ProgressIndicator) {
-                    indicator.isIndeterminate = false
-
                     CodeManager.deployCartridge(
                         webDavClient,
                         configurationProvider.version,
