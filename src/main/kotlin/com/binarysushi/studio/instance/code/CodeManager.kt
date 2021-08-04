@@ -53,7 +53,7 @@ object CodeManager {
 
             for (dir in dirs) {
                 if (dir.exists()) {
-                    FileUtil.copyDir(dir, Paths.get(tempArchiveDir.toString(), dir.name).toFile())
+                    FileUtil.copyDir(dir, Paths.get(tempDir.toString(), dir.name).toFile())
                 }
             }
 
@@ -90,16 +90,26 @@ object CodeManager {
         consoleView: ConsoleView?
     ) {
         val serverVersionPath = "${TopLevelDavFolders.CARTRIDGES}/${version}"
+        val serverCartridgePath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}"
         val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}.zip"
 
         indicator?.isIndeterminate = false
-        indicator?.fraction = .2
 
         val zipFile = zipCartridge(cartridgeDir)
+
+        indicator?.fraction = .2
 
         try {
             if (!davClient.exists(serverVersionPath)) {
                 davClient.createDirectory(serverVersionPath)
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        try {
+            if (davClient.exists(serverCartridgePath)) {
+                davClient.delete(serverCartridgePath)
             }
         } catch (e: IOException) {
             e.printStackTrace()
