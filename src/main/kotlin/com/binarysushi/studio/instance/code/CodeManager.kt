@@ -37,8 +37,7 @@ object CodeManager {
      * calling method should delete the file when done with it.
      */
     private fun createArchive(archiveName: String, dirs: List<File>): File {
-        val timeFormat = SimpleDateFormat("hh-mm-ss")
-        val tempDir = Paths.get(FileUtil.getTempDirectory(), "sfcc-studio-${timeFormat.format(Date())}").toFile()
+        val tempDir = Paths.get(FileUtil.getTempDirectory(), "sfcc-studio").toFile()
         if (!tempDir.exists()) {
             FileUtil.createDirectory(tempDir)
         }
