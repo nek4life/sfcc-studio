@@ -2,8 +2,10 @@ package com.binarysushi.studio.instance.code
 
 import com.binarysushi.studio.instance.clients.TopLevelDavFolders
 import com.binarysushi.studio.instance.clients.WebDavClient
+import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
+import com.intellij.ide.browsers.OpenUrlHyperlinkInfo
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.io.ZipUtil
@@ -132,11 +134,17 @@ object CodeManager {
         FileUtil.delete(zipFile)
 
         val timeFormat = SimpleDateFormat("hh:mm:ss")
+        val remoteUrl = "${davClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}"
 
         consoleView?.print(
-            "[${timeFormat.format(Date())}] Uploaded ${davClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}\n",
+            "[${timeFormat.format(Date())}] Uploaded: ",
             ConsoleViewContentType.NORMAL_OUTPUT
         )
+        consoleView?.printHyperlink(
+            cartridgeDir.name,
+            OpenUrlHyperlinkInfo(remoteUrl)
+        )
+        consoleView?.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
     }
 
 //    fun listVersions(api: OCAPIClient) {}
