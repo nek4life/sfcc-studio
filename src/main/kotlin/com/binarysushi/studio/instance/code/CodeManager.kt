@@ -2,7 +2,6 @@ package com.binarysushi.studio.instance.code
 
 import com.binarysushi.studio.instance.clients.TopLevelDavFolders
 import com.binarysushi.studio.instance.clients.WebDavClient
-import com.intellij.execution.filters.HyperlinkInfo
 import com.intellij.execution.ui.ConsoleView
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.ide.browsers.OpenUrlHyperlinkInfo
