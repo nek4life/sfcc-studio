@@ -26,7 +26,7 @@ class UploadCartridgeAction : AnAction() {
         } == true
 
         // Pluralize text if more than one cartridge is selected
-        if (files?.size!! > 1) {
+        if (files!!.size > 1) {
             e.presentation.text = "Upload Cartridges"
         }
     }
