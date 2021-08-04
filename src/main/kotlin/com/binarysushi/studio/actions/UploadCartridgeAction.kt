@@ -1,4 +1,4 @@
-package com.binarysushi.studio.webdav
+package com.binarysushi.studio.actions
 
 import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
@@ -12,10 +12,11 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.util.proxy.CommonProxy
 import java.io.File
 
-class UploadCartridgeAction : AnAction() {
+class UploadCartridgeAction : DumbAwareAction() {
     override fun update(e: AnActionEvent) {
         val files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
 

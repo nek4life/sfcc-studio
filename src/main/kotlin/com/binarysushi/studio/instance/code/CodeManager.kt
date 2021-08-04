@@ -20,6 +20,19 @@ import java.util.zip.ZipOutputStream
  * Utilities for performing code related actions and interacting with the remote SFCC instance
  */
 object CodeManager {
+    private fun printToConsole(consoleView: ConsoleView, actionName: String, linkText: String, linkUrl: String) {
+        val timeFormat = SimpleDateFormat("hh:mm:ss")
+
+        consoleView.print(
+            "[${timeFormat.format(Date())}] ${actionName}: ",
+            ConsoleViewContentType.NORMAL_OUTPUT
+        )
+        consoleView.printHyperlink(
+            linkText,
+            OpenUrlHyperlinkInfo(linkUrl)
+        )
+        consoleView.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
+    }
 
     /**
      * Creates a zip archive with the archiveName as the file name. The archive contains one directory
@@ -35,7 +48,7 @@ object CodeManager {
      * This method cleans up the temporary directory, but does not clean up the temporary zip the
      * calling method should delete the file when done with it.
      */
-    private fun createArchive(archiveName: String, dirs: List<File>): File {
+    private fun createArchive(archiveName: String, dirs: List<File>, isVersion: Boolean = true): File {
         val tempDir = Paths.get(FileUtil.getTempDirectory(), "sfcc-studio").toFile()
         if (!tempDir.exists()) {
             FileUtil.createDirectory(tempDir)
@@ -45,13 +58,14 @@ object CodeManager {
         FileUtil.createDirectory(tempArchiveDir)
 
         val zipFile = Paths.get(tempDir.toString(), "$archiveName.zip").toFile()
+        val copyPath = if (isVersion) tempArchiveDir else tempDir
 
         try {
             val zipOutputStream = ZipOutputStream(FileOutputStream(zipFile))
 
             for (dir in dirs) {
                 if (dir.exists()) {
-                    FileUtil.copyDir(dir, Paths.get(tempDir.toString(), dir.name).toFile())
+                    FileUtil.copyDir(dir, Paths.get(copyPath.toString(), dir.name).toFile())
                 }
             }
 
@@ -66,36 +80,106 @@ object CodeManager {
         return zipFile
     }
 
-    fun zipVersion(versionName: String, cartridgeDirs: List<File>): File {
+    private fun zipVersion(versionName: String, cartridgeDirs: List<File>): File {
         return createArchive(versionName, cartridgeDirs)
     }
 
-    fun zipCartridge(cartridgeDir: File): File {
-        return createArchive(cartridgeDir.name, listOf(cartridgeDir))
+    private fun zipCartridge(cartridgeDir: File): File {
+        return createArchive(cartridgeDir.name, listOf(cartridgeDir), false)
     }
 
-    //    fun deployVersion(davClient: WebDavClient, version: String) {}
-//
-//    /**
-//     * Deploys a cartridge to an SFCC instance. This consists of uploading an archive, removing the previous
-//     * version, unzipping the archive and removing the temporary files
-//     */
+    /**
+     * Deploys a cartridge to an SFCC instance. This consists of uploading an archive, removing the previous
+     * version, unzipping the archive and removing the temporary files
+     */
+    fun deployVersion(
+        davClient: WebDavClient,
+        version: String,
+        cartridgeDirs: List<File>,
+        indicator: ProgressIndicator,
+        consoleView: ConsoleView
+    ) {
+        val serverVersionPath = "${TopLevelDavFolders.CARTRIDGES}/${version}"
+        val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}.zip"
+
+        indicator.isIndeterminate = false
+        indicator.text = "Preparing archive..."
+        indicator.fraction = .166
+
+        val zipFile = zipVersion(version, cartridgeDirs)
+
+        indicator.text = "Uploading archive..."
+        indicator.fraction = .333
+
+        try {
+            davClient.put(serverZipPath, zipFile, "application/octet-stream")
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+
+        indicator.text = "Removing previous version..."
+        indicator.fraction = .5
+
+        try {
+            davClient.delete(serverVersionPath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+
+        indicator.text = "Unzipping archive..."
+        indicator.fraction = .66
+
+        try {
+            davClient.unzip(serverZipPath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+
+        indicator.text = "Removing temporary files..."
+        indicator.fraction = .83
+
+        try {
+            davClient.delete(serverZipPath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        FileUtil.delete(zipFile)
+
+        indicator.fraction = 1.0
+
+        printToConsole(
+            consoleView,
+            "Cleaned Version",
+            version,
+            "${davClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}"
+        )
+    }
+
+
+    /**
+     * Deploys a cartridge to an SFCC instance. This consists of uploading an archive, removing the previous
+     * version, unzipping the archive and removing the temporary files
+     */
     fun deployCartridge(
         davClient: WebDavClient,
         version: String,
         cartridgeDir: File,
-        indicator: ProgressIndicator?,
-        consoleView: ConsoleView?
+        indicator: ProgressIndicator,
+        consoleView: ConsoleView
     ) {
         val serverVersionPath = "${TopLevelDavFolders.CARTRIDGES}/${version}"
         val serverCartridgePath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}"
         val serverZipPath = "${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}.zip"
 
-        indicator?.isIndeterminate = false
+        indicator.isIndeterminate = false
 
         val zipFile = zipCartridge(cartridgeDir)
 
-        indicator?.fraction = .2
+        indicator.fraction = .2
 
         try {
             if (!davClient.exists(serverVersionPath)) {
@@ -113,7 +197,7 @@ object CodeManager {
             e.printStackTrace()
         }
 
-        indicator?.fraction = .4
+        indicator.fraction = .4
 
         try {
             davClient.put(serverZipPath, zipFile, "application/octet-stream")
@@ -121,7 +205,7 @@ object CodeManager {
             e.printStackTrace()
         }
 
-        indicator?.fraction = .6
+        indicator.fraction = .6
 
         try {
             davClient.unzip(serverZipPath)
@@ -129,7 +213,7 @@ object CodeManager {
             e.printStackTrace()
         }
 
-        indicator?.fraction = .8
+        indicator.fraction = .8
 
         try {
             davClient.delete(serverZipPath)
@@ -137,22 +221,16 @@ object CodeManager {
             e.printStackTrace()
         }
 
-        indicator?.fraction = 1.0
+        indicator.fraction = 1.0
 
         FileUtil.delete(zipFile)
 
-        val timeFormat = SimpleDateFormat("hh:mm:ss")
-        val remoteUrl = "${davClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}"
-
-        consoleView?.print(
-            "[${timeFormat.format(Date())}] Uploaded: ",
-            ConsoleViewContentType.NORMAL_OUTPUT
-        )
-        consoleView?.printHyperlink(
+        printToConsole(
+            consoleView,
+            "Uploaded Cartridge",
             cartridgeDir.name,
-            OpenUrlHyperlinkInfo(remoteUrl)
+            "${davClient.baseURI}${TopLevelDavFolders.CARTRIDGES}/${version}/${cartridgeDir.name}"
         )
-        consoleView?.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
     }
 
 //    fun listVersions(api: OCAPIClient) {}
