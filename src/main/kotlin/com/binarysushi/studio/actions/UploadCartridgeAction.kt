@@ -19,16 +19,17 @@ import java.io.File
 class UploadCartridgeAction : DumbAwareAction() {
     override fun update(e: AnActionEvent) {
         val files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
+        if (files != null) {
+            // Show action if file is a directory and is part of the active cartridge roots
+            e.presentation.isVisible = files.all { file ->
+                val activeCartridgeRoots = e.project?.let { CartridgePathUtil.getActiveCartridgeRoots(it) }
+                file.isDirectory && activeCartridgeRoots?.contains(file.path) == true
+            } == true
 
-        // Show action if file is a directory and is part of the active cartridge roots
-        e.presentation.isVisible = files?.all { file ->
-            val activeCartridgeRoots = e.project?.let { CartridgePathUtil.getActiveCartridgeRoots(it) }
-            file.isDirectory && activeCartridgeRoots?.contains(file.path) == true
-        } == true
-
-        // Pluralize text if more than one cartridge is selected
-        if (files!!.size > 1) {
-            e.presentation.text = "Upload Cartridges"
+            // Pluralize text if more than one cartridge is selected
+            if (files.size > 1) {
+                e.presentation.text = "Upload Cartridges"
+            }
         }
     }
 
