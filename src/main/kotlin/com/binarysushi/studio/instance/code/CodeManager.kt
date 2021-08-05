@@ -2,9 +2,8 @@ package com.binarysushi.studio.instance.code
 
 import com.binarysushi.studio.instance.clients.TopLevelDavFolders
 import com.binarysushi.studio.instance.clients.WebDavClient
+import com.binarysushi.studio.toolWindow.ConsolePrinter.printToConsole
 import com.intellij.execution.ui.ConsoleView
-import com.intellij.execution.ui.ConsoleViewContentType
-import com.intellij.ide.browsers.OpenUrlHyperlinkInfo
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.util.io.ZipUtil
@@ -12,28 +11,12 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.file.Paths
-import java.text.SimpleDateFormat
-import java.util.*
 import java.util.zip.ZipOutputStream
 
 /**
  * Utilities for performing code related actions and interacting with the remote SFCC instance
  */
 object CodeManager {
-    private fun printToConsole(consoleView: ConsoleView, actionName: String, linkText: String, linkUrl: String) {
-        val timeFormat = SimpleDateFormat("hh:mm:ss")
-
-        consoleView.print(
-            "[${timeFormat.format(Date())}] ${actionName}: ",
-            ConsoleViewContentType.NORMAL_OUTPUT
-        )
-        consoleView.printHyperlink(
-            linkText,
-            OpenUrlHyperlinkInfo(linkUrl)
-        )
-        consoleView.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
-    }
-
     /**
      * Creates a zip archive with the archiveName as the file name. The archive contains one directory
      * with the archiveName as the directory name with all the supplied cartridge folders as children

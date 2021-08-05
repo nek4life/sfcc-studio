@@ -1,6 +1,8 @@
 package com.binarysushi.studio.webdav
 
+import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
+import com.binarysushi.studio.toolWindow.ConsolePrinter.printToConsole
 import com.binarysushi.studio.toolWindow.StudioConsoleService
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.service
@@ -15,6 +17,7 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -78,10 +81,10 @@ class StudioUpdateFileTask(
             try {
                 val response = serverConnection.client.newCall(request).execute()
                 if (response.code == 201) {
-                    consoleView.print(
-                        "[${timeFormat.format(Date())}] [Created folder] ${request.url}\n",
-                        ConsoleViewContentType.NORMAL_OUTPUT
-                    )
+                    val rootPath = CartridgePathUtil.getCartridgeRootPathForFile(project, eventFile.path)
+                    val relativePath = rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePath(it, eventFile.path) }
+                    val relativeDir = Paths.get(relativePath ?: "").parent
+                    printToConsole(consoleView, "Created folder", relativeDir.toString(), request.url.toString())
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -99,11 +102,7 @@ class StudioUpdateFileTask(
             serverConnection.client.newCall(request).execute().use { response ->
                 response.close()
 
-                consoleView.print(
-                    "[" + timeFormat.format(Date()) + "] " + "[" + message + " (" + localFile.name + ")] " + request.url
-                        .toString() + "\n",
-                    ConsoleViewContentType.NORMAL_OUTPUT
-                )
+                printToConsole(consoleView, message, localFile.name, request.url.toString())
             }
         } catch (e: FileNotFoundException) {
             // TODO handle file not found
