@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.UnknownHostException
 import java.nio.file.Paths
-import java.util.*
 
 class StudioServerConnection(config: StudioConfigurationProvider) {
     val basePath = "https://${config.hostname}/on/demandware.servlet/webdav/Sites/Cartridges/${config.version}"
@@ -49,15 +48,19 @@ class StudioServerConnection(config: StudioConfigurationProvider) {
             .head()
             .build()
 
-        return try {
-            val call = client.newCall(request).execute()
-            if (call.code == 401) {
-                StudioServerNotifier.notify("Unauthorized Request")
+        var code = -1
+
+        try {
+            client.newCall(request).execute().use {
+                if (it.code == 401) {
+                    StudioServerNotifier.notify("Unauthorized Request")
+                }
+                code = it.code
             }
-            call.code
         } catch (e: UnknownHostException) {
             StudioServerNotifier.notify("Unknown Host")
-            -1
         }
+
+        return code
     }
 }
