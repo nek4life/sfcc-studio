@@ -1,10 +1,8 @@
 package com.binarysushi.studio.configuration.projectSettings;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 
 import java.util.ArrayList;
@@ -17,11 +15,10 @@ import java.util.ArrayList;
         }
 )
 public class StudioConfigurationProvider implements PersistentStateComponent<StudioConfigurationProvider.State> {
-    public static final Logger LOG = Logger.getInstance(StudioConfigurationProvider.class);
-    private State myState = new State();
+    private final State myState = new State();
 
     public static StudioConfigurationProvider getInstance(Project project) {
-        return ServiceManager.getService(project, StudioConfigurationProvider.class);
+        return project.getService(StudioConfigurationProvider.class);
     }
 
     public String getHostname() {

@@ -90,13 +90,23 @@
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </group>
 
-        <action id="com.binarysushi.studio.webdav.clean.StudioCleanAction" class="com.binarysushi.studio.webdav.clean.StudioCleanAction"
+        <action id="com.binarysushi.studio.actions.UploadCartridgeAction" class="com.binarysushi.studio.actions.UploadCartridgeAction"
+                text="Upload Cartridge"
+                description="Upload cartridges"
+                icon="/icons/cartridge.png">
+
+            <add-to-group group-id="SFCCActionGroup" />
+        </action>
+
+        <action id="com.binarysushi.studio.actions.CleanCartridgesAction" class="com.binarysushi.studio.actions.CleanCartridgesAction"
                 text="Clean Cartridges"
                 description="Clean cartridges"
                 icon="/icons/cartridge.png">
 
             <add-to-group group-id="SFCCActionGroup" />
         </action>
+
+
 
         <action id="com.binarysushi.studio.browseActions.actions.StudioBrowseSandboxBMAction"
                 class="com.binarysushi.studio.browseActions.StudioBrowseSandboxBMAction"

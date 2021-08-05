@@ -25,7 +25,10 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
         when {
             query.startsWith("~") -> handleCompletion(
                 result,
-                findFilesStudioFiles(project, FileUtil.toSystemIndependentName(parameters.position.containingFile.originalFile.virtualFile.presentableUrl)),
+                findFilesStudioFiles(
+                    project,
+                    FileUtil.toSystemIndependentName(parameters.position.containingFile.originalFile.virtualFile.presentableUrl)
+                ),
                 false
             )
             query.startsWith("*") -> handleCompletion(result, findFilesStudioFiles(project), false)
@@ -46,7 +49,7 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
 
         return if (pathScope != null) {
             results.filter {
-                pathScope.contains("/${it.getCartridgeName()}")
+                pathScope.contains("${it.getCartridgeName()}/cartridge")
             }
         } else {
             results
@@ -83,14 +86,15 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
             result.addElement(lookupElementBuilder)
         }
 
-        if (studioFiles.isNotEmpty()) result.stopHere()
+        if (studioFiles.isNotEmpty()) {
+            result.stopHere()
+        }
     }
 
     /**
      * Star should complete files in any cartridge on the active cartridge path
      *
      */
-
     private fun handleApiCompletion(
         result: CompletionResultSet
     ) {

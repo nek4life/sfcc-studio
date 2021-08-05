@@ -50,6 +50,7 @@ public class StudioCartridgeConfigurable implements SearchableConfigurable, Conf
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void apply() throws ConfigurationException {
         StudioConfigurationProvider myConfigurationProvider = StudioConfigurationProvider.getInstance(myProject);
         myConfigurationProvider.setCartridgeRoots(myCartridgePanel.getListItems());

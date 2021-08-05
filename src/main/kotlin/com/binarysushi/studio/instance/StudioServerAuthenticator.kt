@@ -1,4 +1,4 @@
-package com.binarysushi.studio.webdav
+package com.binarysushi.studio.instance
 
 import okhttp3.*
 import java.io.IOException

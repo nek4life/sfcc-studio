@@ -19,12 +19,12 @@ class RequirePsiReference(element: PsiElement) :
         // Drop the quotes from element text
         var cleanedElementPath = elementPath.drop(1).dropLast(1)
 
-        // Remove / charter from beginning of path
+        // Remove / character from beginning of path
         if (cleanedElementPath.startsWith("/")) {
             cleanedElementPath = cleanedElementPath.drop(1)
         }
 
-        // "*" throws an java.util.regex.PatternSyntaxException: Dangling meta character '*' near index 0
+        // "*" throws a java.util.regex.PatternSyntaxException: Dangling meta character '*' near index 0
         if (cleanedElementPath.startsWith("*")) {
             cleanedElementPath = cleanedElementPath.drop(1)
         }

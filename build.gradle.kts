@@ -8,7 +8,7 @@ plugins {
     // Java support
     id("java")
     // Kotlin support
-    id("org.jetbrains.kotlin.jvm") version "1.5.10"
+    id("org.jetbrains.kotlin.jvm") version "1.5.21"
     // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "1.1.4"
     // Kotlinx Serialization
@@ -32,6 +32,8 @@ repositories {
 dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.1")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
+    implementation("com.github.lookfirst:sardine:5.10")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 //    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.15.0")
 }
 
@@ -103,6 +105,10 @@ tasks {
 
         // Get the latest available change notes from the changelog file
         changeNotes.set(provider { changelog.getLatest().toHTML() })
+    }
+
+    runIde {
+        jvmArgs("-Xmx1024m")
     }
 
     runPluginVerifier {
