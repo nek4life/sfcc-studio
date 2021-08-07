@@ -64,7 +64,7 @@ class StudioUpdateFileTask(
             FileStatus.NEW -> createNewFile(request, localFile, eventFile)
             FileStatus.UPDATED -> doHttpRequest(request, localFile, eventFile, "Updated")
             FileStatus.DELETED -> doDeleteHttpRequest(
-                Request.Builder().url(remoteFilePath).delete().build(), localFile,"Deleted"
+                Request.Builder().url(remoteFilePath).delete().build(), localFile, "Deleted"
             )
         }
         indicator.fraction = 1.0
@@ -75,25 +75,26 @@ class StudioUpdateFileTask(
             val request = Request.Builder().url("$path/").method("MKCOL", null).build()
 
             try {
-                val response = serverConnection.client.newCall(request).execute()
-                if (response.code == 201) {
-                    val rootPath = CartridgePathUtil.getCartridgeRootPathForFile(project, eventFile.path)
-                    val relativePath =
-                        rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePath(it, eventFile.path) }
-                    val relativeDir = Paths.get(relativePath ?: "").parent
+                serverConnection.client.newCall(request).execute().use {
+                    if (it.code == 201) {
+                        val rootPath = CartridgePathUtil.getCartridgeRootPathForFile(project, eventFile.path)
+                        val relativePath =
+                            rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePath(it, eventFile.path) }
+                        val relativeDir = Paths.get(relativePath ?: "").parent
 
-                    printLocalAndRemoteFile(
-                        project,
-                        consoleView,
-                        "Created",
-                        relativeDir.toString(),
-                        null,
-                        request.url.toUrl().path.substring(
-                            "/on/demandware.servlet/webdav/Sites/Cartridges/".length,
-                            request.url.toUrl().path.length
-                        ),
-                        request.url.toString()
-                    )
+                        printLocalAndRemoteFile(
+                            project,
+                            consoleView,
+                            "Created",
+                            relativeDir.toString(),
+                            null,
+                            request.url.toUrl().path.substring(
+                                "/on/demandware.servlet/webdav/Sites/Cartridges/".length,
+                                request.url.toUrl().path.length
+                            ),
+                            request.url.toString()
+                        )
+                    }
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
