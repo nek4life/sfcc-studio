@@ -8,7 +8,7 @@
 - Improved Sync Log Formatting
 
 ### Fixed
-– Require references and completion for repos with nested cartridges
+- Require references and completion for repos with nested cartridges
 
 ## [2021.2.0]
 ### Updated
