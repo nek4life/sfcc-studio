@@ -5,6 +5,7 @@
 ## [Unreleased]
 ### Added
 - Individual Cartridge Upload
+- Improved Sync Log Formatting
 
 ### Fixed
 – Require references and completion for repos with nested cartridges
