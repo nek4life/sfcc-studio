@@ -2,9 +2,8 @@ package com.binarysushi.studio.webdav
 
 import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.binarysushi.studio.toolWindow.ConsolePrinter.printToConsole
+import com.binarysushi.studio.toolWindow.ConsolePrinter.printLocalAndRemoteFile
 import com.binarysushi.studio.toolWindow.StudioConsoleService
-import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.PerformInBackgroundOption
 import com.intellij.openapi.progress.ProgressIndicator
@@ -18,8 +17,6 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import java.nio.file.Paths
-import java.text.SimpleDateFormat
-import java.util.*
 
 class StudioUpdateFileTask(
     project: Project,
@@ -34,7 +31,6 @@ class StudioUpdateFileTask(
     private val consoleView = project.service<StudioConsoleService>().consoleView
     private val remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath, eventFile.path)
     private val remoteFilePath = serverConnection.getRemoteFilePath(sourceRootPath, eventFile.path)
-    private val timeFormat = SimpleDateFormat("hh:mm:ss")
 
     override fun run(indicator: ProgressIndicator) {
         val localFile = File(eventFile.path)
@@ -65,10 +61,10 @@ class StudioUpdateFileTask(
             .build()
 
         when (fileStatus) {
-            FileStatus.NEW -> createNewFile(request, localFile)
-            FileStatus.UPDATED -> doHttpRequest(request, localFile, "Updated file")
-            FileStatus.DELETED -> doHttpRequest(
-                Request.Builder().url(remoteFilePath).delete().build(), localFile, "Deleted"
+            FileStatus.NEW -> createNewFile(request, localFile, eventFile)
+            FileStatus.UPDATED -> doHttpRequest(request, localFile, eventFile, "Updated")
+            FileStatus.DELETED -> doDeleteHttpRequest(
+                Request.Builder().url(remoteFilePath).delete().build(), localFile,"Deleted"
             )
         }
         indicator.fraction = 1.0
@@ -82,9 +78,22 @@ class StudioUpdateFileTask(
                 val response = serverConnection.client.newCall(request).execute()
                 if (response.code == 201) {
                     val rootPath = CartridgePathUtil.getCartridgeRootPathForFile(project, eventFile.path)
-                    val relativePath = rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePath(it, eventFile.path) }
+                    val relativePath =
+                        rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePath(it, eventFile.path) }
                     val relativeDir = Paths.get(relativePath ?: "").parent
-                    printToConsole(consoleView, "Created folder", relativeDir.toString(), request.url.toString())
+
+                    printLocalAndRemoteFile(
+                        project,
+                        consoleView,
+                        "Created",
+                        relativeDir.toString(),
+                        null,
+                        request.url.toUrl().path.substring(
+                            "/on/demandware.servlet/webdav/Sites/Cartridges/".length,
+                            request.url.toUrl().path.length
+                        ),
+                        request.url.toString()
+                    )
                 }
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -92,17 +101,47 @@ class StudioUpdateFileTask(
         }
     }
 
-    private fun createNewFile(request: Request, localFile: File) {
+    private fun createNewFile(request: Request, localFile: File, eventFile: VirtualFile) {
         createRemoteDirectories()
-        doHttpRequest(request, localFile, "Created file")
+        doHttpRequest(request, localFile, eventFile, "Created")
     }
 
-    private fun doHttpRequest(request: Request, localFile: File, message: String) {
+    private fun doHttpRequest(request: Request, localFile: File, eventFile: VirtualFile, message: String) {
         try {
-            serverConnection.client.newCall(request).execute().use { response ->
-                response.close()
+            serverConnection.client.newCall(request).execute().use {
+                printLocalAndRemoteFile(
+                    project,
+                    consoleView,
+                    message,
+                    localFile.name,
+                    eventFile,
+                    request.url.toUrl().path.substring(
+                        "/on/demandware.servlet/webdav/Sites/Cartridges/".length,
+                        request.url.toUrl().path.length
+                    ),
+                    request.url.toString()
+                )
+            }
+        } catch (e: FileNotFoundException) {
+            // TODO handle file not found
+        }
+    }
 
-                printToConsole(consoleView, message, localFile.name, request.url.toString())
+    private fun doDeleteHttpRequest(request: Request, localFile: File, message: String) {
+        try {
+            serverConnection.client.newCall(request).execute().use {
+                printLocalAndRemoteFile(
+                    project,
+                    consoleView,
+                    message,
+                    localFile.name,
+                    null,
+                    request.url.toUrl().path.substring(
+                        "/on/demandware.servlet/webdav/Sites/Cartridges/".length,
+                        request.url.toUrl().path.length
+                    ),
+                    null
+                )
             }
         } catch (e: FileNotFoundException) {
             // TODO handle file not found
