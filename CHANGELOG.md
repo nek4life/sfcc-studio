@@ -3,6 +3,7 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+## [2021.2.1-beta.0]
 ### Added
 - Individual cartridge upload
 - Improved Sync log formatting
