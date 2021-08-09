@@ -3,11 +3,13 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+### Added 
+- Improved Debugger breakpoint console output
+
 ## [2021.2.1-beta.0]
 ### Added
 - Individual cartridge upload
 - Improved Sync log formatting
-- Improved Debugger breakpoint console output
 
 ### Fixed
 - Require references and completion for repos with nested cartridges
