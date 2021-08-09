@@ -4,8 +4,9 @@
 
 ## [Unreleased]
 ### Added
-- Individual Cartridge Upload
-- Improved Sync Log Formatting
+- Individual cartridge upload
+- Improved Sync log formatting
+- Improved Debugger breakpoint console output
 
 ### Fixed
 - Require references and completion for repos with nested cartridges

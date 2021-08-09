@@ -4,6 +4,7 @@ import com.binarysushi.studio.cartridges.CartridgePathUtil
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
 import com.binarysushi.studio.debugger.client.SDAPIClient
 import com.binarysushi.studio.debugger.client.ScriptThread
+import com.intellij.execution.filters.OpenFileHyperlinkInfo
 import com.intellij.execution.ui.ConsoleViewContentType
 import com.intellij.icons.AllIcons
 import com.intellij.javascript.debugger.breakpoints.JavaScriptBreakpointType
@@ -12,6 +13,7 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Key
+import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.xdebugger.XDebugSession
 import com.intellij.xdebugger.XDebuggerManager
 import com.intellij.xdebugger.XDebuggerUtil
@@ -19,7 +21,7 @@ import com.intellij.xdebugger.breakpoints.XBreakpointProperties
 import com.intellij.xdebugger.breakpoints.XLineBreakpoint
 import com.intellij.xdebugger.breakpoints.XLineBreakpointType
 import java.text.SimpleDateFormat
-import java.util.Date
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebugProcess) {
@@ -288,7 +290,13 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
                         null
                     )
 
-                    printToConsole("Listening on: ${xLineBreakpoint.fileUrl}:${xLineBreakpoint.line + 1}")
+                    val virtualFile = VirtualFileManager.getInstance().findFileByUrl(xLineBreakpoint.fileUrl)
+                    val fileHyperLink = OpenFileHyperlinkInfo(session.project, virtualFile!!, xLineBreakpoint.line)
+
+                    session.consoleView.print("[${timeFormat.format(Date())}] ", ConsoleViewContentType.NORMAL_OUTPUT)
+                    session.consoleView.print("Listening on: ", ConsoleViewContentType.NORMAL_OUTPUT)
+                    session.consoleView.printHyperlink("${filePath}#${xLineBreakpoint.line + 1}", fileHyperLink)
+                    session.consoleView.print("\n", ConsoleViewContentType.NORMAL_OUTPUT)
                 }, onError = {
                     if (it.type == "DebuggerDisabledException") {
                         session.stop()
