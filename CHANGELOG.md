@@ -3,6 +3,7 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+## [2021.2.1-beta.1]
 ### Added 
 - Improved Debugger breakpoint console output
 
