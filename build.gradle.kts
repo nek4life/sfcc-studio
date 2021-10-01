@@ -30,7 +30,7 @@ repositories {
 }
 
 dependencies {
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+    implementation("com.squareup.okhttp3:okhttp:4.9.2")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.2.2")
     implementation("com.github.lookfirst:sardine:5.10")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
