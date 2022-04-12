@@ -3,10 +3,12 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+
+## [2022.1.0]
 - Updated compatibility
 
 ## [2021.2.1-beta.1]
-### Added 
+### Added
 - Improved Debugger breakpoint console output
 
 ## [2021.2.1-beta.0]
@@ -43,8 +45,6 @@
 - window path issue with ~/ completion
 
 ## [1.8.0-beta.3]
-### Added
-– Scoped require ~/ references to current file's cartridge path
 
 ## [1.8.0-beta.2]
 ### Added
