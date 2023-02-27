@@ -3,6 +3,8 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+
+## [2023.1.0]
 - Updated compatibility
 
 ## [2022.1.0]
