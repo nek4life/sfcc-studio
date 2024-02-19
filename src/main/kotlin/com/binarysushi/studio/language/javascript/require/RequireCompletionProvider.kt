@@ -1,4 +1,4 @@
-package com.binarysushi.studio.language.javascript
+package com.binarysushi.studio.language.javascript.require
 
 import com.binarysushi.studio.*
 import com.binarysushi.studio.cartridges.*
@@ -31,6 +31,7 @@ class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
                 ),
                 false
             )
+
             query.startsWith("*") -> handleCompletion(result, findFilesStudioFiles(project), false)
             query.startsWith("dw/") -> handleApiCompletion(result)
             else -> {

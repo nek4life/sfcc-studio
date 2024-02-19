@@ -5,10 +5,7 @@ import com.intellij.json.JsonLanguage
 import com.intellij.openapi.fileTypes.LanguageFileType
 import javax.swing.Icon
 
-class DwJsonFileType : LanguageFileType(JsonLanguage.INSTANCE, true) {
-    companion object {
-        val INSTANCE = DwJsonFileType()
-    }
+object DwJsonFileType : LanguageFileType(JsonLanguage.INSTANCE, true) {
 
     override fun getName(): String {
         return "DW_JSON"
@@ -26,3 +23,4 @@ class DwJsonFileType : LanguageFileType(JsonLanguage.INSTANCE, true) {
         return StudioIcons.STUDIO_ICON
     }
 }
+

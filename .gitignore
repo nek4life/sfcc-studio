@@ -3,4 +3,5 @@ build
 out
 .idea
 
+*.DS_Store
 http-client.private.env.json

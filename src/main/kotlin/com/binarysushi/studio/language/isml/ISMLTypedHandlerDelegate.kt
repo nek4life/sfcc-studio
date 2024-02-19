@@ -19,20 +19,19 @@ class ISMLTypedHandlerDelegate : TypedHandlerDelegate() {
         return Result.CONTINUE
     }
 
-    companion object {
-        private fun shouldCloseBrace(editor: Editor, offset: Int, c: Char): Boolean {
-            val text = editor.document.charsSequence
-            if (offset < 2) return false
-            if (c != '{' || text[offset - 2] != '$') return false
-            if (offset < text.length) {
-                val next = text[offset]
-                return if (next == '}') false else !Character.isLetterOrDigit(next)
-            }
-            return true
-        }
+}
 
-        fun shouldProcess(file: PsiFile): Boolean {
-            return ISMLFileType.Companion.INSTANCE == file.viewProvider.fileType
-        }
+private fun shouldCloseBrace(editor: Editor, offset: Int, c: Char): Boolean {
+    val text = editor.document.charsSequence
+    if (offset < 2) return false
+    if (c != '{' || text[offset - 2] != '$') return false
+    if (offset < text.length) {
+        val next = text[offset]
+        return if (next == '}') false else !Character.isLetterOrDigit(next)
     }
+    return true
+}
+
+fun shouldProcess(file: PsiFile): Boolean {
+    return ISMLFileType == file.viewProvider.fileType
 }

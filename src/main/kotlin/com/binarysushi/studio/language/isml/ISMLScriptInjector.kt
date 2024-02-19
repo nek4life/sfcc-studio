@@ -14,7 +14,7 @@ import java.util.*
 
 class ISMLScriptInjector : MultiHostInjector {
     override fun getLanguagesToInject(registrar: MultiHostRegistrar, context: PsiElement) {
-        if (context.containingFile.originalFile.virtualFile.fileType !== ISMLFileType.Companion.INSTANCE) {
+        if (context.containingFile.originalFile.virtualFile.fileType !== ISMLFileType) {
             return
         }
         if (context.parent != null && context.parent is HtmlTagImpl) {

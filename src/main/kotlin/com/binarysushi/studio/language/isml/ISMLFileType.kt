@@ -7,9 +7,7 @@ import com.intellij.lang.html.HTMLLanguage
 import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
-class ISMLFileType : XmlLikeFileType {
-    private constructor() : super(HTMLLanguage.INSTANCE) {}
-    internal constructor(language: Language?) : super(language!!) {}
+object ISMLFileType : XmlLikeFileType(HTMLLanguage.INSTANCE) {
 
     override fun getName(): String {
         return "ISML"
@@ -23,12 +21,7 @@ class ISMLFileType : XmlLikeFileType {
         return "isml"
     }
 
-    override fun getIcon(): Icon? {
+    override fun getIcon(): Icon {
         return StudioIcons.STUDIO_ISML_ICON
-    }
-
-    companion object {
-        val DOT_DEFAULT_EXTENSION: @NonNls String = ".isml"
-        val INSTANCE = ISMLFileType()
     }
 }

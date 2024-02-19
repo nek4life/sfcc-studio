@@ -3,6 +3,9 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+– Fixed display name null pointer exceptions
+– Fixed before file changed write action null pointer exceptions
+– Misc bug fixes
 
 ## [2023.1.0]
 - Updated compatibility

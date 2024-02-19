@@ -1,4 +1,4 @@
-package com.binarysushi.studio.language.javascript
+package com.binarysushi.studio.language.javascript.require
 
 import com.intellij.lang.javascript.psi.*
 import com.intellij.psi.*

@@ -8,6 +8,8 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.intellij.psi.search.FilenameIndex
+import com.intellij.psi.util.nextLeafs
+import com.intellij.psi.util.prevLeafs
 import com.intellij.psi.xml.XmlAttribute
 import com.intellij.psi.xml.XmlTag
 
@@ -41,7 +43,10 @@ class ISMLLineMarkerProvider : RelatedItemLineMarkerProvider() {
                 val builder = NavigationGutterIconBuilder.create(StudioIcons.STUDIO_ISML_ICON)
                     .setTooltipText("Goto included file")
                     .setTargets(templateMatches)
-                result.add(builder.createLineMarkerInfo(element))
+
+                if (templateMatches.size > 0) {
+                    result.add(builder.createLineMarkerInfo(element.nextLeafs.first()))
+                }
             }
         }
     }

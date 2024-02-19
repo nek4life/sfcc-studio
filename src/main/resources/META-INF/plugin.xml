@@ -2,6 +2,7 @@
     <id>com.binarysushi.sfcc-studio</id>
     <name>Salesforce Commerce Cloud (SFCC) Studio</name>
     <vendor email="nek4life@gmail.com">Charlie Choiniere</vendor>
+    <resource-bundle>messages.StudioBundle</resource-bundle>
 
     <description><![CDATA[
         <h2>The original plugin for developing Salesforce B2C Commerce (SFCC) sites on the Jetbrains IDE platform</h1>
@@ -33,20 +34,21 @@
     <idea-version since-build="202.5958.24"/>
 
     <extensions defaultExtensionNs="com.intellij">
+        
         <directoryProjectGenerator implementation="com.binarysushi.studio.projectWizard.StudioProjectGenerator"/>
 
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
         <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
 
-        <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable"/>
-        <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable"/>
+        <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable" displayName="%studio.configuration.server.panel.title"/>
+        <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable" displayName="%studio.server.cartridges.panel.title"/>
 
         <!-- Module Extensions -->
         <moduleType id="SFCC_STUDIO_MODULE" implementationClass="com.binarysushi.studio.projectWizard.StudioModuleType"/>
         <moduleBuilder builderClass="com.binarysushi.studio.projectWizard.StudioModuleBuilder"/>
 
-        <toolWindow id="Commerce Cloud" icon="/icons/salesforce.png" anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory"/>
+        <toolWindow id="Commerce Cloud Tool Window" icon="/icons/salesforce13x13.png"  anchor="bottom" factoryClass="com.binarysushi.studio.toolWindow.StudioToolWindowFactory" />
 
         <fileType name="DW_JSON" fileNames="dw.json" implementationClass="com.binarysushi.studio.language.dwjson.DwJsonFileType" fieldName="INSTANCE"/>
         <completion.contributor language="JSON" implementationClass="com.binarysushi.studio.language.dwjson.DWJsonCompletionContributor"/>
@@ -73,10 +75,10 @@
         <programRunner implementation="com.binarysushi.studio.debugger.StudioDebuggerRunner" />
 
         <!-- JavaScript -->
-        <psi.referenceContributor language="JavaScript" implementation="com.binarysushi.studio.language.javascript.RequirePsiReferenceContributor"/>
+        <psi.referenceContributor language="JavaScript" implementation="com.binarysushi.studio.language.javascript.require.RequirePsiReferenceContributor"/>
         <completion.contributor language="JavaScript" implementationClass="com.binarysushi.studio.language.javascript.JavaScriptCompletionContributor" order="first"/>
-
-        <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>
+        
+<!--        <postStartupActivity implementation="com.binarysushi.studio.language.ds.DSFileTypeAssociator"/>-->
     </extensions>
 
     <applicationListeners>

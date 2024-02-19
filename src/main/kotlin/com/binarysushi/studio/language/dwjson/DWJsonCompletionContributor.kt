@@ -17,19 +17,17 @@ class DWJsonCompletionContributor : CompletionContributor() {
         )
     }
 
-    companion object {
-        private val properties = arrayOf(
-            "cartridge",
-            "hostname",
-            "username",
-            "password",
-            "p12",
-            "passphrase",
-            "client-id",
-            "client-secret",
-            "code-version",
-        )
-    }
+    val properties = arrayOf(
+        "cartridge",
+        "hostname",
+        "username",
+        "password",
+        "p12",
+        "passphrase",
+        "client-id",
+        "client-secret",
+        "code-version",
+    )
 
     private inner class DWJsonCompletionProvider : CompletionProvider<CompletionParameters>() {
         override fun addCompletions(
@@ -38,7 +36,7 @@ class DWJsonCompletionContributor : CompletionContributor() {
             result: CompletionResultSet
         ) {
 
-            if (parameters.originalFile.containingFile.fileType != DwJsonFileType.INSTANCE) {
+            if (parameters.originalFile.containingFile.fileType != DwJsonFileType) {
                 return
             }
 
