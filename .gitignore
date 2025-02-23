@@ -2,6 +2,6 @@
 build
 out
 .idea
-
+.intellijPlatform
 *.DS_Store
 http-client.private.env.json

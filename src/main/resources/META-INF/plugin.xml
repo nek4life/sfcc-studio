@@ -28,6 +28,7 @@
 
     <depends>JavaScript</depends>
     <depends>JavaScriptDebugger</depends>
+    <depends>com.intellij.modules.json</depends>
     <depends>com.intellij.modules.lang</depends>
     <depends>com.intellij.modules.platform</depends>
 
