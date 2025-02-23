@@ -25,7 +25,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Validate wrapper
       - name: Gradle Wrapper Validation
@@ -46,7 +46,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Cache Gradle dependencies
       - name: Setup Gradle Dependencies Cache
@@ -83,26 +83,26 @@ jobs:
       artifact: ${{ steps.properties.outputs.artifact }}
     steps:
 
-      # Setup Java 11 environment for the next steps
+      # Setup Java 17 environment for the next steps
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Cache Gradle Dependencies
       - name: Setup Gradle Dependencies Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', 'gradle.properties') }}
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
@@ -149,22 +149,22 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: 17
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Cache Gradle Dependencies
       - name: Setup Gradle Dependencies Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-caches-${{ hashFiles('**/*.gradle', '**/*.gradle.kts', 'gradle.properties') }}
 
       # Cache Gradle Wrapper
       - name: Setup Gradle Wrapper Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-wrapper-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}
@@ -182,7 +182,7 @@ jobs:
 
       # Cache Plugin Verifier IDEs
       - name: Setup Plugin Verifier IDEs Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ${{ steps.properties.outputs.pluginVerifierHomeDir }}/ides
           key: ${{ runner.os }}-plugin-verifier-${{ steps.properties.outputs.ideVersions }}
@@ -202,7 +202,7 @@ jobs:
 
       # Check out current repository
       - name: Fetch Sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Remove old release drafts by using the curl request for the available releases with draft flag
       - name: Remove Old Release Drafts
@@ -229,7 +229,7 @@ jobs:
 
       # Download plugin artifact provided by the previous job
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: plugin-artifact
 
