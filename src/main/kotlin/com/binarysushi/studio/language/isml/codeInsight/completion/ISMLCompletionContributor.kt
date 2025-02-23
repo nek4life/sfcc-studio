@@ -1,14 +1,5 @@
 package com.binarysushi.studio.language.isml.codeInsight.completion
 
-import com.binarysushi.studio.language.isml.codeInsight.tags.ISMLXmlAttributeDescriptor
-import com.binarysushi.studio.language.isml.codeInsight.tags.ISMLTagDescriptor
-import com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor.ISMLTemplateFileInsertHandler
-import com.binarysushi.studio.language.isml.codeInsight.completion.ISMLCompletionContributor.ISMLTemplateAttributeProvider
-import com.binarysushi.studio.StudioIcons
-import com.binarysushi.studio.language.isml.ISMLFileType
-import com.intellij.lang.javascript.JavascriptLanguage
-import com.intellij.lang.javascript.JSInjectionBracesUtil
-import com.binarysushi.studio.language.isml.ISMLTypedHandlerDelegate
 import com.intellij.codeInsight.completion.*
 import com.intellij.codeInsight.lookup.LookupElement
 import com.intellij.codeInsight.lookup.LookupElementBuilder

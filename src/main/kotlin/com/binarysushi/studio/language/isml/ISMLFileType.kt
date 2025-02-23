@@ -2,9 +2,7 @@ package com.binarysushi.studio.language.isml
 
 import com.binarysushi.studio.StudioIcons
 import com.intellij.ide.highlighter.XmlLikeFileType
-import com.intellij.lang.Language
 import com.intellij.lang.html.HTMLLanguage
-import org.jetbrains.annotations.NonNls
 import javax.swing.Icon
 
 object ISMLFileType : XmlLikeFileType(HTMLLanguage.INSTANCE) {

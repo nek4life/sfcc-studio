@@ -1,8 +1,9 @@
 package com.binarysushi.studio.language.javascript.require
 
-import com.intellij.lang.javascript.psi.*
-import com.intellij.patterns.*
-import com.intellij.psi.*
+import com.intellij.lang.javascript.psi.JSLiteralExpression
+import com.intellij.patterns.PlatformPatterns
+import com.intellij.psi.PsiReferenceContributor
+import com.intellij.psi.PsiReferenceRegistrar
 
 class RequirePsiReferenceContributor : PsiReferenceContributor() {
     override fun registerReferenceProviders(registrar: PsiReferenceRegistrar) {

@@ -10,7 +10,6 @@ import okhttp3.Request
 import java.io.File
 import java.io.IOException
 import java.net.ProxySelector
-import kotlin.jvm.Throws
 
 /**
  * Client to interact with Commerce Cloud's Webdav Server

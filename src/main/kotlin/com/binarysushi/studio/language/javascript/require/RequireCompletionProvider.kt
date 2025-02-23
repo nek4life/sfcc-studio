@@ -1,16 +1,19 @@
 package com.binarysushi.studio.language.javascript.require
 
-import com.binarysushi.studio.*
-import com.binarysushi.studio.cartridges.*
+import com.binarysushi.studio.StudioIcons
+import com.binarysushi.studio.cartridges.StudioFile
+import com.binarysushi.studio.cartridges.StudioFileManager
 import com.intellij.codeInsight.completion.*
-import com.intellij.codeInsight.lookup.*
-import com.intellij.json.*
-import com.intellij.lang.javascript.*
-import com.intellij.openapi.project.*
-import com.intellij.openapi.util.io.*
-import com.intellij.psi.search.*
-import com.intellij.util.*
-import org.jetbrains.annotations.*
+import com.intellij.codeInsight.lookup.LookupElement
+import com.intellij.codeInsight.lookup.LookupElementBuilder
+import com.intellij.json.JsonFileType
+import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.io.FileUtil
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.GlobalSearchScope
+import com.intellij.util.ProcessingContext
+import org.jetbrains.annotations.NotNull
 
 class RequireCompletionProvider : CompletionProvider<CompletionParameters>() {
     override fun addCompletions(

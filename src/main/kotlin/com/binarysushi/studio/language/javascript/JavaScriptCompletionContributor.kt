@@ -2,11 +2,13 @@ package com.binarysushi.studio.language.javascript
 
 import com.binarysushi.studio.language.javascript.require.RequireCompletionProvider
 import com.binarysushi.studio.language.javascript.server.ServerCompletionProvider
-import com.intellij.codeInsight.completion.*
-import com.intellij.lang.javascript.*
-import com.intellij.lang.javascript.psi.*
-import com.intellij.patterns.*
-import com.intellij.patterns.PlatformPatterns.*
+import com.intellij.codeInsight.completion.CompletionContributor
+import com.intellij.codeInsight.completion.CompletionType
+import com.intellij.lang.javascript.JSTokenTypes
+import com.intellij.lang.javascript.psi.JSCallExpression
+import com.intellij.patterns.PlatformPatterns.psiElement
+import com.intellij.patterns.PsiElementPattern
+import com.intellij.patterns.StandardPatterns
 import com.intellij.psi.PsiElement
 
 class JavaScriptCompletionContributor : CompletionContributor() {

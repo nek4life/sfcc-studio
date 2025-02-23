@@ -5,7 +5,6 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.binarysushi.studio.toolWindow.ConsolePrinter.printLocalAndRemoteFile
 import com.binarysushi.studio.toolWindow.StudioConsoleService
 import com.intellij.openapi.components.service
-import com.intellij.openapi.progress.PerformInBackgroundOption
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.Task.Backgroundable
 import com.intellij.openapi.project.Project

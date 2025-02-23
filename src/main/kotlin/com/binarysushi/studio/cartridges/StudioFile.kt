@@ -1,12 +1,11 @@
 package com.binarysushi.studio.cartridges
 
-import com.binarysushi.studio.configuration.projectSettings.*
-import com.intellij.openapi.components.*
-import com.intellij.openapi.project.*
-import com.intellij.openapi.util.io.*
-import com.intellij.openapi.vfs.*
-import java.io.*
-import java.nio.file.*
+import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.VirtualFile
+import java.io.File
+import java.nio.file.Paths
 
 /**
  * A class that represents a SFCC Studio file and provides many of the needed

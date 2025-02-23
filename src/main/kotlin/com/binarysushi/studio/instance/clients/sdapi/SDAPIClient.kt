@@ -2,7 +2,6 @@ package com.binarysushi.studio.debugger.client
 
 import com.binarysushi.studio.instance.StudioServerAuthenticator
 import com.intellij.util.net.JdkProxyProvider
-import com.intellij.util.proxy.CommonProxy
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.serializer

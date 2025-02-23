@@ -1,7 +1,6 @@
 package com.binarysushi.studio.webdav
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.intellij.openapi.progress.PerformInBackgroundOption
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.vfs.newvfs.BulkFileListener

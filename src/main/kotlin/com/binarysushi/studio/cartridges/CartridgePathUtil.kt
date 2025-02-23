@@ -1,7 +1,6 @@
 package com.binarysushi.studio.cartridges
 
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
-import com.intellij.openapi.components.service
 import com.intellij.openapi.project.Project
 import java.nio.file.Paths
 

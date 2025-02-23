@@ -1,13 +1,14 @@
 package com.binarysushi.studio.language.javascript.require
 
-import com.binarysushi.studio.cartridges.*
-import com.intellij.json.*
-import com.intellij.lang.javascript.*
-import com.intellij.openapi.util.*
-import com.intellij.openapi.util.io.*
-import com.intellij.openapi.vfs.*
+import com.binarysushi.studio.cartridges.StudioFileManager
+import com.intellij.json.JsonFileType
+import com.intellij.lang.javascript.JavaScriptFileType
+import com.intellij.openapi.util.TextRange
+import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.*
-import com.intellij.psi.search.*
+import com.intellij.psi.search.FileTypeIndex
+import com.intellij.psi.search.GlobalSearchScope
 
 
 class RequirePsiReference(element: PsiElement) :

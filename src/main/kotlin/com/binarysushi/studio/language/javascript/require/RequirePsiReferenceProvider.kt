@@ -1,8 +1,10 @@
 package com.binarysushi.studio.language.javascript.require
 
-import com.intellij.lang.javascript.psi.*
-import com.intellij.psi.*
-import com.intellij.util.*
+import com.intellij.lang.javascript.psi.JSCallExpression
+import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiReference
+import com.intellij.psi.PsiReferenceProvider
+import com.intellij.util.ProcessingContext
 
 class RequirePsiReferenceProvider : PsiReferenceProvider() {
 

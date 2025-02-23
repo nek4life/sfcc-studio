@@ -4,7 +4,6 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.binarysushi.studio.instance.StudioServerAuthenticator
 import com.binarysushi.studio.instance.StudioServerNotifier
 import com.intellij.util.net.JdkProxyProvider
-import com.intellij.util.proxy.CommonProxy
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.UnknownHostException

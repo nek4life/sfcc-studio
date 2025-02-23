@@ -1,11 +1,11 @@
 package com.binarysushi.studio.cartridges
 
-import com.binarysushi.studio.configuration.projectSettings.*
-import com.intellij.openapi.components.*
-import com.intellij.openapi.project.*
-import com.intellij.openapi.vfs.*
-import org.jetbrains.annotations.*
-import java.nio.file.*
+import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
+import com.intellij.openapi.components.service
+import com.intellij.openapi.project.Project
+import com.intellij.openapi.vfs.VirtualFile
+import org.jetbrains.annotations.NotNull
+import java.nio.file.Paths
 
 class StudioFileManager(private val project: @NotNull Project) {
     /**

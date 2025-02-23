@@ -10,7 +10,6 @@ import com.intellij.icons.AllIcons
 import com.intellij.javascript.debugger.breakpoints.JavaScriptBreakpointType
 import com.intellij.javascript.debugger.breakpoints.JavaScriptLineBreakpointProperties
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.service
 import com.intellij.openapi.ui.MessageType
 import com.intellij.openapi.util.Key
 import com.intellij.openapi.vfs.VirtualFileManager
