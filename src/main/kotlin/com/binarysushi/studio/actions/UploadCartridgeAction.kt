@@ -5,6 +5,7 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.binarysushi.studio.instance.clients.WebDavClient
 import com.binarysushi.studio.instance.code.CodeManager
 import com.binarysushi.studio.toolWindow.StudioConsoleService
+import com.intellij.openapi.actionSystem.ActionUpdateThread
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.components.service
@@ -16,6 +17,9 @@ import com.intellij.util.net.JdkProxyProvider
 import java.io.File
 
 class UploadCartridgeAction : DumbAwareAction() {
+    override fun getActionUpdateThread(): ActionUpdateThread {
+        return ActionUpdateThread.BGT
+    }
     override fun update(e: AnActionEvent) {
         val files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)
         if (files != null) {
