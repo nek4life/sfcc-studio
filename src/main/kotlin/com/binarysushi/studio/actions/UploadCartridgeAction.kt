@@ -5,7 +5,6 @@ import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationP
 import com.binarysushi.studio.instance.clients.WebDavClient
 import com.binarysushi.studio.instance.code.CodeManager
 import com.binarysushi.studio.toolWindow.StudioConsoleService
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.components.service
@@ -13,7 +12,7 @@ import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
 import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.util.proxy.CommonProxy
+import com.intellij.util.net.JdkProxyProvider
 import java.io.File
 
 class UploadCartridgeAction : DumbAwareAction() {
@@ -34,13 +33,13 @@ class UploadCartridgeAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        val configurationProvider = e.project!!.service<StudioConfigurationProvider>()
+        val configurationProvider = StudioConfigurationProvider.getInstance(e.project!!)
         val consoleView = e.project!!.service<StudioConsoleService>().consoleView
         val webDavClient = WebDavClient(
             configurationProvider.hostname,
             configurationProvider.username,
             configurationProvider.password,
-            proxySelector = CommonProxy.getInstance()
+            proxySelector = JdkProxyProvider.getInstance().proxySelector
         )
 
         val files = e.getData(CommonDataKeys.VIRTUAL_FILE_ARRAY)

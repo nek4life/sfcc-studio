@@ -15,7 +15,7 @@ class CartridgePathUtil {
          * active server settings in the future
          */
         fun getActiveCartridgeRoots(project: Project): ArrayList<String> {
-            val config = project.service<StudioConfigurationProvider>()
+            val config = StudioConfigurationProvider.getInstance(project)
             return config.cartridgeRoots
         }
 

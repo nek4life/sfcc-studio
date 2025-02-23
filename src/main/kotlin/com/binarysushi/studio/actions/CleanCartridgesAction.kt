@@ -11,7 +11,7 @@ import com.intellij.openapi.components.service
 import com.intellij.openapi.progress.ProgressIndicator
 import com.intellij.openapi.progress.ProgressManager
 import com.intellij.openapi.progress.Task
-import com.intellij.util.proxy.CommonProxy
+import com.intellij.util.net.JdkProxyProvider
 import java.io.File
 
 class CleanCartridgesAction : AnAction() {
@@ -21,14 +21,13 @@ class CleanCartridgesAction : AnAction() {
         ProgressManager.getInstance().run(object : Task.Backgroundable(
             e.project,
             "Cleaning cartridges",
-            true,
-            ALWAYS_BACKGROUND
+            true
         ) {
             override fun run(indicator: ProgressIndicator) {
-                val configurationProvider = project!!.service<StudioConfigurationProvider>()
+                val configurationProvider = StudioConfigurationProvider.getInstance(project!!)
                 val consoleView = project.service<StudioConsoleService>().consoleView
                 val cartridgeRoots = configurationProvider.cartridgeRoots
-                if (configurationProvider.cartridgeRoots.size < 1) {
+                if (configurationProvider.cartridgeRoots.isEmpty()) {
                     StudioServerNotifier.notify("No Cartridges Found")
                     return
                 }
@@ -37,7 +36,7 @@ class CleanCartridgesAction : AnAction() {
                     configurationProvider.hostname,
                     configurationProvider.username,
                     configurationProvider.password,
-                    proxySelector = CommonProxy.getInstance()
+                    proxySelector = JdkProxyProvider.getInstance().proxySelector
                 )
 
                 CodeManager.deployVersion(

@@ -40,7 +40,6 @@
 
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
-        <projectService serviceImplementation="com.binarysushi.studio.toolWindow.StudioConsoleService"/>
 
         <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable" displayName="%studio.configuration.server.panel.title"/>
         <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable" displayName="%studio.server.cartridges.panel.title"/>

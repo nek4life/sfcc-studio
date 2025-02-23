@@ -22,11 +22,10 @@ class StudioUpdateFileTask(
     project: Project,
     title: String,
     canBeCancelled: Boolean,
-    backgroundOption: PerformInBackgroundOption,
     sourceRootPath: String,
     private val eventFile: VirtualFile
-) : Backgroundable(project, title, canBeCancelled, backgroundOption) {
-    private val configurationProvider = project.service<StudioConfigurationProvider>()
+) : Backgroundable(project, title, canBeCancelled) {
+    private val configurationProvider = StudioConfigurationProvider.getInstance(project)
     private val serverConnection = StudioServerConnection(configurationProvider)
     private val consoleView = project.service<StudioConsoleService>().consoleView
     private val remoteDirPaths = serverConnection.getRemoteDirPaths(sourceRootPath, eventFile.path)

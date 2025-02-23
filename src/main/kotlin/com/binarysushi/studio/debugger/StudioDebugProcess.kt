@@ -15,7 +15,7 @@ import com.intellij.xdebugger.evaluation.XDebuggerEditorsProvider
 import com.intellij.xdebugger.frame.XSuspendContext
 
 class StudioDebugProcess(session: XDebugSession) : XDebugProcess(session) {
-    private val config = session.project.service<StudioConfigurationProvider>()
+    private val config = StudioConfigurationProvider.getInstance(session.project)
     val debuggerClient = SDAPIClient(config.hostname, config.username, config.password)
     private val breakpointHandler = StudioDebuggerJSLineBreakpointHandler(this)
     private val debugger = SDAPIDebugger(session, this)

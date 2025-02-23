@@ -25,7 +25,7 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class SDAPIDebugger(private val session: XDebugSession, private val process: StudioDebugProcess) {
-    private val config = session.project.service<StudioConfigurationProvider>()
+    private val config = StudioConfigurationProvider.getInstance(session.project)
     private val debuggerClient = SDAPIClient(
         config.hostname,
         config.username,

@@ -3,5 +3,6 @@ build
 out
 .idea
 .intellijPlatform
+.kotlin
 *.DS_Store
 http-client.private.env.json

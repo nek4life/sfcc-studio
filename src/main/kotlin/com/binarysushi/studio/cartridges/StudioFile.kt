@@ -25,7 +25,7 @@ class StudioFile(private val fileSystemPath: String, private val cartridgeName: 
 
 
     fun isInActiveCartridgePath(project: Project): Boolean {
-        return project.service<StudioConfigurationProvider>().cartridgeRoots.indexOf(getRootPath()) != -1
+        return StudioConfigurationProvider.getInstance(project).cartridgeRoots.indexOf(getRootPath()) != -1
     }
 
     /**

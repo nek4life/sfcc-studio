@@ -31,7 +31,6 @@ class StudioBulkFileListener : BulkFileListener {
                                 project,
                                 "Syncing files to: " + StudioConfigurationProvider.getInstance(project).hostname,
                                 true,
-                                PerformInBackgroundOption.ALWAYS_BACKGROUND,
                                 cartridgeRoot,
                                 event.file!!
                             )

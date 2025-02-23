@@ -3,6 +3,7 @@ package com.binarysushi.studio.webdav
 import com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider
 import com.binarysushi.studio.instance.StudioServerAuthenticator
 import com.binarysushi.studio.instance.StudioServerNotifier
+import com.intellij.util.net.JdkProxyProvider
 import com.intellij.util.proxy.CommonProxy
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -12,7 +13,7 @@ import java.nio.file.Paths
 class StudioServerConnection(config: StudioConfigurationProvider) {
     val basePath = "https://${config.hostname}/on/demandware.servlet/webdav/Sites/Cartridges/${config.version}"
     val client = OkHttpClient.Builder()
-        .proxySelector(CommonProxy.getInstance())
+        .proxySelector(JdkProxyProvider.getInstance().proxySelector)
         .authenticator(StudioServerAuthenticator(config.username, config.password))
         .build()
 
