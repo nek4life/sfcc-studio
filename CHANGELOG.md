@@ -3,6 +3,10 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+### Updated
+- Updated compatibility
+### Fixed
+- Inability to set breakpoints due to behavior change in xLineBreakpoint.presentableFilePath
 
 ## [2024.1.0]
 - Updated compatibility
