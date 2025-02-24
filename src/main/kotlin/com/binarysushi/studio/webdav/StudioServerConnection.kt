@@ -26,7 +26,7 @@ class StudioServerConnection(config: StudioConfigurationProvider) {
         return "$basePath/$cartridgeName$relPath"
     }
 
-    fun getRemoteDirPaths(rootPath: String, filePath: String?): ArrayList<String> {
+    fun getRemoteDirPaths(rootPath: String, filePath: String): ArrayList<String> {
         val serverPaths = ArrayList<String>()
         // There may be no parent path in root directory
         val relPath =

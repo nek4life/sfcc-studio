@@ -15,7 +15,7 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class StudioDebuggerRunConfiguration extends RunConfigurationBase implements RunConfigurationWithSuppressedDefaultRunAction {
+public class StudioDebuggerRunConfiguration extends RunConfigurationBase<StudioDebuggerRunConfiguration> implements RunConfigurationWithSuppressedDefaultRunAction {
     public StudioDebuggerRunConfiguration(Project project, ConfigurationFactory configurationFactory, String name) {
         super(project, configurationFactory, name);
     }

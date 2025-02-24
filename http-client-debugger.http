@@ -1,34 +1,35 @@
-POST {{host}}/client
+POST https://{{host}}/s/-/dw/debugger/v2_0/client
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
-DELETE {{host}}/client
+
+DELETE https://{{host}}/s/-/dw/debugger/v2_0/client
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
-GET {{host}}/breakpoints
+GET https://{{host}}/s/-/dw/debugger/v2_0/breakpoints
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
-GET {{host}}/threads
+GET https://{{host}}/s/-/dw/debugger/v2_0/threads
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
-GET {{host}}/threads/33/frames/0/members?start=0&count=100&object_path=cache
+GET https://{{host}}/s/-/dw/debugger/v2_0/threads/33/frames/0/members?start=0&count=100&object_path=cache
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 x-dw-client-id: SFCCDebugger
 ###
 
-POST {{host}}/threads/reset
+POST https://{{host}}/s/-/dw/debugger/v2_0/threads/reset
 Authorization: Basic {{username}} {{password}}
 Accept: application/json
 x-dw-client-id: SFCCDebugger
