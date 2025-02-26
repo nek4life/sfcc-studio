@@ -273,9 +273,11 @@ class SDAPIDebugger(private val session: XDebugSession, private val process: Stu
 
             // TODO Add messaging about breakpoint not set if file is not part of current cartridge root settings
             if (cartridgeRootPath != null) {
-                // Replace is for Windows...
-                val filePath = xLineBreakpoint.presentableFilePath.replace("\\", "/")
 
+                val filePath = CartridgePathUtil.getCartridgeRelativePathFromProjectRelativePath(
+                    cartridgeRootPath,
+                    xLineBreakpoint.presentableFilePath
+                )
 
                 debuggerClient.createBreakpoint(line + 1, "/$filePath", onSuccess = { breakpoint ->
                     xLineBreakpoint.putUserData(idKey, breakpoint.id!!)

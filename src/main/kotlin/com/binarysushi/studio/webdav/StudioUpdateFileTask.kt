@@ -77,7 +77,7 @@ class StudioUpdateFileTask(
                     if (it.code == 201) {
                         val rootPath = CartridgePathUtil.getCartridgeRootPathForFile(project, eventFile.path)
                         val relativePath =
-                            rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePath(it, eventFile.path) }
+                            rootPath?.let { CartridgePathUtil.getCartridgeRelativeFilePathFromAbsolutePath(it, eventFile.path) }
                         val relativeDir = Paths.get(relativePath ?: "").parent
 
                         printLocalAndRemoteFile(

@@ -46,10 +46,22 @@ class CartridgePathUtil {
          *
          * app_storefront/some/file/name.js --> /Users/username/project/cartridges/app_storefront_base/some/file/name.js
          */
-        fun getCartridgeRelativeFilePath(cartridgeRootPath: String, localFilePath: String): String {
-            val relativePath = localFilePath.substring(cartridgeRootPath.length)
+        fun getCartridgeRelativeFilePathFromAbsolutePath(cartridgeRootPath: String, localPath: String): String {
+            val relativePath = localPath.substring(cartridgeRootPath.length)
             val cartridgeName = getCartridgeNameFromRootPath(cartridgeRootPath)
             return "$cartridgeName$relativePath".replace("\\", "/")
+        }
+
+        /**
+         * Returns a path relative to cartridge root.
+         *
+         * cartridges/app_storefront_base/some/file/name.js --> app_storefront/some/file/name.js
+         * app_storefront/some/file/name.js --> app_storefront/some/file/name.js
+         */
+        fun getCartridgeRelativePathFromProjectRelativePath(cartridgeRootPath: String, localPath: String): String {
+            val cartridgeName = CartridgePathUtil.getCartridgeNameFromRootPath(cartridgeRootPath)
+            val cartridgeNameIndex = localPath.indexOf(cartridgeName)
+            return localPath.substring(cartridgeNameIndex).replace("\\", "/")
         }
 
         /**
