@@ -3,6 +3,10 @@
 # Salesforce Commerce Cloud (SFCC) Studio
 
 ## [Unreleased]
+### Fixed
+- Breakpoint path not being set correctly when the cartridge path did not start at the root of the project 
+
+## [2024.2.0]
 ### Updated
 - Updated compatibility
 ### Fixed
