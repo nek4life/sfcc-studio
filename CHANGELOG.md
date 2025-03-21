@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- Getting debugger file path when more than one match for the cartridge name is found in the local path
+
 ## [2024.2.1] - 2025-03-04
 
 ### Fixed

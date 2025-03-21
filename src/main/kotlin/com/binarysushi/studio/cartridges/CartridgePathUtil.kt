@@ -60,7 +60,7 @@ class CartridgePathUtil {
          */
         fun getCartridgeRelativePathFromProjectRelativePath(cartridgeRootPath: String, localPath: String): String {
             val cartridgeName = CartridgePathUtil.getCartridgeNameFromRootPath(cartridgeRootPath)
-            val cartridgeNameIndex = localPath.indexOf(cartridgeName)
+            val cartridgeNameIndex = localPath.lastIndexOf(cartridgeName)
             return localPath.substring(cartridgeNameIndex).replace("\\", "/")
         }
 
