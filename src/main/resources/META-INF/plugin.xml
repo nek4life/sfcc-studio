@@ -41,8 +41,8 @@
         <!-- Project Extensions -->
         <projectService serviceImplementation="com.binarysushi.studio.configuration.projectSettings.StudioConfigurationProvider"/>
 
-        <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable" displayName="%studio.configuration.server.panel.title"/>
-        <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable" displayName="%studio.server.cartridges.panel.title"/>
+        <projectConfigurable id="SFCC_SERVER_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioServerConfigurable" key="studio.configuration.server.panel.title" bundle="messages.StudioBundle"/>
+        <projectConfigurable id="SFCC_CARTRIDGE_CONFIGURABLE" groupId="tools" instance="com.binarysushi.studio.configuration.projectSettings.StudioCartridgeConfigurable" key="studio.server.cartridges.panel.title" bundle="messages.StudioBundle"/>
 
         <!-- Module Extensions -->
         <moduleType id="SFCC_STUDIO_MODULE" implementationClass="com.binarysushi.studio.projectWizard.StudioModuleType"/>
