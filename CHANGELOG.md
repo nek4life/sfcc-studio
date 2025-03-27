@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Updated
+
+- Updated compatibility
+
 ## [2024.2.2] - 2025-03-25
 
 ### Fixed
