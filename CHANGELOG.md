@@ -4,6 +4,8 @@
 
 ## [Unreleased]
 
+## [2025.1.0] - 2025-04-08
+
 ### Updated
 
 - Updated compatibility
@@ -116,7 +118,8 @@
 
 - Require Java 11 and 2020.3 IDE versions and above
 
-[Unreleased]: https://github.com/nek4life/sfcc-studio/compare/v2024.2.2...HEAD
+[Unreleased]: https://github.com/nek4life/sfcc-studio/compare/v2025.1.0...HEAD
+[2025.1.0]: https://github.com/nek4life/sfcc-studio/compare/v2024.2.2...v2025.1.0
 [2024.2.2]: https://github.com/nek4life/sfcc-studio/compare/v2024.2.1...v2024.2.2
 [2024.2.1]: https://github.com/nek4life/sfcc-studio/compare/v2024.2.0...v2024.2.1
 [2024.2.0]: https://github.com/nek4life/sfcc-studio/compare/v2024.1.0...v2024.2.0
